@@ -1,0 +1,46 @@
+# spring.application.name=final
+
+server:
+  port: 8181
+
+spring:
+  application:
+    name: todo
+  datasource:
+    url: jdbc:mysql://localhost:3306/jpa?serverTimezone=Asia/Seoul
+    username: spring
+    password: spring
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    database: mysql
+  servlet:
+    multipart:
+      max-file-size: 10MB # 1?? ??? ?? ???
+      max-request-size: 20MB # ?? ??? ?? ???
+
+# swagger setting
+springdoc:
+  swagger-ui:
+    path: /myapi.html
+
+jwt:
+  secret: kLS9eb/S9p7ZhlyCD9vPjCo/avI9yE7JL0eDabJQukK2B36WmB+XXoM/eujSCmJhAjD4ryEZ3JJ7F7YwZtwbIQ==
+  refresh-secret: eJiNncwiessXWK+Hrp6wzAK3uhmpk8kwjuNI4eKwhXIVPLDn1x8kw+k2F9npj+YLiLqtFFkYZGPRc2V0u5+M6A==
+
+upload:
+  path: C:/todo_upload
+
+kakao:
+  client_id: 107a7f6361f5736d67fea21a3ff4ed61
+  redirect_url: http://localhost:3000/oauth/kakao
+  client_secret: ZQlJpH3hHQQIialxsjdlipOCQ0zmBcX6
+
+request:
+  permit-all-patterns:
+  - /
+  - /api/auth/
+  - /api/board/list
+  - /api/board/detail/
