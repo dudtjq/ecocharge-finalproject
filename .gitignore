@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 
 ### STS ###
+*.yml
 .apt_generated
 .classpath
 .factorypath
@@ -18,7 +19,6 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-applocation.yml
 .idea
 *.iws
 *.iml
