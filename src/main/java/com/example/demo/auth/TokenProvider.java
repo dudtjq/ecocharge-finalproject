@@ -1,8 +1,8 @@
 package com.example.demo.auth;
 
 
-import com.example.demo.entity.Role;
-import com.example.demo.entity.User;
+import com.example.demo.userapi.entity.Role;
+import com.example.demo.userapi.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
