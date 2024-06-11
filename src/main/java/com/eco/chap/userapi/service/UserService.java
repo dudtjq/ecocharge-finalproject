@@ -128,6 +128,9 @@ public class UserService {
 
         return "Logout successful";
     }
+    public  void test(){
+        return;
+    }
 
     public String renewalAccessToken(Map<String, String> tokenRequest) {
         String refreshToken = tokenRequest.get("refreshToken");
