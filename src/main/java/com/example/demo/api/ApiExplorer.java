@@ -1,33 +1,48 @@
 package com.example.demo.api;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.stream.Collectors;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
-public class ApiExplorer {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/EvCharger/getChargerInfo"); /*URL*/
-        urlBuilder.append("?" + "serviceKey" + "=서비스키"); /*Service Key*/
-        urlBuilder.append("&" + "pageNo" + "=" + "1"); /*페이지번호*/
-        urlBuilder.append("&" + "numOfRows" + "=" + "10"); /*한 페이지 결과 수 (최소 10, 최대 9999)*/
-        urlBuilder.append("&" + "zcode" + "=" + "11"); /*시도 코드 (행정구역코드 앞 2자리)*/
+@SpringBootApplication
+public class ApiExplorer implements CommandLineRunner {
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(urlBuilder.toString()))
-                .build();
+    public static void main(String[] args) {
+        SpringApplication.run(ApiExplorer.class, args);
+    }
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    @Override
+    public void run(String... args) {
+        try {
+            String serviceKey = "wxNd53XeLl8o0O7cDWKZgw08DLradmwhjTRGZN%2B2H%2BjbKkatBGYQDlaZWSFOEpp5AP4TM6YtoVbF8Rw72wJPkA%3D%3D";
+            String pageNo = "1";
+            String numOfRows = "10";
+            String period = "5";
+            String zcode = "11";
 
-        System.out.println("Response code: " + response.statusCode());
-        System.out.println(response.body());
+            String url = "http://apis.data.go.kr/B552584/EvCharger/getChargerStatus" +
+                    "?serviceKey=" + URLEncoder.encode(serviceKey, "UTF-8") +
+                    "&pageNo=" + URLEncoder.encode(pageNo, "UTF-8") +
+                    "&numOfRows=" + URLEncoder.encode(numOfRows, "UTF-8") +
+                    "&period=" + URLEncoder.encode(period, "UTF-8") +
+                    "&zcode=" + URLEncoder.encode(zcode, "UTF-8");
+
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                System.out.println("Response code: " + responseEntity.getStatusCode());
+                System.out.println("Response body: " + responseEntity.getBody());
+            } else {
+                System.out.println("Error occurred! Response code: " + responseEntity.getStatusCode());
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 }
