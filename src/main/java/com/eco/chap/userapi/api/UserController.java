@@ -2,12 +2,6 @@ package com.eco.chap.userapi.api;
 
 import com.eco.chap.auth.TokenUserInfo;
 import com.eco.chap.userapi.service.UserService;
-import com.example.todo.auth.TokenUserInfo;
-import com.example.todo.userapi.dto.request.LoginRequestDTO;
-import com.example.todo.userapi.dto.request.UserSignUpRequestDTO;
-import com.example.todo.userapi.dto.response.LoginResponseDTO;
-import com.example.todo.userapi.dto.response.UserSignUpResponseDTO;
-import com.example.todo.userapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.File;
 import java.io.IOException;
