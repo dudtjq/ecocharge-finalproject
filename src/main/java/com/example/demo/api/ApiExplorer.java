@@ -1,6 +1,5 @@
-package com.eco.chap.api;
+package com.example.demo.api;
 
-<<<<<<< HEAD:src/main/java/com/example/demo/api/ApiExplorer.java
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,14 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-=======
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
->>>>>>> fd868d55579e5609abe20e34ba2828e05b27a126:src/main/java/com/eco/chap/api/ApiExplorer.java
-
 @SpringBootApplication
 public class ApiExplorer implements CommandLineRunner {
 

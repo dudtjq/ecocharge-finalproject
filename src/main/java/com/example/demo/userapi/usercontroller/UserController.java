@@ -1,7 +1,7 @@
-package com.eco.chap.userapi.api;
+package com.example.demo.userapi.usercontroller;
 
-import com.eco.chap.auth.TokenUserInfo;
-import com.eco.chap.userapi.service.UserService;
+import com.example.demo.auth.TokenUserInfo;
+import com.example.demo.userapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -10,9 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 

@@ -1,5 +1,5 @@
-package com.eco.chap.dto.response;
-import com.eco.chap.userapi.entity.User;
+package com.example.demo.dto.response;
+import com.example.demo.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import lombok.Getter;

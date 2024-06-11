@@ -1,7 +1,7 @@
-package com.eco.chap.filter;
+package com.example.demo.filter;
 
 
-import com.eco.chap.exception.ErrorCode;
+import com.example.demo.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

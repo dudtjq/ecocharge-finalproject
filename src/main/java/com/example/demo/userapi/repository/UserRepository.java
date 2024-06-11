@@ -1,6 +1,6 @@
-package com.eco.chap.userapi.repository;
+package com.example.demo.userapi.repository;
 
-import com.eco.chap.userapi.entity.User;
+import com.example.demo.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

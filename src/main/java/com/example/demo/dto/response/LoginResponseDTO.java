@@ -1,6 +1,6 @@
-package com.eco.chap.dto.response;
+package com.example.demo.dto.response;
 
-import com.eco.chap.userapi.entity.User;
+import com.example.demo.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 

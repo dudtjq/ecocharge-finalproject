@@ -1,4 +1,4 @@
-package com.eco.chap.exception;
+package com.example.demo.exception;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

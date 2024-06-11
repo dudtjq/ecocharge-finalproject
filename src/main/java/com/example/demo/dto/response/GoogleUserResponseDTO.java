@@ -1,4 +1,4 @@
-package com.eco.chap.dto.response;
+package com.example.demo.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;

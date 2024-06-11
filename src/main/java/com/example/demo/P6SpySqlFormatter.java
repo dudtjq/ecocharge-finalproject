@@ -1,4 +1,4 @@
-package com.eco.chap;
+package com.example.demo;
 
 import com.p6spy.engine.logging.Category;
 import com.p6spy.engine.spy.P6SpyOptions;

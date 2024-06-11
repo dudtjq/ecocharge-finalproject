@@ -1,5 +1,5 @@
-package com.eco.chap.auth;
-import com.eco.chap.userapi.entity.User;
+package com.example.demo.auth;
+import com.example.demo.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
