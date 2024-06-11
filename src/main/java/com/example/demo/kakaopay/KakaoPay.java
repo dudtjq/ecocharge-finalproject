@@ -1,4 +1,4 @@
-package com.example.demo.kakaopay;
+package com.eco.chap.kakaopay;
 
 
 
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
 import java.net.*;
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.example.demo.userapi.entity;
+package com.eco.chap.userapi.entity;
 
 public enum Role {
 

@@ -1,4 +1,4 @@
-package com.example.demo.exception;
+package com.eco.chap.exception;
 
 import lombok.NoArgsConstructor;
 
