@@ -25,10 +25,6 @@ public class NaverLoginService {
 
     private final UserRepository userRepository;
 
-    @Value("${upload.path}")
-    private String uploadRootPath;
-
-
     public void naverLogin(Map<String, String> params, HttpSession session) {
         String accessToken = getNaverAccessToken(params);
         NaverUserResponseDTO dto = getNaverUserInfo(accessToken);

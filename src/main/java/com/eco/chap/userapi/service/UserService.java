@@ -113,8 +113,7 @@ public class UserService {
                 String accessToken = foundUser.getNaverAccessToken();
                 headers.add("Authorization", "Bearer " + accessToken);
                 HttpEntity<String> entity = new HttpEntity<>(headers);
-                logoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=YOUR_CLIENT_ID&client" +
-                        "_secret=YOUR_CLIENT_SECRET&access_token=" + accessToken + "&service_provider=NAVER";
+                logoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete&access_token=" + accessToken;
                 ResponseEntity<String> response = restTemplate.exchange(logoutUrl, HttpMethod.GET, entity, String.class);
                 if (response.getStatusCode() == HttpStatus.OK) {
                     log.info("Naver logout successful for user: {}", userInfo.getEmail());
