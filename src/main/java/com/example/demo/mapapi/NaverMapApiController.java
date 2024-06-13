@@ -48,7 +48,6 @@ public class NaverMapApiController {
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-
         // API 호출 및 응답 수신
         ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class);
 
