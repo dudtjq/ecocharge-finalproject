@@ -18,18 +18,20 @@ public class ApiExplorer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            String serviceKey = "wxNd53XeLl8o0O7cDWKZgw08DLradmwhjTRGZN%2B2H%2BjbKkatBGYQDlaZWSFOEpp5AP4TM6YtoVbF8Rw72wJPkA%3D%3D";
+            String serviceKey = "jU0Qy0LLpXMYexiTOR2OjvO6voMY%2BZnxKiLyhPARmaTb5ifkmDNL7gC4rADhVSSsLzMTNaVMfLpiqIFzoWdOKQ%3D%3D";
             String pageNo = "1";
-            String numOfRows = "10";
-            String period = "5";
+            String numOfRows = "52";
             String zcode = "11";
+            String zscode = "11680";
+//            String statId = "ME183119";
 
-            String url = "http://apis.data.go.kr/B552584/EvCharger/getChargerStatus" +
+            String url = "http://apis.data.go.kr/B552584/EvCharger/getChargerInfo" +
                     "?serviceKey=" + URLEncoder.encode(serviceKey, "UTF-8") +
                     "&pageNo=" + URLEncoder.encode(pageNo, "UTF-8") +
                     "&numOfRows=" + URLEncoder.encode(numOfRows, "UTF-8") +
-                    "&period=" + URLEncoder.encode(period, "UTF-8") +
-                    "&zcode=" + URLEncoder.encode(zcode, "UTF-8");
+                    "&zcode=" + URLEncoder.encode(zcode, "UTF-8") +
+                    "&zscode=" + URLEncoder.encode(zscode, "UTF-8");
+//                    "&statId=" + URLEncoder.encode(statId, "UTF-8");
 
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);

@@ -19,7 +19,7 @@ import java.net.*;
 import java.util.Map;
 
 @Controller
-@RequestMapping("")
+@RequestMapping("/jq")
 @Slf4j
 public class KakaoPay {
 
