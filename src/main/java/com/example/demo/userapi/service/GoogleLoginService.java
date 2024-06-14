@@ -37,13 +37,13 @@ public class GoogleLoginService {
         User user;
         if (userOptional.isPresent()) {
             user = userOptional.get();
-            user.changeGoogleAccessToken(accessToken);
+            user.changeAccessToken(accessToken);
         } else {
             user = User.builder()
                     .email(email)
                     .phoneNumber(dto.getPhoneNumber())
                     .profileImg(dto.getProfileImage())
-                    .googleAccessToken(accessToken)
+                    .accessToken(accessToken)
                     .loginMethod(User.LoginMethod.GOOGLE)
                     .build();
             userRepository.save(user);

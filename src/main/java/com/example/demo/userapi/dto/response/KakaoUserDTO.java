@@ -38,6 +38,7 @@ public class KakaoUserDTO {
         }
     }
 
+    // 핸드폰 번호 값 나중에 받아오면 여기 빌더에 넣기
     public User toEntity(String accessToken) {
         return User.builder()
                 .email(this.kakaoAccount.email)

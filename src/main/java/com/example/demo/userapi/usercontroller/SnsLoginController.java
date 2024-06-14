@@ -4,6 +4,7 @@ package com.example.demo.userapi.usercontroller;
 import com.example.demo.dto.response.LoginResponseDTO;
 import com.example.demo.userapi.service.GoogleLoginService;
 import com.example.demo.userapi.service.KaKaoLoginService;
+import com.example.demo.userapi.service.NaverLoginService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ import java.util.Map;
 public class SnsLoginController {
 
     private final KaKaoLoginService kaKaoLoginService;
-//    private final NaverLoginService naverLoginService;
+    private final NaverLoginService naverLoginService;
 //    private final GoogleLoginService googleLoginService;
 
 //    @Value("${sns.naver.client-id}")
@@ -50,17 +51,6 @@ public class SnsLoginController {
 //    @Value("${sns.google.client-pw}")
 //    private String googleClientPw;
 
-//    @GetMapping("/kakao/login")
-//    public String kakaoLogin() {
-//        String uri = "https://kauth.kakao.com/oauth/authorize";
-//        uri += "?client_id=" + kakaoAppKey;
-//        uri += "&redirect_uri=" + kakaoRidirectUri;
-//        uri += "&response_type=code";
-//
-//        return "redirect:" + uri;
-//    }
-
-
     @GetMapping("/kakaologin")
     public ResponseEntity<?> kakaoLogin(String code) {
         log.info("/api/auth/kakaoLogin - GET! code: {}", code);
@@ -70,7 +60,13 @@ public class SnsLoginController {
     }
 
 
-//    @GetMapping("/naver/login")
+    @GetMapping("/naverlogin")
+    public ResponseEntity<?> naverLogin(String code) {
+        log.info("/api/auth/naverLogin - GET! code: {}", code);
+        LoginResponseDTO responseDTO = naverLoginService.naverService(code);
+
+
+    }
 //    public String naverConnect() {
 //        // state용 난수 생성
 //        SecureRandom random = new SecureRandom();

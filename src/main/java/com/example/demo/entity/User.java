@@ -30,7 +30,7 @@ public class User {
     @CreationTimestamp
     private LocalDateTime joinDate;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String phoneNumber;
 
     private String profileImg; // 프로필 이미지 경로
