@@ -1,13 +1,14 @@
 package com.example.demo.entity;
 
+import com.example.demo.qnaapi.Qna;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
-@Getter @ToString
+@Setter @Getter @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +19,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
     private String id;
 
     @Column(nullable = false, unique = true)
@@ -44,6 +46,7 @@ public class User {
     private Date refreshTokenExpiryDate; // 리프레시 토큰의 만료일
 
     private LoginMethod loginMethod;
+
 
     // 카카오 access token 저장하는 메서드
     public void changeKakaoAccessToken(String accessToken) {
