@@ -17,10 +17,11 @@ import java.util.Date;
 public class User {
 
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -34,9 +35,7 @@ public class User {
 
     private String profileImg; // 프로필 이미지 경로
 
-    private String kakaoAccessToken; // 카카오 로그인 시 발급받는 accessToken
-    private String googleAccessToken; // 구글 로그인 시 발급받는 accessToken
-    private String naverAccessToken; // 네이버 로그인 시 발급받는 accessToken
+    private String accessToken; // 소셜로그인 시 발급받는 accessToken
 
     @Column(length = 400)
     private String refreshToken; // 리프레시 토큰의 값
@@ -45,19 +44,9 @@ public class User {
 
     private LoginMethod loginMethod;
 
-    // 카카오 access token 저장하는 메서드
-    public void changeKakaoAccessToken(String accessToken) {
-        this.kakaoAccessToken = accessToken;
-    }
-
-    // 구글 access token 저장하는 메서드
-    public void changeGoogleAccessToken(String accessToken) {
-        this.googleAccessToken = accessToken;
-    }
-
-    // 네이버 access token 저장하는 메서드
-    public void changeNaverAccessToken(String accessToken) {
-        this.naverAccessToken = accessToken;
+    // 소셜 로그인 access token 저장하는 메서드
+    public void changeAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public void changeRefreshToken(String refreshToken) {
@@ -70,7 +59,7 @@ public class User {
 
 
     public enum LoginMethod{
-        COMMON, KAKAO, NAVER, GOOGLE
+        KAKAO, NAVER, GOOGLE
     }
 
 
