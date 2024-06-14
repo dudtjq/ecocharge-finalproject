@@ -18,7 +18,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String  id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -28,9 +28,6 @@ public class User {
 
     @CreationTimestamp
     private LocalDateTime joinDate;
-
-    @Column(unique = true, nullable = false)
-    private String phoneNumber;
 
     private String profileImg; // 프로필 이미지 경로
 
@@ -44,6 +41,9 @@ public class User {
     private Date refreshTokenExpiryDate; // 리프레시 토큰의 만료일
 
     private LoginMethod loginMethod;
+
+    @Column(nullable = false,unique = true)
+    private String phoneNumber;
 
     // 카카오 access token 저장하는 메서드
     public void changeKakaoAccessToken(String accessToken) {

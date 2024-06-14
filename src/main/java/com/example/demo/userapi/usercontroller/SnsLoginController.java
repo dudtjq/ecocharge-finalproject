@@ -1,6 +1,7 @@
 package com.example.demo.userapi.usercontroller;
 
 
+import com.example.demo.dto.response.LoginResponseDTO;
 import com.example.demo.userapi.service.GoogleLoginService;
 import com.example.demo.userapi.service.KaKaoLoginService;
 import com.example.demo.userapi.service.NaverLoginService;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigInteger;
@@ -18,6 +20,7 @@ import java.util.Map;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/auth")
 public class SnsLoginController {
 
     private final KaKaoLoginService kaKaoLoginService;
@@ -65,8 +68,8 @@ public class SnsLoginController {
     }
 
     // 카카오 인가 코드 받기
-    @GetMapping("/auth/kakao")
-    public String snsKakao(String code, HttpSession session) {
+    @GetMapping("/kakao")
+    public ResponseEntity<?> snsKakao(String code, HttpSession session) {
         log.info("카카오 로그인 인가 코드:{}", code);
 
         // 인가 코드를 가지고 카카오 인증 서버에 토큰 발급 요청을 보내자
@@ -76,10 +79,10 @@ public class SnsLoginController {
         params.put("redirect", kakaoRidirectUri);
         params.put("code", code);
 
-        kaKaoLoginService.kakaoLogin(params, session);
+        LoginResponseDTO responseDTO= kaKaoLoginService.kakaoLogin(params, session);
 
         // 로그인 처리가 모두 완료되면 홈 화면으로
-        return "redirect:/home/main";
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/naver/login")
@@ -99,7 +102,7 @@ public class SnsLoginController {
     }
 
     // 네이버 인가코드 받기
-    @GetMapping("/auth/naver")
+    @GetMapping("/naver")
     private String snsNaver(String code, HttpSession session) {
         log.info("네이버 로그인 인가 코드:{}", code);
 
@@ -127,7 +130,7 @@ public class SnsLoginController {
     }
 
     //     구글 인가코드 받기
-    @GetMapping("/auth/google")
+    @GetMapping("/google")
     private String snsGoogle(String code, HttpSession session) {
         log.info("구글 로그인 인가 코드:{}", code);
 

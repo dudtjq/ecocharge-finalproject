@@ -2,6 +2,7 @@ package com.example.demo.userapi.service;
 
 import com.example.demo.auth.TokenProvider;
 import com.example.demo.dto.response.GoogleUserResponseDTO;
+import com.example.demo.dto.response.LoginResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +27,15 @@ public class GoogleLoginService {
 
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
+    private  final  UserService userService;
 
-    public void googleLogin(Map<String, String> params, HttpSession session) {
+    public LoginResponseDTO googleLogin(Map<String, String> params, HttpSession session) {
         String accessToken = getGoogleAccessToken(params);
         GoogleUserResponseDTO dto = getGoogleUserInfo(accessToken);
 
-        String email = dto.getPhoneNumber();
-        Optional<User> userOptional = userRepository.findByPhoneNumber(dto.getPhoneNumber());
+        String phoneNumber = dto.getPhoneNumber(); // 구글에서 제공하는 고유 식별자(ID)
+
+        Optional<User> userOptional = userRepository.findByphoneNumber(phoneNumber);
 
         User user;
         if (userOptional.isPresent()) {
@@ -40,8 +43,8 @@ public class GoogleLoginService {
             user.changeGoogleAccessToken(accessToken);
         } else {
             user = User.builder()
-                    .email(email)
                     .phoneNumber(dto.getPhoneNumber())
+                    .email(dto.getEmail())
                     .profileImg(dto.getProfileImage())
                     .googleAccessToken(accessToken)
                     .loginMethod(User.LoginMethod.GOOGLE)
@@ -50,7 +53,11 @@ public class GoogleLoginService {
         }
 
         session.setAttribute("user", user);
+        Map<String, String> token = userService.getTokenMap(user);
+
+        return new LoginResponseDTO(user, token);
     }
+
 
     private GoogleUserResponseDTO getGoogleUserInfo(String accessToken) {
         String userInfoUri = "https://www.googleapis.com/oauth2/v3/userinfo";

@@ -58,6 +58,10 @@ dependencies {
 
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+	// nurigo 문자인증
+	implementation 'net.nurigo:sdk:4.3.0'
+
+
 }
 
 tasks.named('test') {

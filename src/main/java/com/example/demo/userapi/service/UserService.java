@@ -2,10 +2,9 @@ package com.example.demo.userapi.service;
 
 import com.example.demo.auth.TokenProvider;
 import com.example.demo.auth.TokenUserInfo;
-import com.example.demo.dto.request.LoginRequestDTO;
-import com.example.demo.dto.response.LoginResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.userapi.repository.UserRepository;
+import com.example.demo.userapi.util.SmsUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,10 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -30,27 +26,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
+    private final SmsUtil smsUtil;
 
     @Value("${upload.path}")
     private String uploadRootPath;
 
 
-    public LoginResponseDTO authenticate(final LoginRequestDTO dto) {
-        User user = userRepository.findByPhoneNumber(dto.getPhoneNumber())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 계정입니다."));
-
-        log.info("{}님 로그인 성공!", user.getUserName());
-
-        Map<String, String> token = getTokenMap(user);
-
-        user.changeRefreshToken(token.get("refresh_token"));
-        user.changeRefreshExpiryDate(tokenProvider.getExpiryDate(token.get("refresh_token")));
-        userRepository.save(user);
-
-        return new LoginResponseDTO(user, token);
-    }
-
-    private Map<String, String> getTokenMap(User user) {
+    public Map<String, String> getTokenMap(User user) {
         String accessToken = tokenProvider.createAccessKey(user);
         String refreshToken = tokenProvider.createRefreshKey(user);
 
@@ -71,8 +53,8 @@ public class UserService {
         return uniqueFileName;
     }
 
-    public String findProfilePath(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException());
+    public String findProfilePath(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException());
         String profileImg = user.getProfileImg();
         if (profileImg.startsWith("http://")) {
             return profileImg;
@@ -140,4 +122,27 @@ public class UserService {
         }
         return null;
     }
+
+//
+//
+//    public ResponseEntity<?> sendSmsToFindEmail(LoginResponseDTO responseDTO) {
+//        String name = responseDTO.getUserName();
+//        //수신번호 형태에 맞춰 "-"을 ""로 변환
+//        String phoneNum = responseDTO.getPhoneNumber().replaceAll("-","");
+//
+//        User foundUser = userRepository.findByphoneNumber( phoneNum).orElseThrow(()->
+//                new NoSuchElementException("회원이 존재하지 않습니다."));
+//
+//        String receiverEmail = foundUser.getEmail();
+//        String verificationCode = smsUtil.createCode();
+//        smsUtil.sendOne(phoneNum, verificationCode);
+//
+//        //인증코드 유효기간 5분 설정
+////        redisUtil.setDataExpire(verificationCode, receiverEmail, 60 * 5L);
+//
+//        return ResponseEntity.ok(new Message());
+//    }
+//
+
+
 }
