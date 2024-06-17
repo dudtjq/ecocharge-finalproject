@@ -1,14 +1,11 @@
 package com.example.demo.userapi.service;
 
 import com.example.demo.dto.response.LoginResponseDTO;
-import com.example.demo.dto.response.NaverUserResponseDTO;
+import com.example.demo.userapi.dto.response.NaverUserResponseDTO;
 import com.example.demo.entity.User;
-import com.example.demo.userapi.dto.response.KakaoUserDTO;
 import com.example.demo.userapi.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.apache.bcel.classfile.Code;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -26,6 +23,7 @@ import java.util.Optional;
 @Transactional
 public class NaverLoginService {
 
+    private final UserService userService;
     private final UserRepository userRepository;
 
     @Value("${naver.client_id}")
@@ -37,59 +35,39 @@ public class NaverLoginService {
     @Value("${upload.path}")
     private String uploadRootPath;
 
-
-    public void naverLogin(Map<String, String> params, HttpSession session) {
-        String accessToken = getNaverAccessToken(params);
-        NaverUserResponseDTO dto = getNaverUserInfo(accessToken);
-
-
-        String phoneNumber = dto.getNaverAccount().getPhoneNumber();
-        Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
-
-        User user;
-        if (userOptional.isPresent()) {
-            user = userOptional.get();
-            user.changeAccessToken(accessToken);
-        } else {
-            user = User.builder()
-                    .email(dto.getNaverAccount().getEmail())
-                    .userName(dto.getNaverAccount().getProfile().getNickname())
-                    .phoneNumber(dto.getNaverAccount().getPhoneNumber())
-                    .profileImg(dto.getNaverAccount().getProfile().getProfileImageUrl())
-                    .accessToken(accessToken)
-                    .loginMethod(User.LoginMethod.NAVER)
-                    .build();
-            userRepository.save(user);
-        }
-
-        session.setAttribute("user", user);
-    }
-
-    private NaverUserResponseDTO getNaverUserInfo(String accessToken) {
-        String userInfoUri = "https://openapi.naver.com/v1/nid/me";
-        RestTemplate template = new RestTemplate();
-
-        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-
-        ResponseEntity<NaverUserResponseDTO> responseEntity = template.exchange(
-                userInfoUri,
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                NaverUserResponseDTO.class
-        );
-
-        return responseEntity.getBody();
-    }
-
-
-
     public LoginResponseDTO naverService(String code) {
-        // 인가 코드를 통해 토큰 발급받기
+
         String accessToken = getNaverAccessToken(code);
         log.info("token: {}", accessToken);
 
-        NaverUser
+        NaverUserResponseDTO userDTO = getNaverUserInfo(accessToken);
+        log.info("userDTO: {}", userDTO);
+
+        if (!userService.isDuplicate(userDTO.getNaverUserDetail().getEmail())) {
+            User saved = userRepository.save(userDTO.toEntity(accessToken));
+        }
+
+        User foundUser
+                = userRepository.findByEmail(userDTO.getNaverUserDetail().getEmail()).orElseThrow();
+
+        foundUser.changeAccessToken(accessToken);
+        userRepository.save(foundUser);
+
+        return new LoginResponseDTO(foundUser);
+    }
+
+    private NaverUserResponseDTO getNaverUserInfo(String accessToken) {
+        String requestUri = "https://openapi.naver.com/v1/nid/me";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        RestTemplate template = new RestTemplate();
+        ResponseEntity<NaverUserResponseDTO> responseEntity
+                = template.exchange(requestUri, HttpMethod.POST, new HttpEntity<>(headers), NaverUserResponseDTO.class);
+
+        log.info("userInfo: {}", responseEntity.getBody());
+        return responseEntity.getBody();
     }
 
     private String getNaverAccessToken(String code) {

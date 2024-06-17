@@ -65,40 +65,9 @@ public class SnsLoginController {
         log.info("/api/auth/naverLogin - GET! code: {}", code);
         LoginResponseDTO responseDTO = naverLoginService.naverService(code);
 
-
+        return ResponseEntity.ok().body(responseDTO);
     }
-//    public String naverConnect() {
-//        // state용 난수 생성
-//        SecureRandom random = new SecureRandom();
-//        String state = new BigInteger(130, random).toString(32);
-//
-//        String uri = "https://nid.naver.com/oauth2.0/authorize?";
-//        uri += "response_type=code";
-//        uri += "&client_id=" + naverClientId;
-//        uri += "&redirect_uri=" + naverCallbakUri;
-//        uri += "&state=" + state;
-//
-//        return "redirect:" + uri;
-//
-//    }
 
-//    // 네이버 인가코드 받기
-//    @GetMapping("/auth/naver")
-//    private String snsNaver(String code, HttpSession session) {
-//        log.info("네이버 로그인 인가 코드:{}", code);
-//
-//        // 인가 코드를 가지고 네이버 인증 서버에 토큰 발급 요청을 보내자
-//        Map<String, String> params = new HashMap<>();
-//        params.put("client_id", naverClientId);
-//        params.put("client_secret", naverClientSecret);
-//        params.put("grant_type", "authorization_code");
-//        params.put("state", naverState);
-//        params.put("code", code);
-//
-//        naverLoginService.naverLogin(params, session);
-//
-//        return "redirect:/home/main";
-//    }
 //
 //    @GetMapping("/google/login")
 //    public String googleLogin() {
