@@ -14,17 +14,12 @@ import java.time.LocalDateTime;
 @ToString
 public class KakaoUserResponseDTO {
 
-    private long id;
 
     @JsonProperty("connected_at")
     private LocalDateTime connectedAt;
 
     @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;
-
-    @Column(unique = true)
-    private String phoneNumber;
-
 
 
 
@@ -34,6 +29,7 @@ public class KakaoUserResponseDTO {
         private String email;
         private Profile profile;
 
+        private String phoneNumber;
 
         @Getter
         @Setter

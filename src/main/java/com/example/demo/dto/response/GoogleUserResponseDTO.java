@@ -16,19 +16,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class GoogleUserResponseDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true, nullable = false)
     private String email;
-
-    @Column(unique = true)
-    private String phoneNumber;
 
     @JsonProperty("profile_image")
     private String profileImage;
 
-
+    private String phoneNumber;
 
 }

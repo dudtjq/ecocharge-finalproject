@@ -1,5 +1,6 @@
 package com.example.demo.userapi.service;
 
+import com.example.demo.dto.response.LoginResponseDTO;
 import com.example.demo.dto.response.NaverUserResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.userapi.repository.UserRepository;
@@ -24,18 +25,15 @@ import java.util.Optional;
 public class NaverLoginService {
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    @Value("${upload.path}")
-    private String uploadRootPath;
-
-
-    public void naverLogin(Map<String, String> params, HttpSession session) {
+    public LoginResponseDTO naverLogin(Map<String, String> params, HttpSession session) {
         String accessToken = getNaverAccessToken(params);
         NaverUserResponseDTO dto = getNaverUserInfo(accessToken);
 
 
         String phoneNumber = dto.getNaverAccount().getPhoneNumber();
-        Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
+        Optional<User> userOptional = userRepository.findByphoneNumber(phoneNumber);
 
         User user;
         if (userOptional.isPresent()) {
@@ -52,8 +50,9 @@ public class NaverLoginService {
                     .build();
             userRepository.save(user);
         }
-
+        Map<String, String> token = userService.getTokenMap(user);
         session.setAttribute("user", user);
+        return new LoginResponseDTO(user,token);
     }
 
     private NaverUserResponseDTO getNaverUserInfo(String accessToken) {

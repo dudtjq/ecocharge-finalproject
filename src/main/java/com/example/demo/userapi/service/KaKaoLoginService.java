@@ -1,6 +1,7 @@
 package com.example.demo.userapi.service;
 
 import com.example.demo.dto.response.KakaoUserResponseDTO;
+import com.example.demo.dto.response.LoginResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.userapi.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -23,13 +24,14 @@ import java.util.Optional;
 public class KaKaoLoginService {
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    public void kakaoLogin(Map<String, String> params, HttpSession session) {
+    public LoginResponseDTO kakaoLogin(Map<String, String> params, HttpSession session) {
         String accessToken = getKakaoAccessToken(params);
         KakaoUserResponseDTO dto = getKakaoUserInfo(accessToken);
 
-        String phoneNumber = dto.getPhoneNumber();
-        Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
+        String phoneNumber = dto.getKakaoAccount().getPhoneNumber();
+        Optional<User> userOptional = userRepository.findByphoneNumber(phoneNumber);
 
         User user;
         if (userOptional.isPresent()) {
@@ -37,6 +39,7 @@ public class KaKaoLoginService {
             user.changeKakaoAccessToken(accessToken);
         } else {
             user = User.builder()
+                    .phoneNumber(dto.getKakaoAccount().getPhoneNumber())
                     .email(dto.getKakaoAccount().getEmail())
                     .userName(dto.getKakaoAccount().getProfile().getNickname())
                     .profileImg(dto.getKakaoAccount().getProfile().getProfileImageUrl())
@@ -46,7 +49,9 @@ public class KaKaoLoginService {
             userRepository.save(user);
         }
 
+        Map<String, String> token = userService.getTokenMap(user);
         session.setAttribute("user", user);
+        return new LoginResponseDTO(user,token);
     }
 
     private KakaoUserResponseDTO getKakaoUserInfo(String accessToken) {

@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 @ToString
 public class NaverUserResponseDTO {
 
-    private long id;
-
     @JsonProperty("connected_at")
     private LocalDateTime connectedAt;
 
@@ -27,7 +25,6 @@ public class NaverUserResponseDTO {
         private String email;
         private Profile profile;
 
-        @Column(unique = true)
         private String phoneNumber;
 
 

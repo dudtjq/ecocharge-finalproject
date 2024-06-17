@@ -19,6 +19,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+
     @Column(name = "user_id")
     private String id;
 
@@ -30,9 +31,6 @@ public class User {
 
     @CreationTimestamp
     private LocalDateTime joinDate;
-
-    @Column(unique = true, nullable = false)
-    private String phoneNumber;
 
     private String profileImg; // 프로필 이미지 경로
 
@@ -47,6 +45,8 @@ public class User {
 
     private LoginMethod loginMethod;
 
+    @Column(nullable = false,unique = true)
+    private String phoneNumber;
 
     // 카카오 access token 저장하는 메서드
     public void changeKakaoAccessToken(String accessToken) {
