@@ -2,7 +2,7 @@ package com.example.demo.userapi.service;
 
 import com.example.demo.dto.response.LoginResponseDTO;
 import com.example.demo.entity.User;
-import com.example.demo.userapi.dto.response.KakaoUserDTO;
+import com.example.demo.userapi.dto.response.KakaoUserResponseDTO;
 import com.example.demo.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class KaKaoLoginService {
         log.info("token: {}", accessToken);
 
         // 토큰을 통해 사용자 정보를 가져오기
-        KakaoUserDTO userDTO = getKakaoUserInfo(accessToken);
+        KakaoUserResponseDTO userDTO = getKakaoUserInfo(accessToken);
         log.info("userDTO: {}", userDTO);
 
         // 일회성 로그인으로 처리 ->  dto를 바로 화면단에 리턴
@@ -63,7 +63,7 @@ public class KaKaoLoginService {
         return new LoginResponseDTO(foundUser);
     }
 
-    private KakaoUserDTO getKakaoUserInfo(String accessToken) {
+    private KakaoUserResponseDTO getKakaoUserInfo(String accessToken) {
         // 요청 uri
         String requestURI = "https://kapi.kakao.com/v2/user/me";
 
@@ -74,11 +74,11 @@ public class KaKaoLoginService {
 
         // 요청 보내기
         RestTemplate template = new RestTemplate();
-        ResponseEntity<KakaoUserDTO> responseEntity
-                = template.exchange(requestURI, HttpMethod.GET, new HttpEntity<>(headers), KakaoUserDTO.class);
+        ResponseEntity<KakaoUserResponseDTO> responseEntity
+                = template.exchange(requestURI, HttpMethod.GET, new HttpEntity<>(headers), KakaoUserResponseDTO.class);
 
         // 응답 바디 꺼내기
-        KakaoUserDTO responseData = responseEntity.getBody();
+        KakaoUserResponseDTO responseData = responseEntity.getBody();
         log.info("user profile: {}", responseData);
 
         return responseData;
