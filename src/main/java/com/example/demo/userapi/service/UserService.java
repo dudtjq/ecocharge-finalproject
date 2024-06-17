@@ -7,6 +7,7 @@ import com.example.demo.userapi.repository.UserRepository;
 import com.example.demo.userapi.util.SmsUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.*;
 @Transactional
 public class UserService {
 
+    @Autowired
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final SmsUtil smsUtil;
@@ -31,8 +33,30 @@ public class UserService {
     @Value("${upload.path}")
     private String uploadRootPath;
 
+    public boolean isDuplicate(String email) {
+        if (userRepository.existsByEmail(email)) {
+            log.warn("이메일이 중복되었습니다. - {}", email);
+            return true;
+        } else return false;
+    }
 
-    public Map<String, String> getTokenMap(User user) {
+    public LoginResponseDTO authenticate(final LoginRequestDTO dto) {
+        User user = userRepository.findByPhoneNumber(dto.getPhoneNumber())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 계정입니다."));
+
+        log.info("{}님 로그인 성공!", user.getUserName());
+
+        Map<String, String> token = getTokenMap(user);
+
+        user.changeRefreshToken(token.get("refresh_token"));
+        user.changeRefreshExpiryDate(tokenProvider.getExpiryDate(token.get("refresh_token")));
+        userRepository.save(user);
+
+        return new LoginResponseDTO(user);
+    }
+
+    private Map<String, String> getTokenMap(User user) {
+
         String accessToken = tokenProvider.createAccessKey(user);
         String refreshToken = tokenProvider.createRefreshKey(user);
 
@@ -72,7 +96,7 @@ public class UserService {
 
         try {
             if (foundUser.getLoginMethod() == User.LoginMethod.GOOGLE) {
-                String accessToken = foundUser.getGoogleAccessToken();
+                String accessToken = foundUser.getAccessToken();
                 logoutUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken;
                 ResponseEntity<String> response = restTemplate.postForEntity(logoutUrl, null, String.class);
                 if (response.getStatusCode() == HttpStatus.OK) {
@@ -81,7 +105,7 @@ public class UserService {
                     log.error("Google logout failed for user: {}", userInfo.getEmail());
                 }
             } else if (foundUser.getLoginMethod() == User.LoginMethod.KAKAO) {
-                String accessToken = foundUser.getKakaoAccessToken();
+                String accessToken = foundUser.getAccessToken();
                 headers.add("Authorization", "Bearer " + accessToken);
                 HttpEntity<String> entity = new HttpEntity<>(headers);
                 logoutUrl = "https://kapi.kakao.com/v1/user/logout";
@@ -92,7 +116,7 @@ public class UserService {
                     log.error("Kakao logout failed for user: {}", userInfo.getEmail());
                 }
             } else if (foundUser.getLoginMethod() == User.LoginMethod.NAVER) {
-                String accessToken = foundUser.getNaverAccessToken();
+                String accessToken = foundUser.getAccessToken();
                 headers.add("Authorization", "Bearer " + accessToken);
                 HttpEntity<String> entity = new HttpEntity<>(headers);
                 logoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete&access_token=" + accessToken;

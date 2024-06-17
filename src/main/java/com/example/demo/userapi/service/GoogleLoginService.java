@@ -40,13 +40,13 @@ public class GoogleLoginService {
         User user;
         if (userOptional.isPresent()) {
             user = userOptional.get();
-            user.changeGoogleAccessToken(accessToken);
+            user.changeAccessToken(accessToken);
         } else {
             user = User.builder()
                     .phoneNumber(dto.getPhoneNumber())
                     .email(dto.getEmail())
                     .profileImg(dto.getProfileImage())
-                    .googleAccessToken(accessToken)
+                    .accessToken(accessToken)
                     .loginMethod(User.LoginMethod.GOOGLE)
                     .build();
             userRepository.save(user);
