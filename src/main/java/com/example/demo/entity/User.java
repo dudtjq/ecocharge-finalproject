@@ -42,6 +42,7 @@ public class User {
 
     private Date refreshTokenExpiryDate; // 리프레시 토큰의 만료일
 
+    @Enumerated(value = EnumType.STRING)
     private LoginMethod loginMethod;
 
     // 소셜 로그인 access token 저장하는 메서드
