@@ -1,6 +1,6 @@
 package com.example.demo.userapi.service;
 
-import com.example.demo.dto.response.LoginResponseDTO;
+import com.example.demo.userapi.dto.response.LoginResponseDTO;
 import com.example.demo.userapi.dto.response.NaverUserResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.userapi.repository.UserRepository;
@@ -15,7 +15,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @Slf4j
