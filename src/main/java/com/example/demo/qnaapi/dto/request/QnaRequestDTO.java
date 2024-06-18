@@ -11,20 +11,18 @@ import lombok.*;
 @Builder
 public class QnaRequestDTO {
 
-    @NotNull
     private String qTitle;
 
-    @NotNull
     private String qContent;
 
 
     // 엔터티 변환
-    public Qna toEntity(User user){
+    public Qna toEntity(){
 
         return Qna.builder()
                 .qTitle(qTitle)
                 .qContent(qContent)
-                .user(user)
+                //.user(user)
                 .build();
 
     }

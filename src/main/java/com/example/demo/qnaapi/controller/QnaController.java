@@ -11,10 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,7 +26,7 @@ public class QnaController {
     @PostMapping
     public ResponseEntity<?> createQna(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @RequestBody QnaRequestDTO requestDTO,
+            @Validated @RequestBody QnaRequestDTO requestDTO,
             BindingResult result){
 
         log.info("/ecocharge/qna GET! - dto: {}", requestDTO);
@@ -38,10 +35,35 @@ public class QnaController {
         final ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if(validatedResult != null) return validatedResult;
 
-        QnaListResponseDTO qnaListResponseDTO = qnaService.create(requestDTO, userInfo.getUserId());
+        QnaListResponseDTO qnaListResponseDTO = qnaService.create(requestDTO);
         return ResponseEntity.ok().body(qnaListResponseDTO);
 
     }
+
+    // qna 목록 요청
+    @GetMapping
+    public ResponseEntity<?> retrieveQnaList(){
+
+        log.info("/ecocharge/qna GET request");
+
+        try {
+
+            QnaListResponseDTO responseDTO = qnaService.retrieve();
+            return ResponseEntity.ok().body(responseDTO);
+
+        }catch (Exception e){
+
+            return ResponseEntity
+                    .internalServerError()
+                    .body(QnaListResponseDTO.builder()
+                            .error(e.getMessage())
+                            .build());
+
+        }
+
+    }
+
+
 
     // 입력값 검증(Validation)의 결과를 처리해 주는 전역 메서드
     private static ResponseEntity<List<FieldError>> getValidatedResult(BindingResult result) {

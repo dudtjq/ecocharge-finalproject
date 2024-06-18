@@ -16,7 +16,6 @@ import lombok.*;
 public class Qna {
 
     @Id
-    @NotNull
     @Column(name = "qna_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long qnaNo;
@@ -26,7 +25,7 @@ public class Qna {
     private String qTitle;
 
     @Column(name = "q_content")
-    @NotNull
+   @NotNull
     private String qContent;
 
     @Column(name = "q_answer")

@@ -31,9 +31,9 @@ class QnaRepositoryTest {
      @DisplayName("QnA 정상적으로 적용이 되는지 테스트")
      void bulkInsert() {
 
-         User user = new User();
-
-         user.setId("c02c6193-f40f-4ca3-b1f8-ab73e780366d");
+//         User user = new User();
+//
+//         user.setId("c02c6193-f40f-4ca3-b1f8-ab73e780366d");
 
          for (int i = 1; i < 31; i++) {
              qnaRepository.save(
@@ -41,7 +41,7 @@ class QnaRepositoryTest {
                              .qnaNo((long) i)
                              .qTitle("QnA 테스트 제목" + i)
                              .qContent("QnA 테스트 내용" + i)
-                             .user(user)
+//                             .user(user)
                              .build()
              );
 

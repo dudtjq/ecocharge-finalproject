@@ -21,10 +21,10 @@ public class QnaService {
     private final UserRepository userRepository;
     private final QnaRepository qnaRepository;
 
-    public QnaListResponseDTO create(QnaRequestDTO requestDTO, String userId) {
-        User user = getUser(userId);
+    public QnaListResponseDTO create(QnaRequestDTO requestDTO) {
+      //  User user = getUser(userId);
 
-        qnaRepository.save(requestDTO.toEntity(user));
+        qnaRepository.save(requestDTO.toEntity());
         log.info("qna 작성 완료! qna 제목 : {}", requestDTO.getQTitle());
         log.info("qna 작성 완료! qna 내용 : {}", requestDTO.getQContent());
 
@@ -33,7 +33,7 @@ public class QnaService {
 
     // qna 목록 가져오기
     public QnaListResponseDTO retrieve(){
-        List<Qna> entityList  = qnaRepository.QnaAllList();
+        List<Qna> entityList  = qnaRepository.findAll();
 
         List<QnaDetailResponseDTO> dtoList = entityList.stream()
                 .map(QnaDetailResponseDTO::new)
