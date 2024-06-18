@@ -2,29 +2,31 @@ package com.example.demo.userapi.usercontroller;
 
 import com.example.demo.userapi.service.MessageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/sms")
 @RequiredArgsConstructor
+@Slf4j
 public class MessageController {
 
     private final MessageService messageService;
 
-    @PostMapping("/send")
-    public ResponseEntity<?> sendVerificationCode(@RequestParam String phoneNumber) {
-        messageService.sendVerificationCode(phoneNumber);
-        return ResponseEntity.ok("인증 코드가 발송되었습니다.");
+    @PostMapping("/api/send-sms")
+    public ResponseEntity<?> sendSMS(@RequestParam String phoneNumber) {
+        SingleMessageSentResponse response = messageService.sendSMS(phoneNumber);
+        log.info("phoneNumber: {}", phoneNumber);
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/verify")
-    public ResponseEntity<?> verifyCode(@RequestParam String phoneNumber, @RequestParam String verificationCode) {
-        boolean isVerified = messageService.verifyCode(phoneNumber, verificationCode);
-        if (isVerified) {
-            return ResponseEntity.ok("인증에 성공했습니다.");
-        } else {
-            return ResponseEntity.status(400).body("인증에 실패했습니다.");
-        }
+    @PostMapping("/api/verify-code")
+    public boolean verifyCode(@RequestParam String phoneNumber,
+                              @RequestParam String verificationCodeInput) {
+        return messageService.verifyCode(phoneNumber, verificationCodeInput);
     }
 }
