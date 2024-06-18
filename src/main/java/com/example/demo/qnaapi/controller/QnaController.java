@@ -29,7 +29,7 @@ public class QnaController {
     @PostMapping
     public ResponseEntity<?> createQna(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @Validated @RequestBody QnaRequestDTO requestDTO,
+            @RequestBody QnaRequestDTO requestDTO,
             BindingResult result){
 
         log.info("/ecocharge/qna GET! - dto: {}", requestDTO);
