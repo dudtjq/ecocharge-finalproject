@@ -1,13 +1,9 @@
 package com.example.demo.userapi.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.demo.entity.User;
 import lombok.*;
 
-import java.time.LocalDateTime;
+
 
 
 @Getter @Setter @ToString
@@ -17,10 +13,18 @@ import java.time.LocalDateTime;
 public class GoogleUserResponseDTO {
 
     private String email;
+    private String name;
+    private String picture;
 
-    @JsonProperty("profile_image")
-    private String profileImage;
+//    private String phoneNumber;
+public User toEntity(String accessToken) {
+    return User.builder()
+            .email(this.email)
+            .userName(this.name)
+            .profileImg(this.picture)
+            .loginMethod(User.LoginMethod.GOOGLE)
+            .build();
+}
 
-    private String phoneNumber;
 
 }
