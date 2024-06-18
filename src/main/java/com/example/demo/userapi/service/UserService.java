@@ -3,9 +3,7 @@ package com.example.demo.userapi.service;
 import com.example.demo.auth.TokenProvider;
 import com.example.demo.auth.TokenUserInfo;
 import com.example.demo.entity.User;
-import com.example.demo.userapi.dto.response.LoginResponseDTO;
 import com.example.demo.userapi.repository.UserRepository;
-import com.example.demo.userapi.util.SmsUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,6 @@ public class UserService {
     @Autowired
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
-    private final SmsUtil smsUtil;
 
     @Value("${upload.path}")
     private String uploadRootPath;
