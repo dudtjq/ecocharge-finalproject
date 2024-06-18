@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+
 @Getter @Setter @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
@@ -13,10 +15,10 @@ import java.util.Date;
 @Entity
 @Table(name = "tbl_user")
 public class User {
+
     @Id
-    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String userId;
 
     @Column(nullable = false)
     private String email;
@@ -41,6 +43,9 @@ public class User {
 
     @Enumerated(value = EnumType.STRING)
     private LoginMethod loginMethod;
+
+    @OneToMany(mappedBy = "user")
+    private List<Qna> qnaList;
 
     // 소셜 로그인 access token 저장하는 메서드
     public void changeAccessToken(String accessToken) {

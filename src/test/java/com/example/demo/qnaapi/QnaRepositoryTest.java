@@ -1,8 +1,7 @@
 package com.example.demo.qnaapi;
 
-import com.example.demo.entity.User;
-import com.example.demo.qnaapi.entity.Qna;
-import com.example.demo.qnaapi.repository.QnaRepository;
+import com.example.demo.entity.Qna;
+import com.example.demo.repository.QnaRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;

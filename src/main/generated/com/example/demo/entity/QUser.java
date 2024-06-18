@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -23,8 +24,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath email = createString("email");
 
-    public final StringPath id = createString("id");
-
     public final DateTimePath<java.time.LocalDateTime> joinDate = createDateTime("joinDate", java.time.LocalDateTime.class);
 
     public final EnumPath<User.LoginMethod> loginMethod = createEnum("loginMethod", User.LoginMethod.class);
@@ -33,9 +32,13 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath profileImg = createString("profileImg");
 
+    public final ListPath<Qna, com.example.demo.qnaapi.entity.QQna> qna = this.<Qna, com.example.demo.qnaapi.entity.QQna>createList("qna", Qna.class, com.example.demo.qnaapi.entity.QQna.class, PathInits.DIRECT2);
+
     public final StringPath refreshToken = createString("refreshToken");
 
     public final DateTimePath<java.util.Date> refreshTokenExpiryDate = createDateTime("refreshTokenExpiryDate", java.util.Date.class);
+
+    public final StringPath userId = createString("userId");
 
     public final StringPath userName = createString("userName");
 
