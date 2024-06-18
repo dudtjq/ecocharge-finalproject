@@ -1,12 +1,13 @@
 //package com.example.demo.userapi.service;
 //
 //import com.example.demo.auth.TokenProvider;
-//import com.example.demo.dto.response.GoogleUserResponseDTO;
-//import com.example.demo.dto.response.LoginResponseDTO;
+//import com.example.demo.userapi.dto.response.GoogleUserResponseDTO;
+//import com.example.demo.userapi.dto.response.LoginResponseDTO;
 //import com.example.demo.entity.User;
 //import com.example.demo.userapi.repository.UserRepository;
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
+//import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.http.*;
 //import org.springframework.stereotype.Service;
 //import org.springframework.transaction.annotation.Transactional;
@@ -27,73 +28,72 @@
 //
 //    private final UserRepository userRepository;
 //    private final TokenProvider tokenProvider;
-//    private  final  UserService userService;
+//    private final UserService userService;
 //
-//    public LoginResponseDTO googleLogin(Map<String, String> params, HttpSession session) {
-//        String accessToken = getGoogleAccessToken(params);
-//        GoogleUserResponseDTO dto = getGoogleUserInfo(accessToken);
+//    @Value("${google.client_id}")
+//    private String GOOGLE_CLIENT_ID;
 //
-//        String phoneNumber = dto.getPhoneNumber(); // 구글에서 제공하는 고유 식별자(ID)
+//    @Value("${google.client_pw}")
+//    private String GOOGLE_CLIENT_PW;
 //
-//        Optional<User> userOptional = userRepository.findByphoneNumber(phoneNumber);
+//    @Value("${google.redirect_url}")
+//    private String GOOGLE_REDIRECT_URL;
 //
-//        User user;
-//        if (userOptional.isPresent()) {
-//            user = userOptional.get();
-//            user.changeAccessToken(accessToken);
-//        } else {
-//            user = User.builder()
-//                    .phoneNumber(dto.getPhoneNumber())
-//                    .email(dto.getEmail())
-//                    .profileImg(dto.getProfileImage())
-//                    .accessToken(accessToken)
-//                    .loginMethod(User.LoginMethod.GOOGLE)
-//                    .build();
-//            userRepository.save(user);
+//    public void googleService(String code) {
+//        String accessToken = getGoogleAccessToken(code);
+//        log.info("accessToken: {}", accessToken);
+//
+//        GoogleUserResponseDTO userDTO = getGoogleUserInfo(accessToken);
+//        log.info("userDTO: {}", userDTO);
+//
+//        if (!userService.isDuplicate(userDTO.getEmail())) {
+//            // 이메일이 중복되지 않았다. -> 이전에 로그인 한 적 없음 -> DB에 데이터를 세팅
+//            User saved = userRepository.save(userDTO.toEntity(accessToken));
 //        }
+//        // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
+//        User foundUser
+//                = userRepository.findByEmail(userDTO.getEmail()).orElseThrow();
 //
-//        session.setAttribute("user", user);
-//        Map<String, String> token = userService.getTokenMap(user);
-//
-//        return new LoginResponseDTO(user, token);
 //    }
-//
 //
 //    private GoogleUserResponseDTO getGoogleUserInfo(String accessToken) {
 //        String userInfoUri = "https://www.googleapis.com/oauth2/v3/userinfo";
-//        RestTemplate template = new RestTemplate();
 //
-//        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+//        HttpHeaders headers = new HttpHeaders();
 //        headers.add("Authorization", "Bearer " + accessToken);
 //
-//        ResponseEntity<GoogleUserResponseDTO> responseEntity = template.exchange(
-//                userInfoUri,
-//                HttpMethod.GET,
-//                new HttpEntity<>(headers),
-//                GoogleUserResponseDTO.class
+//        RestTemplate template = new RestTemplate();
+//        ResponseEntity<GoogleUserResponseDTO> responseEntity
+//                = template.exchange(userInfoUri, HttpMethod.GET, new HttpEntity<>(headers), GoogleUserResponseDTO.class
 //        );
 //
 //        return responseEntity.getBody();
 //    }
 //
-//    private String getGoogleAccessToken(Map<String, String> requestParams) {
-//        String requestUri = "https://oauth2.googleapis.com/token";
+//    private String getGoogleAccessToken(String code) {
+//        String requestURI = "https://oauth2.googleapis.com/token";
+//        log.info("client id: {}", GOOGLE_CLIENT_ID);
+//        log.info("client pw: {}", GOOGLE_CLIENT_PW);
+//
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 //
 //        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//        params.add("code", requestParams.get("code"));
-//        params.add("client_id", requestParams.get("client_id"));
-//        params.add("client_secret", requestParams.get("client_secret"));
-//        params.add("redirect_uri", requestParams.get("redirect_uri"));
+//        params.add("code", code);
+//        params.add("client_id", GOOGLE_CLIENT_ID);
+//        params.add("client_secret", GOOGLE_CLIENT_PW);
+//        params.add("redirect_uri", GOOGLE_REDIRECT_URL);
 //        params.add("grant_type", "authorization_code");
 //
-//        RestTemplate template = new RestTemplate();
 //        HttpEntity<Object> requestEntity = new HttpEntity<>(params, headers);
 //
-//        ResponseEntity<Map> responseEntity = template.exchange(requestUri, HttpMethod.POST, requestEntity, Map.class);
-//        Map<String, Object> responseJSON = (Map<String, Object>) responseEntity.getBody();
-//        return (String) responseJSON.get("access_token");
+//        RestTemplate template = new RestTemplate();
+//
+//        ResponseEntity<Map> responseEntity
+//                = template.exchange(requestURI, HttpMethod.POST, requestEntity, Map.class);
+//        Map<String, Object> responseData = (Map<String, Object>) responseEntity.getBody();
+//        return (String) responseData.get("access_token");
 //    }
 //}
+//
 //
