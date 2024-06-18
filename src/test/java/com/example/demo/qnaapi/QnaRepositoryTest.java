@@ -1,6 +1,8 @@
 package com.example.demo.qnaapi;
 
 import com.example.demo.entity.User;
+import com.example.demo.qnaapi.entity.Qna;
+import com.example.demo.qnaapi.repository.QnaRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -9,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 

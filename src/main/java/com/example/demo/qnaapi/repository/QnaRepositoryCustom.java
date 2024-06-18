@@ -1,4 +1,6 @@
-package com.example.demo.qnaapi;
+package com.example.demo.qnaapi.repository;
+
+import com.example.demo.qnaapi.entity.Qna;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.demo.qnaapi;
+package com.example.demo.qnaapi.entity;
 
 import com.example.demo.entity.User;
 import jakarta.persistence.*;

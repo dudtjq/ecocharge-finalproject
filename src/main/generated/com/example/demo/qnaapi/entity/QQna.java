@@ -1,4 +1,4 @@
-package com.example.demo.qnaapi;
+package com.example.demo.qnaapi.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QQna extends EntityPathBase<Qna> {
 
-    private static final long serialVersionUID = 391651462L;
+    private static final long serialVersionUID = 1169440823L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 

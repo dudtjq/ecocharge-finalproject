@@ -19,19 +19,15 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
-    public final StringPath email = createString("email");
+    public final StringPath accessToken = createString("accessToken");
 
-    public final StringPath googleAccessToken = createString("googleAccessToken");
+    public final StringPath email = createString("email");
 
     public final StringPath id = createString("id");
 
     public final DateTimePath<java.time.LocalDateTime> joinDate = createDateTime("joinDate", java.time.LocalDateTime.class);
 
-    public final StringPath kakaoAccessToken = createString("kakaoAccessToken");
-
     public final EnumPath<User.LoginMethod> loginMethod = createEnum("loginMethod", User.LoginMethod.class);
-
-    public final StringPath naverAccessToken = createString("naverAccessToken");
 
     public final StringPath phoneNumber = createString("phoneNumber");
 
