@@ -32,7 +32,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath profileImg = createString("profileImg");
 
-    public final ListPath<Qna, com.example.demo.qnaapi.entity.QQna> qna = this.<Qna, com.example.demo.qnaapi.entity.QQna>createList("qna", Qna.class, com.example.demo.qnaapi.entity.QQna.class, PathInits.DIRECT2);
+    public final ListPath<Qna, QQna> qnaList = this.<Qna, QQna>createList("qnaList", Qna.class, QQna.class, PathInits.DIRECT2);
 
     public final StringPath refreshToken = createString("refreshToken");
 

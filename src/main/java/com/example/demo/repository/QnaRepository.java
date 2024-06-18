@@ -14,7 +14,7 @@ public interface QnaRepository extends JpaRepository<Qna, Long>, QnaRepositoryCu
     @Query("SELECT q FROM Qna q")
     List<Qna> findAll();
 
-    List<Qna>
+
 
 
 

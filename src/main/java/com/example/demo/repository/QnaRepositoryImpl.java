@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.example.demo.qnaapi.entity.QQna.qna;
+import static com.example.demo.entity.QQna.qna;
+
 
 @RequiredArgsConstructor
 public class QnaRepositoryImpl implements QnaRepositoryCustom {
