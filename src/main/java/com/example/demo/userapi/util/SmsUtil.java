@@ -3,12 +3,13 @@ package com.example.demo.userapi.util;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 
 import java.util.Random;
 
@@ -22,7 +23,6 @@ public class SmsUtil {
 
     @Value("${coolsms.api.secret}")
     private String apiSecretKey;
-
 
     private DefaultMessageService messageService;
 
