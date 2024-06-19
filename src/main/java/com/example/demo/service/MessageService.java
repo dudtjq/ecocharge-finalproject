@@ -4,6 +4,7 @@ import com.example.demo.util.SmsUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,17 @@ public class MessageService {
     private final Map<String, String> verificationCodeMap = new HashMap<>(); // 인증 코드 저장 맵
 
 
-    public SingleMessageSentResponse sendSMS(String phoneNumber) {
+    public SingleMessageSentResponse sendSms(String phoneNumber) {
+        log.info("서비스단 확인:{}",phoneNumber);
         String verificationCode = generateVerificationCode();
+        verificationCodeMap.put(phoneNumber,verificationCode);
 
+        log.info("map확인{}",verificationCodeMap.get(phoneNumber));
+        SingleMessageSentResponse response = smsUtil.sendOne(phoneNumber, verificationCode);
         // SMS 전송
-        return smsUtil.sendOne(phoneNumber, verificationCode);
+        return response;
     }
+
 
     public boolean verifyCode(String phoneNumber, String verificationCodeInput) {
         String verificationCode = verificationCodeMap.get(phoneNumber); // 저장된 인증 코드 가져오기
@@ -35,9 +41,11 @@ public class MessageService {
         if (verificationCode == null) {
             return false; // 인증 코드가 존재하지 않으면 false 반환
         }
-
         // 입력된 인증 코드와 저장된 인증 코드 비교
-        return verificationCodeInput.equals(verificationCode);
+        else if(verificationCodeInput.equals(verificationCode)){
+            return true;
+        }
+        return false;
     }
 
     private String generateVerificationCode() {
