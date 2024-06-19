@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -137,7 +136,6 @@ public class QnaController {
     // QnA 답변 controller
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
     @PatchMapping("/add-answer/{qnaNo}")
-    @Transactional
     public ResponseEntity<?> addAnswerToQna(
             @Validated @RequestBody QnaAnswerRequestDTO requestDTO,
             BindingResult result

@@ -12,6 +12,7 @@ import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,10 +44,10 @@ public class QnaService {
 
         return new QnaDetailResponseDTO(qna);
 
-
     }
 
     // qna 전체 목록 가져오기
+
     public QnaListResponseDTO retrieve(){
         List<Qna> entityList  = qnaRepository.findAll();
 
@@ -103,7 +104,7 @@ public class QnaService {
 
     }
 
-
+    @Transactional
     public QnaDetailResponseDTO addAnswer(final QnaAnswerRequestDTO requestDTO) {
 
         Optional<Qna> addAnswer = qnaRepository.findById(requestDTO.getQnaNo());
