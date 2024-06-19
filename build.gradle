@@ -21,6 +21,10 @@ repositories {
 	mavenCentral()
 }
 
+compileJava {
+	options.compilerArgs << "-parameters"
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -61,7 +65,6 @@ dependencies {
 	// nurigo 문자인증
 	implementation 'net.nurigo:sdk:4.3.0'
 
-
 }
 
 tasks.named('test') {
@@ -81,3 +84,5 @@ tasks.withType(JavaCompile) {
 clean.doLast {
 	file(querydslDir).deleteDir()
 }
+
+
