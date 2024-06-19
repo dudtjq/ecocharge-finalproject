@@ -8,14 +8,4 @@ import java.util.List;
 
 
 public interface QnaRepository extends JpaRepository<Qna, Long>, QnaRepositoryCustom {
-
-    // qna 목록 리턴
-
-    @Query("SELECT q FROM Qna q")
-    List<Qna> findAll();
-
-
-
-
-
 }
