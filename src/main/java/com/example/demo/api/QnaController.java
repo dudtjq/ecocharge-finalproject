@@ -1,13 +1,11 @@
 package com.example.demo.api;
 
 import com.example.demo.auth.TokenUserInfo;
-import com.example.demo.dto.request.QnaAnswerRequestDTO;
 import com.example.demo.dto.request.QnaRequestDTO;
 import com.example.demo.dto.request.QnaUpdateRequestDTO;
 import com.example.demo.dto.response.QnaDetailResponseDTO;
 import com.example.demo.dto.response.QnaListResponseDTO;
 import com.example.demo.service.QnaService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -123,7 +121,7 @@ public class QnaController {
 
         try {
 
-            QnaListResponseDTO updateDTO = qnaService.update(requestDTO);
+            QnaDetailResponseDTO updateDTO = qnaService.update(requestDTO);
             return ResponseEntity.ok().body(updateDTO);
 
         }catch (Exception e){
@@ -135,9 +133,9 @@ public class QnaController {
 
     // QnA 답변 controller
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
-    @PatchMapping("/add-answer/{qnaNo}")
+    @PatchMapping("/{qnaNo}")
     public ResponseEntity<?> addAnswerToQna(
-            @Validated @RequestBody QnaAnswerRequestDTO requestDTO,
+            @PathVariable("qnaNo") @RequestParam("qnaNo") Long qnaNo,
             BindingResult result
             ) {
 
@@ -145,8 +143,7 @@ public class QnaController {
         if(validatedResult != null) return validatedResult;
 
         try {
-             QnaDetailResponseDTO responseDTO = qnaService.addAnswer(requestDTO);
-            return ResponseEntity.ok().body(responseDTO);
+            return ResponseEntity.ok().body(qnaService.addAnswer(qnaNo));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

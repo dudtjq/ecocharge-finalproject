@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.QnaAnswerRequestDTO;
 import com.example.demo.dto.request.QnaUpdateRequestDTO;
 import com.example.demo.entity.User;
 import com.example.demo.dto.request.QnaRequestDTO;
@@ -12,7 +11,6 @@ import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +24,7 @@ public class QnaService {
     private final QnaRepository qnaRepository;
 
     public QnaListResponseDTO create(QnaRequestDTO requestDTO) {
-      //  User user = getUser(userId);
+        //  User user = getUser(userId);
 
         qnaRepository.save(requestDTO.toEntity());
         log.info("qna 작성 완료! qna 제목 : {}", requestDTO.getQTitle());
@@ -47,9 +45,8 @@ public class QnaService {
     }
 
     // qna 전체 목록 가져오기
-
-    public QnaListResponseDTO retrieve(){
-        List<Qna> entityList  = qnaRepository.findAll();
+    public QnaListResponseDTO retrieve() {
+        List<Qna> entityList = qnaRepository.findAll();
 
         List<QnaDetailResponseDTO> dtoList = entityList.stream()
                 .map(QnaDetailResponseDTO::new)
@@ -90,33 +87,30 @@ public class QnaService {
     }
 
     // qna 수정
-    public QnaListResponseDTO update(final QnaUpdateRequestDTO requestDTO) {
+    public QnaDetailResponseDTO update(final QnaUpdateRequestDTO requestDTO) {
 
-         Optional<Qna> byId = qnaRepository.findById(requestDTO.getQnaNo());
+        Optional<Qna> byId = qnaRepository.findById(requestDTO.getQnaNo());
 
-         byId.ifPresent(qna -> {
-             qna.setQTitle(requestDTO.getQTitle());
-             qna.setQContent(requestDTO.getQContent());
-             qnaRepository.save(qna);
-         });
+        byId.ifPresent(qna -> {
+            qna.setQTitle(requestDTO.getQTitle());
+            qna.setQContent(requestDTO.getQContent());
 
-         return retrieve();
+            qnaRepository.save(qna);
+        });
+
+        return qnaDetail(requestDTO.getQnaNo());
 
     }
 
 
-    @Transactional
-    public QnaDetailResponseDTO addAnswer(QnaAnswerRequestDTO requestDTO) throws Exception {
-        Optional<Qna> optionalQna = qnaRepository.findById(requestDTO.getQnaNo());
+    public QnaDetailResponseDTO addAnswer(Long qnaNo) {
+        Optional<Qna> qnaByNo = qnaRepository.findById(qnaNo);
 
-        if (optionalQna.isPresent()) {
-            Qna qna = optionalQna.get();
-            qna.setQAnswer(requestDTO.getQAnswer());
+        qnaByNo.ifPresent(qna -> {
+            qna.setQAnswer(qna.getQAnswer());
             qnaRepository.save(qna);
-            return qnaDetail(requestDTO.getQnaNo());
-        } else {
-            throw new Exception("Qna not found with id: " + requestDTO.getQnaNo());
-        }
+        });
+        return qnaDetail(qnaNo);
     }
 
 }
