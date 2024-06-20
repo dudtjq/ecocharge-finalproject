@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.auth.TokenProvider;
 import com.example.demo.dto.response.GoogleUserResponseDTO;
+import com.example.demo.dto.response.LoginResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class GoogleLoginService {
     @Value("${google.redirect_url}")
     private String GOOGLE_REDIRECT_URL;
 
-    public void googleService(String code) {
+    public LoginResponseDTO googleService(String code) {
         String accessToken = getGoogleAccessToken(code);
         log.info("accessToken: {}", accessToken);
 
@@ -49,6 +50,13 @@ public class GoogleLoginService {
         // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
         User foundUser
                 = userRepository.findByEmail(userDTO.getEmail()).orElseThrow();
+
+        Map<String, String> token = userService.getTokenMap(foundUser);
+
+        foundUser.changeAccessToken(accessToken);
+        userRepository.save(foundUser);
+
+        return new LoginResponseDTO(foundUser, token);
 
     }
 
@@ -68,8 +76,7 @@ public class GoogleLoginService {
 
     private String getGoogleAccessToken(String code) {
         String requestURI = "https://oauth2.googleapis.com/token";
-        log.info("client id: {}", GOOGLE_CLIENT_ID);
-        log.info("client pw: {}", GOOGLE_CLIENT_PW);
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

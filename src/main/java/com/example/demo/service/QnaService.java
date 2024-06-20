@@ -104,17 +104,19 @@ public class QnaService {
 
     }
 
+
     @Transactional
-    public QnaDetailResponseDTO addAnswer(final QnaAnswerRequestDTO requestDTO) {
+    public QnaDetailResponseDTO addAnswer(QnaAnswerRequestDTO requestDTO) throws Exception {
+        Optional<Qna> optionalQna = qnaRepository.findById(requestDTO.getQnaNo());
 
-        Optional<Qna> addAnswer = qnaRepository.findById(requestDTO.getQnaNo());
-
-        addAnswer.ifPresent(qna -> {
+        if (optionalQna.isPresent()) {
+            Qna qna = optionalQna.get();
             qna.setQAnswer(requestDTO.getQAnswer());
             qnaRepository.save(qna);
-        });
-
-        return qnaDetail(requestDTO.getQnaNo());
+            return qnaDetail(requestDTO.getQnaNo());
+        } else {
+            throw new Exception("Qna not found with id: " + requestDTO.getQnaNo());
+        }
     }
 
 }
