@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 public class QnaAnswerRequestDTO {
 
-    @Id
+
     private Long qnaNo;
 
     private String qAnswer;

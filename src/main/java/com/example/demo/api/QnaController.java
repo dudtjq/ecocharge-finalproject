@@ -133,17 +133,14 @@ public class QnaController {
 
     // QnA 답변 controller
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
-    @PatchMapping("/{qnaNo}")
+    @PatchMapping("/add/{qnaNo}")
     public ResponseEntity<?> addAnswerToQna(
-            @PathVariable("qnaNo") @RequestParam("qnaNo") Long qnaNo,
-            BindingResult result
+            @Validated QnaUpdateRequestDTO responseDTO
             ) {
 
-        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
-        if(validatedResult != null) return validatedResult;
-
         try {
-            return ResponseEntity.ok().body(qnaService.addAnswer(qnaNo));
+            QnaDetailResponseDTO updateAnswerDTO = qnaService.addAnswer(responseDTO);
+            return ResponseEntity.ok().body(updateAnswerDTO);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

@@ -94,7 +94,8 @@ public class QnaService {
         byId.ifPresent(qna -> {
             qna.setQTitle(requestDTO.getQTitle());
             qna.setQContent(requestDTO.getQContent());
-
+            qna.setQAnswer(requestDTO.getQAnswer());
+            log.info("getQAnswer: {}", requestDTO.getQAnswer());
             qnaRepository.save(qna);
         });
 
@@ -103,14 +104,18 @@ public class QnaService {
     }
 
 
-    public QnaDetailResponseDTO addAnswer(Long qnaNo) {
-        Optional<Qna> qnaByNo = qnaRepository.findById(qnaNo);
+    // 답변 추가 로직
+    public QnaDetailResponseDTO addAnswer(QnaUpdateRequestDTO requestDTO) {
+        Optional<Qna> qnaByNo = qnaRepository.findById(requestDTO.getQnaNo());
+
+
 
         qnaByNo.ifPresent(qna -> {
-            qna.setQAnswer(qna.getQAnswer());
+            qna.setQAnswer(requestDTO.getQAnswer());
+            log.info("getQAnswer: {}", requestDTO.getQAnswer());
             qnaRepository.save(qna);
         });
-        return qnaDetail(qnaNo);
+        return qnaDetail(requestDTO.getQnaNo());
     }
 
 }

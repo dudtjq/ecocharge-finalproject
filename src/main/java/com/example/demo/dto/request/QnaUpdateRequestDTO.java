@@ -1,6 +1,5 @@
 package com.example.demo.dto.request;
 
-import jakarta.persistence.Id;
 import lombok.*;
 
 @Getter @Setter @ToString
@@ -8,7 +7,7 @@ import lombok.*;
 @Builder
 public class QnaUpdateRequestDTO {
 
-    @Id
+
     private Long qnaNo;
 
     private String qTitle;
