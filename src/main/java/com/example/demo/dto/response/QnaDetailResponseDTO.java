@@ -18,8 +18,6 @@ public class QnaDetailResponseDTO {
     private String qAnswer;
 
     // 엔터티를 DTO로 변경하는 생성자
-
-
     public QnaDetailResponseDTO(Qna qna) {
         this.qnaNo = qna.getQnaNo();
         this.qTitle = qna.getQTitle();

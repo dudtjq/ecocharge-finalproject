@@ -32,7 +32,6 @@ public class Qna {
     private String qContent;
 
     @Column(name = "q_answer")
-    @Null
     private String qAnswer;
 
     @CreationTimestamp
