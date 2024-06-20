@@ -34,6 +34,7 @@ public class UserService {
     @Value("${upload.path}")
     private String uploadRootPath;
 
+    // 나중에 폰번호로 조회하면서 삭제할 예정
     public boolean isDuplicate(String email) {
         if (userRepository.existsByEmail(email)) {
             log.warn("이메일이 중복되었습니다. - {}", email);
@@ -41,22 +42,22 @@ public class UserService {
         } else return false;
     }
 
-//    public LoginResponseDTO authenticate(final LoginRequestDTO dto) {
-//        User user = userRepository.findByPhoneNumber(dto.getPhoneNumber())
-//                .orElseThrow(() -> new RuntimeException("존재하지 않는 계정입니다."));
-//
-//        log.info("{}님 로그인 성공!", user.getUserName());
-//
-//        Map<String, String> token = getTokenMap(user);
-//
-//        user.changeRefreshToken(token.get("refresh_token"));
-//        user.changeRefreshExpiryDate(tokenProvider.getExpiryDate(token.get("refresh_token")));
-//        userRepository.save(user);
-//
-//        return new LoginResponseDTO(user);
-//    }
+    public LoginResponseDTO authenticate(final LoginResponseDTO dto) {
+        User user = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 계정입니다."));
 
-    private Map<String, String> getTokenMap(User user) {
+        log.info("{}님 로그인 성공!", user.getUserName());
+
+        Map<String, String> token = getTokenMap(user);
+
+        user.changeRefreshToken(token.get("refresh_token"));
+        user.changeRefreshExpiryDate(tokenProvider.getExpiryDate(token.get("refresh_token")));
+        userRepository.save(user);
+
+        return new LoginResponseDTO(user, token);
+    }
+
+    protected Map<String, String> getTokenMap(User user) {
 
         String accessToken = tokenProvider.createAccessKey(user);
         String refreshToken = tokenProvider.createRefreshKey(user);

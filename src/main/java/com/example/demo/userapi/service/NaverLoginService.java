@@ -50,10 +50,12 @@ public class NaverLoginService {
         User foundUser
                 = userRepository.findByEmail(userDTO.getNaverUserDetail().getEmail()).orElseThrow();
 
+        Map<String, String> token = userService.getTokenMap(foundUser);
+
         foundUser.changeAccessToken(accessToken);
         userRepository.save(foundUser);
 
-        return new LoginResponseDTO(foundUser);
+        return new LoginResponseDTO(foundUser, token);
     }
 
     private NaverUserResponseDTO getNaverUserInfo(String accessToken) {

@@ -62,10 +62,10 @@ public class TokenProvider {
                 )
                 // token payload에 들어갈 클레임 설정
                 .setClaims(claims) // 추가 클레임을 먼저 설정해야 함.
-                .setIssuer("Todo운영자") // iss: 발급자 정보
+                .setIssuer("EcoCharge") // iss: 발급자 정보
                 .setIssuedAt(new Date()) // iat: 발급 시간
                 .setExpiration(expiry) // exp: 만료 시간
-                .setSubject(String.valueOf(userEntity.getId())) // sub: 토큰을 식별할 수 있는 주요 데이터
+                .setSubject(String.valueOf(userEntity.getUserId())) // sub: 토큰을 식별할 수 있는 주요 데이터
                 .compact();
 
     }
