@@ -26,10 +26,10 @@ public class MainPageService {
     }
     
     public List<Qna> qnaListFind() {
-        return qnaRepository.findAll();
+        return qnaRepository.findAll().subList(0, 3);
     }
     
     public List<News> newsListFind() {
-        return newsRepository.findAll();
+        return newsRepository.findAll().subList(0, 4);
     }
 }
