@@ -7,7 +7,7 @@ import java.util.List;
 @Setter @Getter @ToString
 @EqualsAndHashCode @NoArgsConstructor @AllArgsConstructor
 @Builder
-public class QnaListResponseDTO {
+public class QnaListResponseDTO  {
 
     private String error; // 메세지 담을 필드
 

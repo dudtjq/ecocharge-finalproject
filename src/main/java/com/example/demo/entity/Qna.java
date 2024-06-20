@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 
 @Getter @Setter
@@ -20,17 +23,19 @@ public class Qna {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long qnaNo;
 
-    @Column(name = "q_title")
+    @Column(name = "q_title", nullable = false)
     @NotNull
     private String qTitle;
 
-    @Column(name = "q_content")
-   @NotNull
+    @Column(name = "q_content", nullable = false)
+    @NotNull
     private String qContent;
 
     @Column(name = "q_answer")
-    @Null
     private String qAnswer;
+
+    @CreationTimestamp
+    private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

@@ -22,6 +22,8 @@ public class QQna extends EntityPathBase<Qna> {
 
     public static final QQna qna = new QQna("qna");
 
+    public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
+
     public final StringPath qAnswer = createString("qAnswer");
 
     public final StringPath qContent = createString("qContent");

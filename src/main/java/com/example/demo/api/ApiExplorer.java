@@ -34,6 +34,7 @@ public class ApiExplorer implements CommandLineRunner {
 //                    "&statId=" + URLEncoder.encode(statId, "UTF-8");
 
             RestTemplate restTemplate = new RestTemplate();
+
             ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
