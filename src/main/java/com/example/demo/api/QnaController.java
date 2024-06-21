@@ -110,7 +110,7 @@ public class QnaController {
 
     // QnA 수정 요청 (관리자)
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
-    @PatchMapping
+    @PatchMapping("/{qnaNo}")
     public ResponseEntity<?> updateQna(
             @Validated @RequestBody QnaUpdateRequestDTO requestDTO,
             BindingResult result
