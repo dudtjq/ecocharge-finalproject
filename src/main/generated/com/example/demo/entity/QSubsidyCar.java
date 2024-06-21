@@ -35,6 +35,8 @@ public class QSubsidyCar extends EntityPathBase<SubsidyCar> {
 
     public final StringPath imgUrl = createString("imgUrl");
 
+    public final StringPath locationUrl = createString("locationUrl");
+
     public final StringPath ridingCapacity = createString("ridingCapacity");
 
     public final StringPath subsidy = createString("subsidy");
