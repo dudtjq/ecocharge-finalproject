@@ -48,5 +48,8 @@ public class SubsidyCar {
     
     @Column(scale = 20)
     private String country;
+    
+    @Column(scale = 100)
+    private String locationUrl;
 
 }
