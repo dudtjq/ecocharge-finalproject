@@ -22,6 +22,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath accessToken = createString("accessToken");
 
+    public final ListPath<Board, QBoard> boardList = this.<Board, QBoard>createList("boardList", Board.class, QBoard.class, PathInits.DIRECT2);
+
     public final StringPath email = createString("email");
 
     public final DateTimePath<java.time.LocalDateTime> joinDate = createDateTime("joinDate", java.time.LocalDateTime.class);

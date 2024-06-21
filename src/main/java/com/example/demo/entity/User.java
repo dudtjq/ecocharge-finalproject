@@ -47,6 +47,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Qna> qnaList;
 
+    @OneToMany(mappedBy = "user")
+    private List<Board> boardList;
+
     // 소셜 로그인 access token 저장하는 메서드
     public void changeAccessToken(String accessToken) {
         this.accessToken = accessToken;
