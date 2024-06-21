@@ -54,15 +54,9 @@ public class KaKaoLoginService {
         User foundUser
                 = userRepository.findByEmail(userDTO.getKakaoAccount().getEmail()).orElseThrow();
 
-
-
-//        userRepository.save(foundUser);
-// 우리 사이트에서 사용하는 jwt 생성
+        // 우리 사이트에서 사용하는 jwt 생성
         Map<String, String> token = userService.getTokenMap(foundUser);
 
-        // 기존에 로그인했던 사용자의 access token 값을 update
-//        foundUser.changeAccessToken(token.get("access_token"));
-//        foundUser.changeRefreshToken(token.get("refresh_token"));
         return new LoginResponseDTO(foundUser, token);
 
     }

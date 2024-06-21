@@ -29,6 +29,8 @@ public class LoginResponseDTO {
 
     private Map<String, String> token; // 인증 토큰 (핵심)
 
+    private String role;
+
 
     public LoginResponseDTO(User user, Map<String, String> token) {
         this.email = user.getEmail();
