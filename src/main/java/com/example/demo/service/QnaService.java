@@ -34,7 +34,7 @@ public class QnaService {
     }
 
     // qna detail (하나의 QnA 보여주는 로직)
-    public QnaDetailResponseDTO qnaDetail(Long qnaNo) {
+    public QnaDetailResponseDTO qnaDetail(final Long qnaNo) {
 
         Qna qna = qnaRepository.findById(qnaNo).orElseThrow(
                 () -> new RuntimeException("존재하지 않은 QnA 입니다.")
@@ -94,7 +94,6 @@ public class QnaService {
         byId.ifPresent(qna -> {
             qna.setQTitle(requestDTO.getQTitle());
             qna.setQContent(requestDTO.getQContent());
-            qna.setQAnswer(requestDTO.getQAnswer());
             log.info("getQAnswer: {}", requestDTO.getQAnswer());
             qnaRepository.save(qna);
         });

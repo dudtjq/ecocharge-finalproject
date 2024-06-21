@@ -1,11 +1,14 @@
 package com.example.demo.api;
 
 import com.example.demo.auth.TokenUserInfo;
-import com.example.demo.dto.request.QnaRequestDTO;
+import com.example.demo.dto.request.BoardRequestDTO;
+import com.example.demo.dto.request.BoardUpdateRequestDTO;
 import com.example.demo.dto.request.QnaUpdateRequestDTO;
+import com.example.demo.dto.response.BoardDetailResponseDTO;
+import com.example.demo.dto.response.BoardListResponseDTO;
 import com.example.demo.dto.response.QnaDetailResponseDTO;
 import com.example.demo.dto.response.QnaListResponseDTO;
-import com.example.demo.service.QnaService;
+import com.example.demo.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,41 +21,42 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Slf4j
+@RequestMapping("/ecocharge/board")
 @RequiredArgsConstructor
-@RequestMapping("/ecocharge/qna")
-public class QnaController {
+@Slf4j
+public class BoardController {
 
-    private final QnaService qnaService;
+    private final BoardService boardService;
 
+
+    // 게시판 생성
     @PostMapping
-    public ResponseEntity<?> createQna(
-            @AuthenticationPrincipal TokenUserInfo userInfo,
-            @Validated @RequestBody QnaRequestDTO requestDTO,
-            BindingResult result){
-
-        log.info("/ecocharge/qna GET! - dto: {}", requestDTO);
-        log.info("TokenUserInfo: {}", userInfo);
-
+    public ResponseEntity<?> createBoard(
+            @Validated @RequestBody BoardRequestDTO requestDTO,
+          BindingResult result
+    ){
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if(validatedResult != null) return validatedResult;
 
-        QnaListResponseDTO qnaListResponseDTO = qnaService.create(requestDTO);
-        return ResponseEntity.ok().body(qnaListResponseDTO);
+
+        BoardListResponseDTO boardListResponseDTO = boardService.create(requestDTO);
+
+        return ResponseEntity.ok().body(boardListResponseDTO);
+
 
     }
 
     // QnA 상세보기
-    @GetMapping("/{qnaNo}")
-    public ResponseEntity<?> qnaDetail(
-            @PathVariable("qnaNo") Long qnaNo
+    @GetMapping("/{boardNo}")
+    public ResponseEntity<?> boardDetail(
+            @PathVariable("boardNo") Long boardNo
     ){
         log.info("/ecocharge/qna/detail GET response");
 
 
         try {
-             QnaDetailResponseDTO responseDTO = qnaService.qnaDetail(qnaNo);
-             return ResponseEntity.ok().body(responseDTO);
+            final BoardDetailResponseDTO responseDTO = boardService.boardDetail(boardNo);
+            return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -60,46 +64,42 @@ public class QnaController {
 
     }
 
-    // qna 목록 리스트 요청
+    // 게시판 리스트 목록 불러오기
     @GetMapping
-    public ResponseEntity<?> retrieveQnaList(){
+    public ResponseEntity<?> boardList(){
 
-        log.info("/ecocharge/qna GET request");
+       try {
+           BoardListResponseDTO responseDTO = boardService.retrieve();
 
-        try {
+           return ResponseEntity.ok().body(responseDTO);
 
-            QnaListResponseDTO responseDTO = qnaService.retrieve();
-            return ResponseEntity.ok().body(responseDTO);
-
-        }catch (Exception e){
-
+       }catch (Exception e){
             return ResponseEntity
                     .internalServerError()
-                    .body(QnaListResponseDTO.builder()
+                    .body(BoardListResponseDTO.builder()
                             .error(e.getMessage())
                             .build());
+       }
 
-        }
 
     }
-
     // QnA 삭제 요청 처리 (관리자)
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
-    @DeleteMapping("/{qnaNo}")
+    @DeleteMapping("/{boardNo}")
     public ResponseEntity<?> deleteQna(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @PathVariable("qnaNo") Long qnaNo
+            @PathVariable("boardNo") Long boardNo
     ){
 
-        log.info("/api/todos/{} DELETE request!", qnaNo);
+        log.info("/api/todos/{} DELETE request!", boardNo);
 
-        if(qnaNo == null){
+        if(boardNo == null){
             return ResponseEntity.badRequest()
-                    .body("QnA 번호를 전달해 주세요.");
+                    .body("게시판 번호를 전달해 주세요.");
         }
 
         try {
-            QnaListResponseDTO responseDTO = qnaService.delete(qnaNo);
+            BoardListResponseDTO responseDTO = boardService.delete(boardNo);
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             e.printStackTrace();
@@ -108,42 +108,26 @@ public class QnaController {
 
     }
 
-    // QnA 수정 요청 (관리자)
+    // 게시물 수정 요청 (관리자)
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
-    @PatchMapping("/{qnaNo}")
-    public ResponseEntity<?> updateQna(
-            @Validated @RequestBody QnaUpdateRequestDTO requestDTO,
+    @PatchMapping("/{boardNo}")
+    public ResponseEntity<?> updateBoard(
+            @Validated @RequestBody BoardUpdateRequestDTO requestDTO,
             BindingResult result
-            ){
+    ){
 
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if(validatedResult != null) return validatedResult;
 
         try {
-
-            QnaDetailResponseDTO updateDTO = qnaService.update(requestDTO);
-            return ResponseEntity.ok().body(updateDTO);
+            BoardDetailResponseDTO responseDTO = boardService.update(requestDTO);
+            return ResponseEntity.ok().body(responseDTO);
 
         }catch (Exception e){
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
 
 
-    }
-
-    // QnA 답변 controller
-    // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
-    @PatchMapping("/add/{qnaNo}")
-    public ResponseEntity<?> addAnswerToQna(
-            @Validated QnaUpdateRequestDTO responseDTO
-            ) {
-
-        try {
-            QnaDetailResponseDTO updateAnswerDTO = qnaService.addAnswer(responseDTO);
-            return ResponseEntity.ok().body(updateAnswerDTO);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
     }
 
 
@@ -160,6 +144,7 @@ public class QnaController {
         }
         return null;
     }
+
 
 
 
