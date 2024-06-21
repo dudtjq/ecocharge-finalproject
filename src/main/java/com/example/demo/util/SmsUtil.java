@@ -44,7 +44,8 @@ public class SmsUtil {
     // 단일 메시지 발송 메서드
     public SingleMessageSentResponse sendOne(String phoneNumber, String verificationCode) {
         net.nurigo.sdk.message.model.Message message = new net.nurigo.sdk.message.model.Message();
-        log.info(phoneNumber);
+        log.info("phone: {}", phoneNumber);
+        log.info("Code: {}", verificationCode);
         message.setFrom("01092097196");  // 발신번호 설정
         message.setTo(phoneNumber);  // 수신번호 설정
         message.setText("[EcoCharge] 아래의 인증번호를 입력해주세요\n" + verificationCode);
