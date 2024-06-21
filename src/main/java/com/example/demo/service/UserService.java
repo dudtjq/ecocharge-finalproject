@@ -48,6 +48,7 @@ public class UserService {
 
         Map<String, String> token = getTokenMap(user);
 
+        user.changeAccessToken(token.get("access_token"));
         user.changeRefreshToken(token.get("refresh_token"));
         user.changeRefreshExpiryDate(tokenProvider.getExpiryDate(token.get("refresh_token")));
         userRepository.save(user);

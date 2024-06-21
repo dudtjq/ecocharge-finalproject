@@ -4,6 +4,7 @@ import com.example.demo.dto.response.LoginResponseDTO;
 import com.example.demo.service.GoogleLoginService;
 import com.example.demo.service.KaKaoLoginService;
 import com.example.demo.service.NaverLoginService;
+import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,14 @@ public class SnsLoginController {
     private final KaKaoLoginService kaKaoLoginService;
     private final NaverLoginService naverLoginService;
     private final GoogleLoginService googleLoginService;
+    private final UserService userService;
 
     @GetMapping("/kakaologin")
     public ResponseEntity<?> kakaoLogin(String code) {
         log.info("/api/auth/kakaoLogin - GET! code: {}", code);
-        LoginResponseDTO responseDTO = kaKaoLoginService.kakaoService(code);
+        LoginResponseDTO dto = kaKaoLoginService.kakaoService(code);
+        LoginResponseDTO responseDTO = userService.authenticate(dto);
+        log.info("responseDTO: {}", responseDTO);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -31,7 +35,8 @@ public class SnsLoginController {
     @GetMapping("/naverlogin")
     public ResponseEntity<?> naverLogin(String code) {
         log.info("/api/auth/naverLogin - GET! code: {}", code);
-        LoginResponseDTO responseDTO = naverLoginService.naverService(code);
+        LoginResponseDTO dto = naverLoginService.naverService(code);
+        LoginResponseDTO responseDTO = userService.authenticate(dto);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -39,8 +44,10 @@ public class SnsLoginController {
     @GetMapping("/googlelogin")
     public ResponseEntity<?> googleLogin(String code) {
         log.info("/api/auth/googleLogin - GET! code: {}", code);
-        googleLoginService.googleService(code);
-        return null;
+        LoginResponseDTO dto = googleLoginService.googleService(code);
+        LoginResponseDTO responseDTO = userService.authenticate(dto);
+
+        return ResponseEntity.ok().body(responseDTO);
     }
 
 }
