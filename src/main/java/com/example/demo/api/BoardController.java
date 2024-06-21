@@ -47,15 +47,15 @@ public class BoardController {
     }
 
     // QnA 상세보기
-    @GetMapping("/{qnaNo}")
+    @GetMapping("/{boardNo}")
     public ResponseEntity<?> boardDetail(
-            @PathVariable("qnaNo") Long qnaNo
+            @PathVariable("boardNo") Long boardNo
     ){
         log.info("/ecocharge/qna/detail GET response");
 
 
         try {
-            final BoardDetailResponseDTO responseDTO = boardService.boardDetail(qnaNo);
+            final BoardDetailResponseDTO responseDTO = boardService.boardDetail(boardNo);
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -120,7 +120,7 @@ public class BoardController {
         if(validatedResult != null) return validatedResult;
 
         try {
-            BoardListResponseDTO responseDTO = boardService.update(requestDTO);
+            BoardDetailResponseDTO responseDTO = boardService.update(requestDTO);
             return ResponseEntity.ok().body(responseDTO);
 
         }catch (Exception e){

@@ -2,9 +2,12 @@ package com.example.demo.service;
 
 import com.example.demo.dto.request.BoardRequestDTO;
 import com.example.demo.dto.request.BoardUpdateRequestDTO;
+import com.example.demo.dto.request.QnaUpdateRequestDTO;
 import com.example.demo.dto.response.BoardDetailResponseDTO;
 import com.example.demo.dto.response.BoardListResponseDTO;
+import com.example.demo.dto.response.QnaDetailResponseDTO;
 import com.example.demo.entity.Board;
+import com.example.demo.entity.Qna;
 import com.example.demo.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,26 +72,27 @@ public class BoardService {
 
         return retrieve();
 
-
     }
 
 
-    public BoardListResponseDTO update(final BoardUpdateRequestDTO requestDTO) {
+    public BoardDetailResponseDTO update(final BoardUpdateRequestDTO requestDTO) {
 
         Optional<Board> byId = boardRepository.findById(requestDTO.getBoardNo());
 
-        byId.ifPresent(board -> {
-            board.setBAddress(requestDTO.getBAddress());
-            board.setBWriter(requestDTO.getBWriter());
-            board.setBTitle(requestDTO.getBTitle());
-            board.setBContent(requestDTO.getBContent());
-            board.setBProfileImage(requestDTO.getBProfileImage());
+        byId.ifPresent(qna -> {
+            qna.setBWriter(requestDTO.getBWriter());
+            qna.setBTitle(requestDTO.getBTitle());
+            qna.setBContent(requestDTO.getBContent());
+            qna.setBAddress(requestDTO.getBAddress());
+            qna.setBProfileImage(requestDTO.getBProfileImage());
 
+            boardRepository.save(qna);
         });
 
-        return retrieve();
+        return boardDetail(requestDTO.getBoardNo());
 
     }
+
 
 
 }

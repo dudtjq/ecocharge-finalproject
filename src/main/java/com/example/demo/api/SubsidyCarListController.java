@@ -15,8 +15,8 @@ public class SubsidyCarListController {
     
     private final SubsidyCarListService subSidyCarListService;
     
-    @GetMapping()
-    public ResponseEntity<?> carListRender(@RequestParam int pageNo) {
+    @GetMapping
+    public ResponseEntity<?> carListRender(@RequestParam(defaultValue = "1", name = "pageNo") int pageNo) {
         log.info("/carList GET! pageNo: {}", pageNo);
         return ResponseEntity.ok().body(subSidyCarListService.findCarList(pageNo));
     }
