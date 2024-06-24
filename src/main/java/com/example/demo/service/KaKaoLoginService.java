@@ -15,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -32,7 +33,7 @@ public class KaKaoLoginService {
     @Value("${kakao.client_secret}")
     private String KAKAO_CLIENT_SECRET;
 
-    public LoginResponseDTO kakaoService(String code) {
+    public LoginResponseDTO kakaoService(String code ,String phoneNumber) {
         // 인가 코드를 통해 토큰을 발급받기
         String accessToken = getKakaoAccessToken(code);
         log.info("token: {}", accessToken);
@@ -45,15 +46,14 @@ public class KaKaoLoginService {
         // 회원가입 처리 -> 이메일 중복 검사 진행 -> 자체 jwt를 생성해서 토큰을 화면단에 리턴
         // -> 화면단에서는 적절한 url을 선택하여 redirect를 진행
 
-        if (!userService.isDuplicate(userDTO.getKakaoAccount().getEmail())) {
-            // 이메일이 중복되지 않았다. -> 이전에 로그인 한 적 없음 -> DB에 데이터를 세팅
-            User saved = userRepository.save(userDTO.toEntity(accessToken));
-
+        if (!userService.isDuplicatePhone(userDTO.getKakaoAccount().getPhoneNumber())
+            || !userService.isDuplicateEmail(userDTO.getKakaoAccount().getEmail())) {
+            User saved = userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
         // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
+        log.info("phoneNumber: {}", phoneNumber);
         User foundUser
-                = userRepository.findByEmail(userDTO.getKakaoAccount().getEmail()).orElseThrow();
-
+                = userRepository.findByPhoneNumber(userDTO.getKakaoAccount().getPhoneNumber().describeConstable().orElseThrow());
         // 우리 사이트에서 사용하는 jwt 생성
         Map<String, String> token = userService.getTokenMap(foundUser);
 

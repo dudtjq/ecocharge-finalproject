@@ -11,15 +11,18 @@ public interface UserRepository extends JpaRepository<User, String> {
 //    @Query("SELECT COUNT(*) FROM User u WHERE u.email =: email") -> JPQL
     boolean existsByEmail(String email);
 
-    Optional<User> findByphoneNumber(String phoneNumber);
 
 
-    Optional<User> findByPhoneNumber(String PhoneNumber);
+    boolean existsByPhoneNumber(String phoneNumber);
+
+    User findByPhoneNumber(String PhoneNumber);
 
 
     // 리프레시 토큰으로 사용자 정보 조회하기
     Optional<User> findByRefreshToken(String refreshToken);
 
     Optional<User> findByEmail(String email);
+
+//    Optional<User> ChangePw(String phoneNumber, String newPassword);
 
 }

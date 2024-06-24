@@ -2,7 +2,6 @@ package com.example.demo.dto.response;
 
 import com.example.demo.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -42,7 +41,7 @@ public class KakaoUserResponseDTO {
         }
     }
 
-    public User toEntity(String accessToken) {
+    public User toEntity(String accessToken, String phoneNumber) {
         return User.builder()
                 .email(this.kakaoAccount.email)
                 .userName(this.kakaoAccount.profile.nickname)

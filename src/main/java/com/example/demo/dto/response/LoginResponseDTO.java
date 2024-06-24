@@ -2,6 +2,7 @@ package com.example.demo.dto.response;
 import com.example.demo.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -24,6 +25,9 @@ public class LoginResponseDTO {
 
     private  String profileImage;
 
+    @NotBlank
+    private String password;
+
     @JsonFormat(pattern = "yyyy년 MM월 dd일")
     private LocalDate joinDate;
 
@@ -36,10 +40,10 @@ public class LoginResponseDTO {
         this.email = user.getEmail();
         this.userName = user.getUserName();
         this.joinDate = LocalDate.from(user.getJoinDate()); // LocalDateTime 타입이 다르면 from을 이용해서 넣어라!
-
+        this.password=user.getPassword();
         this.profileImage=getProfileImage();
 
-        this.phoneNumber = "";
+        this.phoneNumber = user.getPhoneNumber();
         this.token = token;
 
     }

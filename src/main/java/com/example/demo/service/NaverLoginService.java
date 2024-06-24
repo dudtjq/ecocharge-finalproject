@@ -15,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -34,7 +35,7 @@ public class NaverLoginService {
     @Value("${upload.path}")
     private String uploadRootPath;
 
-    public LoginResponseDTO naverService(String code) {
+    public LoginResponseDTO naverService(String code,String phoneNumber) {
 
         String accessToken = getNaverAccessToken(code);
         log.info("token: {}", accessToken);
@@ -43,20 +44,18 @@ public class NaverLoginService {
         log.info("userDTO: {}", userDTO);
 
 
-        if (!userService.isDuplicate(userDTO.getNaverUserDetail().getEmail())) {
-            User saved = userRepository.save(userDTO.toEntity(accessToken));
+        if (!userService.isDuplicatePhone(userDTO.getNaverUserDetail().getPhoneNumber())
+                || !userService.isDuplicateEmail(userDTO.getNaverUserDetail().getEmail())) {
+            User saved = userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
 
-        User foundUser
-                = userRepository.findByEmail(userDTO.getNaverUserDetail().getEmail()).orElseThrow();
+        Optional<User> foundUser
+                = userRepository.findByEmail(userDTO.getNaverUserDetail().getPhoneNumber());
 
-        Map<String, String> token = userService.getTokenMap(foundUser);
+        Map<String, String> token = userService.getTokenMap(foundUser.orElse(null));
+        foundUser.get().changeAccessToken(accessToken);
 
-
-        foundUser.changeAccessToken(accessToken);
-        userRepository.save(foundUser);
-
-        return new LoginResponseDTO(foundUser, token);
+        return new LoginResponseDTO(foundUser.orElse(null), token);
     }
 
     private NaverUserResponseDTO getNaverUserInfo(String accessToken) {

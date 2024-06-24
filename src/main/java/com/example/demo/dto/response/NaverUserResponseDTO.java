@@ -28,7 +28,7 @@ public class NaverUserResponseDTO {
 
     }
 
-    public User toEntity(String accessToken) {
+    public User toEntity(String accessToken,String phoneNumber) {
         return User.builder()
                 .email(this.naverUserDetail.email)
                 .userName(this.naverUserDetail.name)

@@ -16,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -36,17 +37,18 @@ public class GoogleLoginService {
     @Value("${google.redirect_url}")
     private String GOOGLE_REDIRECT_URL;
 
-    public LoginResponseDTO googleService(String code) {
+    public LoginResponseDTO googleService(String code,String phoneNumber) {
         String accessToken = getGoogleAccessToken(code);
         log.info("accessToken: {}", accessToken);
 
         GoogleUserResponseDTO userDTO = getGoogleUserInfo(accessToken);
         log.info("userDTO: {}", userDTO);
 
-        if (!userService.isDuplicate(userDTO.getEmail())) {
-            // 이메일이 중복되지 않았다. -> 이전에 로그인 한 적 없음 -> DB에 데이터를 세팅
-            User saved = userRepository.save(userDTO.toEntity(accessToken));
+        if (!userService.isDuplicatePhone(userDTO.getPhoneNumber())
+                || !userService.isDuplicateEmail(userDTO.getEmail())) {
+            User saved = userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
+
         // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
         User foundUser
                 = userRepository.findByEmail(userDTO.getEmail()).orElseThrow();

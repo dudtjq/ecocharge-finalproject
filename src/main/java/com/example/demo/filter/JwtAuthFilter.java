@@ -54,7 +54,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         log.info("permitAllPatterns: {}", permitAllPatterns);
         log.info("isPermitAllUrl: {}", isPermitAllUrl);
 
-        if (isPermitAllUrl && !requestURI.contains("logout")) {
+        if (isPermitAllUrl && !requestURI.contains("logout") && !requestURI.contains("api/auth")) {
             log.info("dofilter동작");
             filterChain.doFilter(request, response);
             return;

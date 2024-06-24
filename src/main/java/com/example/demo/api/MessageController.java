@@ -29,21 +29,13 @@ public class MessageController {
 
     @PostMapping("/api/verify-code")
     public boolean verifyCode(@RequestBody MessageRequestDTO request) {
+        log.info("request확인: {}",request);
         String phoneNumber = request.getPhoneNumber();
-        String verificationCodeInput = request.getVerifivationCodeInput();
+        String verificationCodeInput = request.getVerificationCodeInput();
         log.info("서비스단 확인:{}", verificationCodeInput);
         boolean response = messageService.verifyCode(phoneNumber, verificationCodeInput);
         log.info("reseponse의 결과값: {} ",response);
         return  response;
     }
 
-    @PostMapping("/api/save-phone")
-    public ResponseEntity<?> savePhoneNumber(@RequestBody MessageRequestDTO phoneNumber) {
-        log.info("save-phone 확인 phoneNumber: {}", phoneNumber);
-//        MessageRequestDTO response=  messageService.savePhoneNumber(phoneNumber.getPhoneNumber());
-        MessageRequestDTO response= phoneNumber;
-        log.info("phoneNumber확인: {}",response);
-        return ResponseEntity.ok("Phone number saved successfully");
-    }
-    
 }

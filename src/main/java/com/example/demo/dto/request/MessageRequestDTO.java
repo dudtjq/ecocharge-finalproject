@@ -10,11 +10,12 @@ import lombok.*;
 
 public class MessageRequestDTO {
     private String phoneNumber;
-    private String verifivationCodeInput;
+    private String verificationCodeInput;
 
     public User toEntity(String request) {
         return User.builder()
                 .phoneNumber(this.phoneNumber)
+
                 .build();
     }
 
