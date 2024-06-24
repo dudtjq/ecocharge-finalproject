@@ -88,51 +88,57 @@ public class UserService {
     }
 
     public String logout(TokenUserInfo userInfo) {
-        User foundUser = userRepository.findByEmail(userInfo.getEmail())
+        User foundUser = userRepository.findById(userInfo.getUserId())
                 .orElseThrow();
 
+        String accessToken = foundUser.getAccessToken();
         HttpHeaders headers = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
         String logoutUrl = null;
 
-        try {
-            if (foundUser.getLoginMethod() == User.LoginMethod.GOOGLE) {
-                String accessToken = foundUser.getAccessToken();
-                logoutUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken;
-                ResponseEntity<String> response = restTemplate.postForEntity(logoutUrl, null, String.class);
-                if (response.getStatusCode() == HttpStatus.OK) {
-                    log.info("Google logout successful for user: {}", userInfo.getEmail());
-                } else {
-                    log.error("Google logout failed for user: {}", userInfo.getEmail());
+        if (accessToken != null) {
+            try {
+                if (foundUser.getLoginMethod() == User.LoginMethod.GOOGLE) {
+                    logoutUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken;
+                    ResponseEntity<String> response = restTemplate.postForEntity(logoutUrl, null, String.class);
+                    if (response.getStatusCode() == HttpStatus.OK) {
+                        log.info("Google logout successful for user: {}", userInfo.getEmail());
+                        foundUser.changeAccessToken(null);
+                        userRepository.save(foundUser);
+                    } else {
+                        log.error("Google logout failed for user: {}", userInfo.getEmail());
+                    }
+                } else if (foundUser.getLoginMethod() == User.LoginMethod.KAKAO) {
+                    headers.add("Authorization", "Bearer " + accessToken);
+                    HttpEntity<String> entity = new HttpEntity<>(headers);
+                    logoutUrl = "https://kapi.kakao.com/v1/user/logout";
+                    ResponseEntity<String> response = restTemplate.postForEntity(logoutUrl, entity, String.class);
+                    if (response.getStatusCode() == HttpStatus.OK) {
+                        log.info("Kakao logout successful for user: {}", userInfo.getEmail());
+                        foundUser.changeAccessToken(null);
+                        userRepository.save(foundUser);
+                    } else {
+                        log.error("Kakao logout failed for user: {}", userInfo.getEmail());
+                    }
+                } else if (foundUser.getLoginMethod() == User.LoginMethod.NAVER) {
+                    headers.add("Authorization", "Bearer " + accessToken);
+                    HttpEntity<String> entity = new HttpEntity<>(headers);
+                    logoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete&access_token=" + accessToken;
+                    ResponseEntity<String> response = restTemplate.exchange(logoutUrl, HttpMethod.GET, entity, String.class);
+                    if (response.getStatusCode() == HttpStatus.OK) {
+                        log.info("Naver logout successful for user: {}", userInfo.getEmail());
+                        foundUser.changeAccessToken(null);
+                        userRepository.save(foundUser);
+                    } else {
+                        log.error("Naver logout failed for user: {}", userInfo.getEmail());
+                    }
                 }
-            } else if (foundUser.getLoginMethod() == User.LoginMethod.KAKAO) {
-                String accessToken = foundUser.getAccessToken();
-                headers.add("Authorization", "Bearer " + accessToken);
-                HttpEntity<String> entity = new HttpEntity<>(headers);
-                logoutUrl = "https://kapi.kakao.com/v1/user/logout";
-                ResponseEntity<String> response = restTemplate.postForEntity(logoutUrl, entity, String.class);
-                if (response.getStatusCode() == HttpStatus.OK) {
-                    log.info("Kakao logout successful for user: {}", userInfo.getEmail());
-                } else {
-                    log.error("Kakao logout failed for user: {}", userInfo.getEmail());
-                }
-            } else if (foundUser.getLoginMethod() == User.LoginMethod.NAVER) {
-                String accessToken = foundUser.getAccessToken();
-                headers.add("Authorization", "Bearer " + accessToken);
-                HttpEntity<String> entity = new HttpEntity<>(headers);
-                logoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete&access_token=" + accessToken;
-                ResponseEntity<String> response = restTemplate.exchange(logoutUrl, HttpMethod.GET, entity, String.class);
-                if (response.getStatusCode() == HttpStatus.OK) {
-                    log.info("Naver logout successful for user: {}", userInfo.getEmail());
-                } else {
-                    log.error("Naver logout failed for user: {}", userInfo.getEmail());
-                }
+            } catch (Exception e) {
+                log.error("Logout failed for user: {}", userInfo.getEmail(), e);
             }
-        } catch (Exception e) {
-            log.error("Logout failed for user: {}", userInfo.getEmail(), e);
         }
 
-        return "Logout successful";
+        return null;
     }
 
     public String renewalAccessToken(Map<String, String> tokenRequest) {

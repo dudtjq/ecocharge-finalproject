@@ -54,8 +54,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         log.info("permitAllPatterns: {}", permitAllPatterns);
         log.info("isPermitAllUrl: {}", isPermitAllUrl);
 
-        if (isPermitAllUrl) {
-
+        if (isPermitAllUrl && !requestURI.contains("logout")) {
+            log.info("dofilter동작");
             filterChain.doFilter(request, response);
             return;
         }
@@ -69,8 +69,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             // 권한이 여러 개 존재할 경우 리스트로 권한 체크에 사용할 필드를 add
             // 우리는 Role 타입의 필드 하나만으로 권한을 체크하기 때문에 하나만 add, 여러개라면 여러 개 add 하세요.
             List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-            authorityList.add(new SimpleGrantedAuthority("ROLE_" + tokenUserInfo.getRole().toString()));
-            log.info("{}", authorityList.get(0).toString());
+//            authorityList.add(new SimpleGrantedAuthority("ROLE_" + tokenUserInfo.getRole().toString()));
+//            log.info("{}", authorityList.get(0).toString());
 
             // 인증 완료 처리
             // spring security에게 인증정보를 전달해서 전역적으로 어플리케이션 내에서
@@ -110,8 +110,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
         }
-        log.info("bearerToken: {}", bearerToken);
-        return bearerToken;
+        return null;
     }
 
 
