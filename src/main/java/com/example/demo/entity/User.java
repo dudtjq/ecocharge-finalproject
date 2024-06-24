@@ -60,7 +60,8 @@ public class User {
     public void changeRefreshExpiryDate(Date date) {
         this.refreshTokenExpiryDate = date;
     }
+
     public enum LoginMethod{
-        KAKAO, NAVER, GOOGLE
+        COMMON, KAKAO, NAVER, GOOGLE
     }
 }

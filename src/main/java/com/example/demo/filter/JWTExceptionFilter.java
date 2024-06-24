@@ -37,6 +37,7 @@ public class JWTExceptionFilter extends OncePerRequestFilter {
             log.warn("토큰이 전달되지 않음!");
             setErrorResponse(response, ErrorCode.INVALID_AUTH);
         } catch (Exception e) {
+            e.printStackTrace();
             log.warn("알 수 없는 예외 발생!");
         }
     }

@@ -57,6 +57,9 @@ public class KaKaoLoginService {
         // 우리 사이트에서 사용하는 jwt 생성
         Map<String, String> token = userService.getTokenMap(foundUser);
 
+        foundUser.changeAccessToken(accessToken);
+        userRepository.save(foundUser);
+
         return new LoginResponseDTO(foundUser, token);
 
     }
