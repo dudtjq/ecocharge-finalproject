@@ -51,14 +51,11 @@ public class KaKaoLoginService {
             User saved = userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
         // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
-        User foundUser
-                = userRepository.findByEmail(userDTO.getKakaoAccount().getEmail()).orElseThrow();
-
         log.info("phoneNumber: {}", phoneNumber);
-        Optional<User> foundUser
+        User foundUser
                 = userRepository.findByPhoneNumber(userDTO.getKakaoAccount().getPhoneNumber().describeConstable().orElseThrow());
         // 우리 사이트에서 사용하는 jwt 생성
-        Map<String, String> token = userService.getTokenMap(foundUser.orElse(null));
+        Map<String, String> token = userService.getTokenMap(foundUser);
 
         foundUser.changeAccessToken(accessToken);
         userRepository.save(foundUser);

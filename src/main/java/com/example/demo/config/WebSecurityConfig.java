@@ -72,7 +72,8 @@ public class WebSecurityConfig {
                                     .requestMatchers(HttpMethod.PUT, "/api/auth/promote").hasAnyRole("COMMON")
                                     .requestMatchers(HttpMethod.PUT, "/api/auth/promote").authenticated()
                                     .requestMatchers("/api/auth/load-profile").authenticated()
-                                    .requestMatchers("/api/auth/logout").authenticated();
+                                    .requestMatchers("/api/auth/logout").authenticated()
+                                            .requestMatchers("/api/auth").authenticated();
                                     properties.getPermitAllPatterns().forEach(url -> {
                                         authorizeRequests.requestMatchers(url).permitAll();
                                     });
