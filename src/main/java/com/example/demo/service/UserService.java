@@ -2,14 +2,19 @@ package com.example.demo.service;
 
 import com.example.demo.auth.TokenProvider;
 import com.example.demo.auth.TokenUserInfo;
+import com.example.demo.dto.request.LoginRequestDTO;
+import com.example.demo.dto.request.UserSignUpRequestDTO;
 import com.example.demo.dto.response.LoginResponseDTO;
+import com.example.demo.dto.response.UserSignUpResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.util.SmsUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -28,22 +33,46 @@ public class UserService {
     @Autowired
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
+    private  PasswordEncoder passwordEncoder;
+    private MessageService messageService;
 
     @Value("${upload.path}")
     private String uploadRootPath;
+    @Autowired
+    private SmsUtil smsUtil;
 
-    // 나중에 폰번호로 조회하면서 삭제할 예정
-    public boolean isDuplicate(String email) {
-        if (userRepository.existsByEmail(email)) {
-            log.warn("이메일이 중복되었습니다. - {}", email);
+
+    public boolean isDuplicatePhone(String phone) {
+        if (userRepository.existsByPhoneNumber(phone)) {
+            log.warn(" 전화번호가 중복되었습니다. - {}", phone);
+            log.warn(" 전화번호가 중복되었습니다. - {}", userRepository.existsByPhoneNumber(phone));
             return true;
         } else return false;
     }
 
+    public boolean isDuplicateEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            log.warn(" 이메일이 중복되었습니다. - {}", email);
+            return true;
+        } else return false;
+    }
+
+//    public void findByPw(String phoneNumber, String verificationCode){
+//        smsUtil.sendOne(phoneNumber,verificationCode);
+//        userRepository.ChangePw(phoneNumber,verificationCode);
+//    }
+
     public LoginResponseDTO authenticate(final LoginResponseDTO dto) {
-        User user = userRepository.findByEmail(dto.getEmail())
+        User user = userRepository.findByEmail(dto.getPhoneNumber())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 계정입니다."));
 
+        // 패스워드 검증
+        String rawPassword = dto.getPassword(); // 입력한 비번
+        String encodedPassword = user.getPassword(); // DB에 저장된 암호화된 비번
+
+        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+            throw new RuntimeException("비밀번호가 틀렸습니다.");
+        }
         log.info("{}님 로그인 성공!", user.getUserName());
 
         Map<String, String> token = getTokenMap(user);
@@ -154,26 +183,25 @@ public class UserService {
         return null;
     }
 
-//
-//
-//    public ResponseEntity<?> sendSmsToFindEmail(LoginResponseDTO responseDTO) {
-//        String name = responseDTO.getUserName();
-//        //수신번호 형태에 맞춰 "-"을 ""로 변환
-//        String phoneNum = responseDTO.getPhoneNumber().replaceAll("-","");
-//
-//        User foundUser = userRepository.findByphoneNumber( phoneNum).orElseThrow(()->
-//                new NoSuchElementException("회원이 존재하지 않습니다."));
-//
-//        String receiverEmail = foundUser.getEmail();
-//        String verificationCode = smsUtil.createCode();
-//        smsUtil.sendOne(phoneNum, verificationCode);
-//
-//        //인증코드 유효기간 5분 설정
-////        redisUtil.setDataExpire(verificationCode, receiverEmail, 60 * 5L);
-//
-//        return ResponseEntity.ok(new Message());
-//    }
-//
+    public UserSignUpResponseDTO create(final UserSignUpRequestDTO dto, final String uploadedFilePath) {
+        String phone = dto.getPhoneNumber();
+        User.LoginMethod methodCheck = dto.getLoginMethod();
+
+        if (methodCheck.equals(User.LoginMethod.COMMON)&&isDuplicatePhone(phone)) {
+            throw new RuntimeException("이미 가입된 회원입니다.");
+        }
+
+//         패스워드 인코딩
+        String encoded = passwordEncoder.encode(dto.getPassword());
+        dto.setPassword(encoded);
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        // dto를 User Entity로 변환해서 저장.
+        User saved = userRepository.save(dto.toEntity(uploadedFilePath));
+        log.info("회원 가입 정상 수행됨! - saved user - {}", saved);
+
+        return new UserSignUpResponseDTO(saved);
+    }
 
 
 }

@@ -23,6 +23,7 @@ public class MessageService {
     private final SmsUtil smsUtil;
     private final UserRepository userRepository;
     private final Map<String, String> verificationCodeMap = new HashMap<>(); // 인증 코드 저장 맵
+    private MessageRequestDTO messageRequestDTO;
 
 // SingleMessageSentResponse
     public String sendSms(String phoneNumber) {
@@ -32,7 +33,7 @@ public class MessageService {
         verificationCodeMap.put(phoneNumber,verificationCode);
 
         log.info("map확인{}",verificationCodeMap.get(phoneNumber));
-//        SingleMessageSentResponse response = smsUtil.sendOne(phoneNumber, verificationCode);
+//       SingleMessageSentResponse response = smsUtil.sendOne(phoneNumber, verificationCode);
         String response = verificationCode;
         // SMS 전송
         return response;
@@ -50,6 +51,7 @@ public class MessageService {
             }
 
             if (verificationCodeInput.equals(verificationCode)) {
+//                messageRequestDTO.toEntity(phoneNumber);
                 verificationCodeMap.remove(phoneNumber);
                 log.info("인증 코드가 일치합니다. 맵에서 제거됨.");
                 return true;

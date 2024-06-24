@@ -1,6 +1,10 @@
 package com.example.demo.api;
 
 import com.example.demo.auth.TokenUserInfo;
+import com.example.demo.dto.request.LoginRequestDTO;
+import com.example.demo.dto.request.UserSignUpRequestDTO;
+import com.example.demo.dto.response.LoginResponseDTO;
+import com.example.demo.dto.response.UserSignUpResponseDTO;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.File;
@@ -25,6 +33,50 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+
+    // 회원 가입 요청 처리
+    // POST: /api/auth
+    @PostMapping("/api/auth")
+    public ResponseEntity<?> signUp(@RequestBody UserSignUpRequestDTO dto) {
+        log.info("/api/auth POST! - {}", dto);
+
+        try {
+            String uploadedFilePath = null;
+            // profileImage 처리 로직은 필요에 따라 추가적으로 구현 가능
+
+            UserSignUpResponseDTO responseDTO = userService.create(dto, uploadedFilePath);
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            log.error("Error processing signUp request", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> signIn (
+            @Validated @RequestBody LoginResponseDTO dto,
+            BindingResult result
+    ) {
+        log.info("/api/auth/signin - POST - {}", dto);
+
+        ResponseEntity<FieldError> response = getFieldErrorResponseEntity(result);
+        if (response != null) return response;
+
+        LoginResponseDTO responseDTO = userService.authenticate(dto);
+        return ResponseEntity.ok().body(responseDTO);
+
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<?> check (String email) {
+        if (email.trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body("이메일이 없습니다.");
+        }
+        boolean resultFlag = userService.isDuplicateEmail(email);
+        log.info("중복??? - {}", resultFlag);
+        return ResponseEntity.ok().body(resultFlag);
+    }
 
     // 프로필 사진 이미지 데이터를 클라이언트에게 응답 처리
     @GetMapping("/load-profile")
@@ -116,6 +168,20 @@ public class UserController {
         }
 
     }
+    private static ResponseEntity<FieldError> getFieldErrorResponseEntity(BindingResult result) {
+        if (result.hasErrors()) {
+            log.warn(result.toString());
+            return ResponseEntity.badRequest()
+                    .body(result.getFieldError());
+        }
+        return null;
+    }
+
+//    @PostMapping("/pwsearch")
+//    private String pwChange(String email, String password) {
+//        memberService.changePassword(email, password);
+//        return "redirect:/members/sign-in";
+//    }
 
 
 }

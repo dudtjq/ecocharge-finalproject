@@ -20,16 +20,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String userId;
 
-    @Column(nullable = false)
+    @Column(nullable = false ,unique = true)
     private String email;
 
     @Column(nullable = false)
     private String userName;
 
+    @Column(nullable = false)
+    private  String password;
+
     @CreationTimestamp
     private LocalDateTime joinDate;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String phoneNumber;
 
     private String profileImg; // 프로필 이미지 경로
@@ -50,6 +53,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Board> boardList;
 
+
+
     // 소셜 로그인 access token 저장하는 메서드
     public void changeAccessToken(String accessToken) {
         this.accessToken = accessToken;
@@ -60,8 +65,7 @@ public class User {
     public void changeRefreshExpiryDate(Date date) {
         this.refreshTokenExpiryDate = date;
     }
-
     public enum LoginMethod{
-        COMMON, KAKAO, NAVER, GOOGLE
+    COMMON, KAKAO, NAVER, GOOGLE
     }
 }

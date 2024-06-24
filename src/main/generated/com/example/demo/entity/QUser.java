@@ -30,6 +30,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final EnumPath<User.LoginMethod> loginMethod = createEnum("loginMethod", User.LoginMethod.class);
 
+    public final StringPath password = createString("password");
+
     public final StringPath phoneNumber = createString("phoneNumber");
 
     public final StringPath profileImg = createString("profileImg");
