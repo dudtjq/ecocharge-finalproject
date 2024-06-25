@@ -62,6 +62,12 @@ public class QnaService {
 //        qnaRepository.QnaByTitle(qTitle);
 //    }
 
+    private User getUser(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new RuntimeException("회원 정보가 없습니다.")
+        );
+        return user;
+    }
 
     // qna 삭제
     public QnaListResponseDTO delete(final Long qnaNo) {

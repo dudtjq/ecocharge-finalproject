@@ -7,15 +7,10 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Setter @Getter @ToString
-@EqualsAndHashCode(of = "email")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserSignUpRequestDTO {
-
-    @NotBlank
-    @Email
-    private String email;
 
     @NotBlank
     @Size(min = 8, max = 20)
@@ -28,14 +23,16 @@ public class UserSignUpRequestDTO {
     @Size(min = 2, max = 5)
     private String userName;
 
+    private String id;
+
     private User.LoginMethod loginMethod;
 
-    public User toEntity(String dto) {
+    public User toEntity( String phone) {
         return User.builder()
-                .email(email)
+                .identify(id)
                 .password(password)
                 .userName(userName)
-                .phoneNumber(phoneNumber)
+                .phoneNumber(phone)
                 .loginMethod(User.LoginMethod.COMMON)
                 .build();
     }

@@ -17,13 +17,9 @@ import java.util.Map;
 @Builder
 public class LoginResponseDTO {
 
-    private String phoneNumber;
 
-    private String email;
 
-    private String userName;
-
-    private  String profileImage;
+    private  String id;
 
     @NotBlank
     private String password;
@@ -33,18 +29,17 @@ public class LoginResponseDTO {
 
     private Map<String, String> token; // 인증 토큰 (핵심)
 
+    private String phoneNumber;
+
     private String role;
 
 
     public LoginResponseDTO(User user, Map<String, String> token) {
-        this.email = user.getEmail();
-        this.userName = user.getUserName();
         this.joinDate = LocalDate.from(user.getJoinDate()); // LocalDateTime 타입이 다르면 from을 이용해서 넣어라!
-        this.password=user.getPassword();
-        this.profileImage=getProfileImage();
-
-        this.phoneNumber = user.getPhoneNumber();
+        this.password = user.getPassword();
         this.token = token;
+        this.phoneNumber= user.getPhoneNumber();
+        this.id = getId();
 
     }
 }

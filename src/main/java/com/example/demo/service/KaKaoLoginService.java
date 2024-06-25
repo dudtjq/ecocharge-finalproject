@@ -46,9 +46,8 @@ public class KaKaoLoginService {
         // 회원가입 처리 -> 이메일 중복 검사 진행 -> 자체 jwt를 생성해서 토큰을 화면단에 리턴
         // -> 화면단에서는 적절한 url을 선택하여 redirect를 진행
 
-        if (!userService.isDuplicatePhone(userDTO.getKakaoAccount().getPhoneNumber())
-            || !userService.isDuplicateEmail(userDTO.getKakaoAccount().getEmail())) {
-            User saved = userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
+        if (!userService.isDuplicatePhone(userDTO.getKakaoAccount().getPhoneNumber())){
+            userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
         // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
         log.info("phoneNumber: {}", phoneNumber);

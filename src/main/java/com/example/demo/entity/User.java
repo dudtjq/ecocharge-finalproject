@@ -18,10 +18,13 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
     private String userId;
 
     @Column(nullable = false ,unique = true)
     private String email;
+
+    private String identify;
 
     @Column(nullable = false)
     private String userName;
