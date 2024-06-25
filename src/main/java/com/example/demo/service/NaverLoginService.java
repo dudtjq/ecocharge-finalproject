@@ -95,4 +95,3 @@ public class NaverLoginService {
         return (String) responseJSON.get("access_token");
     }
 }
-

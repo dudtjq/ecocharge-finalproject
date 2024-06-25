@@ -2,6 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.dto.request.MessageRequestDTO;
 import com.example.demo.service.MessageService;
+import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
@@ -17,14 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
 
     private final MessageService messageService;
+    private final UserService userService;
 
     @PostMapping("/api/send-sms")
     public ResponseEntity<?> sendMessage(@RequestBody MessageRequestDTO dto) {
         log.info("controller단에 요청이 들어옴");
 //        SingleMessageSentResponse response = messageService.sendSms(dto.getPhoneNumber());
         String response = String.valueOf(messageService.sendSms(dto.getPhoneNumber()));
+        String phone = "ECO" + dto.getPhoneNumber();
+        Boolean duplicatePhone = userService.isDuplicatePhone(phone);
+        if(duplicatePhone){
+          return ResponseEntity.badRequest().body(duplicatePhone);
+        }
 //        log.info("phoneNumber: {}", phoneNumber);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/api/verify-code")
@@ -37,5 +44,6 @@ public class MessageController {
         log.info("reseponse의 결과값: {} ",response);
         return  response;
     }
+
 
 }

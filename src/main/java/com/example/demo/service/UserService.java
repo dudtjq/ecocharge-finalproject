@@ -33,7 +33,7 @@ public class UserService {
     @Autowired
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
-    private  PasswordEncoder passwordEncoder;
+    private  final PasswordEncoder passwordEncoder;
     private MessageService messageService;
 
     @Value("${upload.path}")
@@ -42,7 +42,7 @@ public class UserService {
     private SmsUtil smsUtil;
 
 
-    public boolean isDuplicatePhone(String phone) {
+    public Boolean isDuplicatePhone(String phone) {
         if (userRepository.existsByPhoneNumber(phone)) {
             log.warn(" 전화번호가 중복되었습니다. - {}", phone);
             log.warn(" 전화번호가 중복되었습니다. - {}", userRepository.existsByPhoneNumber(phone));
@@ -62,23 +62,27 @@ public class UserService {
 //        userRepository.ChangePw(phoneNumber,verificationCode);
 //    }
 
-    public LoginResponseDTO authenticate(final LoginResponseDTO dto) {
-        User user = userRepository.findByEmail(dto.getPhoneNumber())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 계정입니다."));
-
+    public LoginResponseDTO authenticate(final LoginRequestDTO dto) {
+        log.info("authenticate 동작, dto={}", dto);
+        User user = userRepository.findByIdentify(dto.getId());
+        log.info("user={}", user);
         // 패스워드 검증
-        String rawPassword = dto.getPassword(); // 입력한 비번
+        String rawPassword = dto.getPassword();
+        log.info("rawPassword={}", rawPassword);
+        // 입력한 비번
         String encodedPassword = user.getPassword(); // DB에 저장된 암호화된 비번
+        log.info("encodedPassword={}", encodedPassword);
 
-        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+        if (!passwordEncoder.matches(rawPassword.trim(), encodedPassword.trim())) {
+            log.info("hi");
             throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
         log.info("{}님 로그인 성공!", user.getUserName());
 
         Map<String, String> token = getTokenMap(user);
 
-        user.changeAccessToken(token.get("access_token"));
         user.changeRefreshToken(token.get("refresh_token"));
+        user.changeAccessToken(token.get("access_token"));
         user.changeRefreshExpiryDate(tokenProvider.getExpiryDate(token.get("refresh_token")));
         userRepository.save(user);
 
@@ -117,8 +121,7 @@ public class UserService {
     }
 
     public String logout(TokenUserInfo userInfo) {
-        User foundUser = userRepository.findById(userInfo.getUserId())
-                .orElseThrow();
+        User foundUser = userRepository.findById(userInfo.getUserId()).orElseThrow();
 
         String accessToken = foundUser.getAccessToken();
         HttpHeaders headers = new HttpHeaders();
@@ -127,14 +130,13 @@ public class UserService {
 
         if (accessToken != null) {
             try {
-                if (foundUser.getLoginMethod() == User.LoginMethod.GOOGLE) {
+                if (foundUser.getLoginMethod()== User.LoginMethod.GOOGLE) {
                     logoutUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken;
                     ResponseEntity<String> response = restTemplate.postForEntity(logoutUrl, null, String.class);
                     if (response.getStatusCode() == HttpStatus.OK) {
                         log.info("Google logout successful for user: {}", userInfo.getEmail());
                         foundUser.changeAccessToken(null);
                         userRepository.save(foundUser);
-                    } else {
                         log.error("Google logout failed for user: {}", userInfo.getEmail());
                     }
                 } else if (foundUser.getLoginMethod() == User.LoginMethod.KAKAO) {
@@ -149,6 +151,7 @@ public class UserService {
                     } else {
                         log.error("Kakao logout failed for user: {}", userInfo.getEmail());
                     }
+
                 } else if (foundUser.getLoginMethod() == User.LoginMethod.NAVER) {
                     headers.add("Authorization", "Bearer " + accessToken);
                     HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -183,21 +186,21 @@ public class UserService {
         return null;
     }
 
-    public UserSignUpResponseDTO create(final UserSignUpRequestDTO dto, final String uploadedFilePath) {
-        String phone = dto.getPhoneNumber();
-        User.LoginMethod methodCheck = dto.getLoginMethod();
+    public UserSignUpResponseDTO create(final UserSignUpRequestDTO dto) {
+        String phone = "ECO"+dto.getPhoneNumber();
 
-        if (methodCheck.equals(User.LoginMethod.COMMON)&&isDuplicatePhone(phone)) {
+
+        if (isDuplicatePhone(phone)) {
             throw new RuntimeException("이미 가입된 회원입니다.");
         }
 
 //         패스워드 인코딩
         String encoded = passwordEncoder.encode(dto.getPassword());
         dto.setPassword(encoded);
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+
 
         // dto를 User Entity로 변환해서 저장.
-        User saved = userRepository.save(dto.toEntity(uploadedFilePath));
+        User saved = userRepository.save(dto.toEntity(phone));
         log.info("회원 가입 정상 수행됨! - saved user - {}", saved);
 
         return new UserSignUpResponseDTO(saved);

@@ -100,5 +100,3 @@ public class GoogleLoginService {
         return (String) responseData.get("access_token");
     }
 }
-
-

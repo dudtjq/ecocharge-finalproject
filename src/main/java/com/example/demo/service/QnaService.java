@@ -63,9 +63,7 @@ public class QnaService {
 //    }
 
     private User getUser(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new RuntimeException("회원 정보가 없습니다.")
-        );
+        User user = userRepository.findById(userId).orElseThrow();
         return user;
     }
 

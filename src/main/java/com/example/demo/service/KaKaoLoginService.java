@@ -47,8 +47,8 @@ public class KaKaoLoginService {
         // -> 화면단에서는 적절한 url을 선택하여 redirect를 진행
 
         if (!userService.isDuplicatePhone(userDTO.getKakaoAccount().getPhoneNumber())
-            || !userService.isDuplicateEmail(userDTO.getKakaoAccount().getEmail())) {
-            User saved = userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
+                || !userService.isDuplicateEmail(userDTO.getKakaoAccount().getEmail())) {
+            userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
         // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
         log.info("phoneNumber: {}", phoneNumber);
