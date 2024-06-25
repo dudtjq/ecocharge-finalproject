@@ -4,20 +4,17 @@ import com.example.demo.entity.User;
 import lombok.*;
 
 @Setter @Getter @ToString
-@EqualsAndHashCode(of = "email")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserSignUpResponseDTO {
 
-    private String email;
-
+    private String id;
     private String userName;
 
     public UserSignUpResponseDTO(User saved) {
-        this.email = saved.getEmail();
+        this.id = saved.getIdentify();
         this.userName = saved.getUserName();
     }
-
 
 }

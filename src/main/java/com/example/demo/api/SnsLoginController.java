@@ -25,9 +25,7 @@ public class SnsLoginController {
     public ResponseEntity<?> kakaoLogin(String code,String phoneNumber) {
         log.info("/api/auth/kakaoLogin - GET! code: {}", code);
         log.info("phoneNumber: {}", phoneNumber);
-        LoginResponseDTO dto = kaKaoLoginService.kakaoService(code,phoneNumber);
-        LoginResponseDTO responseDTO = userService.authenticate(dto);
-        log.info("responseDTO: {}", responseDTO);
+        LoginResponseDTO responseDTO = kaKaoLoginService.kakaoService(code,phoneNumber);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -36,8 +34,7 @@ public class SnsLoginController {
     @GetMapping("/naverlogin")
     public ResponseEntity<?> naverLogin(String code,String phoneNumber) {
         log.info("/api/auth/naverLogin - GET! code: {}", code);
-        LoginResponseDTO dto = naverLoginService.naverService(code,phoneNumber);
-        LoginResponseDTO responseDTO = userService.authenticate(dto);
+        LoginResponseDTO responseDTO = naverLoginService.naverService(code,phoneNumber);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -45,15 +42,9 @@ public class SnsLoginController {
     @GetMapping("/googlelogin")
     public ResponseEntity<?> googleLogin(String code,String phoneNumber) {
         log.info("/api/auth/googleLogin - GET! code: {}", code);
-        LoginResponseDTO dto = googleLoginService.googleService(code,phoneNumber);
-        LoginResponseDTO responseDTO = userService.authenticate(dto);
+        LoginResponseDTO responseDTO = googleLoginService.googleService(code,phoneNumber);
 
         return ResponseEntity.ok().body(responseDTO);
     }
 
 }
-
-
-
-
-

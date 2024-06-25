@@ -11,15 +11,10 @@ import lombok.*;
 @Builder
 public class LoginRequestDTO {
 
-    @NotBlank
-    @Email
-    private String email;
+    private String id;
 
-    @NotBlank
     private String password;
 
-    @NotBlank
-    private String phoneNumber;
 
 
 }
