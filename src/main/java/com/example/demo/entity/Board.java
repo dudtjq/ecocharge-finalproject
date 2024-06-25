@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter @Setter @EqualsAndHashCode
 @ToString @NoArgsConstructor
@@ -26,7 +27,6 @@ public class Board {
     private String bAddress;
 
     @Column(name = "b_writer")
-    @NotNull
     private String bWriter;
 
     @Column(name = "b_title", nullable = false)
@@ -47,6 +47,9 @@ public class Board {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "board")
+    private List<BoardReply> boardReplyList;
 
 
 }

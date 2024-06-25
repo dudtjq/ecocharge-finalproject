@@ -19,7 +19,6 @@ public class BoardDetailResponseDTO {
 
     private String bContent;
 
-
     private String bProfileImage;
 
     public BoardDetailResponseDTO(Board board){

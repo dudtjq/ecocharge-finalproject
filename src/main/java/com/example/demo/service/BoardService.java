@@ -47,9 +47,9 @@ public class BoardService {
     }
 
     // 하나의 게시물 상세 보기
-    public BoardDetailResponseDTO boardDetail(final Long qnaNo) {
+    public BoardDetailResponseDTO boardDetail(final Long boardNo) {
 
-        Board board = boardRepository.findById(qnaNo).orElseThrow(
+        Board board = boardRepository.findById(boardNo).orElseThrow(
                 () -> new RuntimeException("존재하지 않는 게시물입니다.")
         );
 
