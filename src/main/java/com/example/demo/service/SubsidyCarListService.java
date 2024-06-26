@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,13 +21,21 @@ public class SubsidyCarListService {
     private final SubsidyCarListRepository subsidyCarListRepository;
     private final SubsidyCarListRepositoryImpl subsidyCarListRepositoryImpl;
     
-    public SubsidyCarResponseDTO findCarList(int pageNo) {
-        long count = subsidyCarListRepository.count();
+    public SubsidyCarResponseDTO findCarList(int pageNo, String search) {
+        long count;
         Page page = new Page();
         page.setPageNo(pageNo);
-        List<SubsidyCar> carList = subsidyCarListRepositoryImpl.findAll(page);
+        log.info("search: {}", search);
+        List<SubsidyCar> carList = new ArrayList<>();
+        if (search.trim().isEmpty()) {
+            carList = subsidyCarListRepositoryImpl.findAll(page);
+            count = subsidyCarListRepository.count();
+        } else {
+            carList = subsidyCarListRepositoryImpl.findAllByKeyword(page, search);
+            count = subsidyCarListRepositoryImpl.countByKeyword(search);
+        }
         PageMaker pageMaker = new PageMaker(page, (int) count);
-//        log.info("carList: {}", carList);
+        log.info("carList: {}", carList);
         
         SubsidyCarResponseDTO dto = SubsidyCarResponseDTO
                 .builder()
@@ -34,7 +43,7 @@ public class SubsidyCarListService {
                 .pageMaker(pageMaker)
                 .build();
         
-        log.info("dto: {}", dto);
+//        log.info("dto: {}", dto);
         
         return dto;
     }

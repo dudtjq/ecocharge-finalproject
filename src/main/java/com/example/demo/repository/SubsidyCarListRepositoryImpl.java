@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import com.example.demo.common.Page;
 import com.example.demo.dto.response.SubsidyCarResponseDTO;
 import com.example.demo.entity.SubsidyCar;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -23,4 +24,24 @@ public class SubsidyCarListRepositoryImpl implements SubsidyCarListRepositoryCus
                 .limit(page.getAmount())
                 .fetch();
     }
+    
+    @Override
+    public List<SubsidyCar> findAllByKeyword(Page page, String search) {
+        return jpaQueryFactory
+                .selectFrom(subsidyCar)
+                .where(subsidyCar.carName.toUpperCase().like("%" + search.toUpperCase() + "%"))
+                .offset(page.getPageStart())
+                .limit(page.getAmount())
+                .fetch();
+    }
+    
+    @Override
+    public Long countByKeyword(String search) {
+        return jpaQueryFactory
+                .selectFrom(subsidyCar)
+                .where(subsidyCar.carName.toUpperCase().like("%" + search.toUpperCase() + "%"))
+                .stream().count();
+    }
+    
+    
 }
