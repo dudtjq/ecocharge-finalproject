@@ -30,11 +30,11 @@ public class Board {
     private String bWriter;
 
     @Column(name = "b_title", nullable = false)
-    @NotNull
+  //  @NotNull
     private String bTitle;
 
     @Column(name = "b_content", nullable = false)
-    @NotNull
+ //   @NotNull
     private String bContent;
 
     // 혹시 이미지를 업로드 할수도 있으니

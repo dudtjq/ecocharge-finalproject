@@ -32,9 +32,6 @@ public class Qna {
     @NotNull
     private String qContent;
 
-    @Column(name = "q_answer")
-    private String qAnswer;
-
     @CreationTimestamp
     private LocalDateTime createDate;
 

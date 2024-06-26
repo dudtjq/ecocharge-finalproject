@@ -133,18 +133,18 @@ public class QnaController {
 
     // QnA 답변 controller
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
-    @PatchMapping("/add/{qnaNo}")
-    public ResponseEntity<?> addAnswerToQna(
-            @Validated QnaUpdateRequestDTO responseDTO
-            ) {
-
-        try {
-            QnaDetailResponseDTO updateAnswerDTO = qnaService.addAnswer(responseDTO);
-            return ResponseEntity.ok().body(updateAnswerDTO);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
-    }
+//    @PatchMapping("/add/{qnaNo}")
+//    public ResponseEntity<?> addAnswerToQna(
+//            @Validated QnaUpdateRequestDTO responseDTO
+//            ) {
+//
+//        try {
+//            QnaDetailResponseDTO updateAnswerDTO = qnaService.addAnswer(responseDTO);
+//            return ResponseEntity.ok().body(updateAnswerDTO);
+//        } catch (Exception e) {
+//            return ResponseEntity.internalServerError().body(e.getMessage());
+//        }
+//    }
 
 
     // 입력값 검증(Validation)의 결과를 처리해 주는 전역 메서드

@@ -31,14 +31,8 @@ public class BoardController {
 
     // 게시판 생성
     @PostMapping
-    public ResponseEntity<?> createBoard(
-            @Validated @RequestBody BoardRequestDTO requestDTO,
-          BindingResult result
+    public ResponseEntity<?> createBoard(BoardRequestDTO requestDTO
     ){
-        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
-        if(validatedResult != null) return validatedResult;
-
-
         BoardListResponseDTO boardListResponseDTO = boardService.create(requestDTO);
 
         return ResponseEntity.ok().body(boardListResponseDTO);
