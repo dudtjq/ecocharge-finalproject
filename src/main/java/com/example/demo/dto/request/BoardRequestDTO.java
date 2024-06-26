@@ -20,19 +20,13 @@ public class BoardRequestDTO {
 
     // 엔터티 변환
     // 나중에 User 추가해주기
-    public Board toEntity(){
-        String profileImage;
-        if (this.bProfileImage != null) {
-            profileImage = this.bProfileImage.toString();
-        } else {
-            profileImage = "";
-        }
+    public Board toEntity(String s){
         return Board.builder()
                 .bAddress(bAddress)
                 .bWriter(bWriter)
                 .bTitle(bTitle)
                 .bContent(bContent)
-                .bProfileImage(profileImage)
+                .bProfileImage(s)
                 .build();
     }
 

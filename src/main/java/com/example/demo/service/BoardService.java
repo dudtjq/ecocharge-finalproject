@@ -2,19 +2,18 @@ package com.example.demo.service;
 
 import com.example.demo.dto.request.BoardRequestDTO;
 import com.example.demo.dto.request.BoardUpdateRequestDTO;
-import com.example.demo.dto.request.QnaUpdateRequestDTO;
 import com.example.demo.dto.response.BoardDetailResponseDTO;
 import com.example.demo.dto.response.BoardListResponseDTO;
-import com.example.demo.dto.response.QnaDetailResponseDTO;
 import com.example.demo.entity.Board;
-import com.example.demo.entity.Qna;
 import com.example.demo.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -24,10 +23,13 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
+    private final S3Service s3Service;
 
-    public BoardListResponseDTO create(final BoardRequestDTO requestDTO) {
+    public BoardListResponseDTO create(final BoardRequestDTO requestDTO) throws IOException {
 
-        boardRepository.save(requestDTO.toEntity());
+
+        final String s = s3Service.uploadToS3Bucket(requestDTO.getBProfileImage().getBytes(), UUID.randomUUID().toString() + ".png");
+        boardRepository.save(requestDTO.toEntity(s));
 
         return retrieve();
 

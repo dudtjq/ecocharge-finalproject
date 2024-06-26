@@ -1,5 +1,7 @@
 package com.example.demo.api;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,29 +11,34 @@ import org.springframework.web.client.RestTemplate;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 @SpringBootApplication
+@Slf4j
 public class ApiExplorer implements CommandLineRunner {
-
+    @Value("${chargeinfo.service.key}")
+    private String serviceKey;
     public static void main(String[] args) {
         SpringApplication.run(ApiExplorer.class, args);
     }
 
     @Override
     public void run(String... args) {
+
         try {
-            String serviceKey = "jU0Qy0LLpXMYexiTOR2OjvO6voMY%2BZnxKiLyhPARmaTb5ifkmDNL7gC4rADhVSSsLzMTNaVMfLpiqIFzoWdOKQ%3D%3D";
+
             String pageNo = "1";
-            String numOfRows = "52";
+            String numOfRows = "50000";
             String zcode = "11";
             String zscode = "11680";
 //            String statId = "ME183119";
 
             String url = "http://apis.data.go.kr/B552584/EvCharger/getChargerInfo" +
-                    "?serviceKey=" + URLEncoder.encode(serviceKey, "UTF-8") +
+                    "?serviceKey=" + serviceKey +
                     "&pageNo=" + URLEncoder.encode(pageNo, "UTF-8") +
                     "&numOfRows=" + URLEncoder.encode(numOfRows, "UTF-8") +
                     "&zcode=" + URLEncoder.encode(zcode, "UTF-8") +
                     "&zscode=" + URLEncoder.encode(zscode, "UTF-8");
 //                    "&statId=" + URLEncoder.encode(statId, "UTF-8");
+
+            log.info("url: {}", url);
 
             RestTemplate restTemplate = new RestTemplate();
 

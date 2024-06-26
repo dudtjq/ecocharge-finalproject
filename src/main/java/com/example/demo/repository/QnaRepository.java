@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 
-public interface QnaRepository extends JpaRepository<Qna, Long>, QnaRepositoryCustom {
+public interface QnaRepository extends JpaRepository<Qna, Long> {
 
 }

@@ -2,7 +2,6 @@ package com.example.demo.dto.response;
 
 import com.example.demo.entity.Board;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter @Setter @EqualsAndHashCode
 @ToString @AllArgsConstructor

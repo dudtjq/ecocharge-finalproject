@@ -18,10 +18,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ecocharge/board")
+@RequestMapping("/board")
 @RequiredArgsConstructor
 @Slf4j
 public class BoardController {
@@ -32,7 +33,7 @@ public class BoardController {
     // 게시판 생성
     @PostMapping
     public ResponseEntity<?> createBoard(BoardRequestDTO requestDTO
-    ){
+    ) throws IOException {
         BoardListResponseDTO boardListResponseDTO = boardService.create(requestDTO);
 
         return ResponseEntity.ok().body(boardListResponseDTO);
@@ -41,14 +42,14 @@ public class BoardController {
     }
 
     // 게시판 상세보기
-    @GetMapping("/{boardNo}")
+    @GetMapping("/detail")
     public ResponseEntity<?> boardDetail(
-            @PathVariable("boardNo") Long boardNo
+            @RequestParam(name = "boardNo", defaultValue = "1") int boardNo
     ){
-        log.info("/ecocharge/qna/detail GET response");
+        log.info("/ecocharge/board/detail?boardNo={} GET response", boardNo);
 
         try {
-            final BoardDetailResponseDTO responseDTO = boardService.boardDetail(boardNo);
+            final BoardDetailResponseDTO responseDTO = boardService.boardDetail((long) boardNo);
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -68,9 +69,7 @@ public class BoardController {
        }catch (Exception e){
             return ResponseEntity
                     .internalServerError()
-                    .body(BoardListResponseDTO.builder()
-                            .error(e.getMessage())
-                            .build());
+                    .body(e.getMessage());
        }
 
 
