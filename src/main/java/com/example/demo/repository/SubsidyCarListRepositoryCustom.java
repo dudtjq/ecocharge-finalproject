@@ -11,4 +11,7 @@ public interface SubsidyCarListRepositoryCustom {
     
     List<SubsidyCar> findAll(Page page);
     
+    List<SubsidyCar> findAllByKeyword(Page page, String search);
+    
+    Long countByKeyword(String search);
 }

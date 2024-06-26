@@ -26,7 +26,7 @@ public class PageMaker {
     }
     
     // 한 화면에 보여질 페이지 버튼 개수
-    private static final int PAGE_COUNT = 10;
+    private static final int PAGE_COUNT = 5;
     
     private void makePageInfo() {
         
