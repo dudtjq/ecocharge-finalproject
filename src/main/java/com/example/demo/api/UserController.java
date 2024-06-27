@@ -69,14 +69,15 @@ public class UserController {
 
     }
 
-    @GetMapping("/check")
-    public ResponseEntity<?> check (String email) {
-        if (email.trim().isEmpty()) {
+    @PostMapping("/check")
+    public ResponseEntity<?> check (@RequestBody String identify) {
+        log.info("아이디:{}",identify);
+        if (identify.trim().isEmpty()) {
             return ResponseEntity.badRequest()
-                    .body("이메일이 없습니다.");
+                    .body("ID가 없습니다.");
         }
-        boolean resultFlag = userService.isDuplicateEmail(email);
-        log.info("중복??? - {}", resultFlag);
+        boolean resultFlag = userService.isDuplicateIdentify(identify);
+        log.info("중복확인 :{}", resultFlag);
         return ResponseEntity.ok().body(resultFlag);
     }
 

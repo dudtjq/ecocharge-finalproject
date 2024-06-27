@@ -25,7 +25,7 @@ public class SnsLoginController {
     public ResponseEntity<?> kakaoLogin(String code,String phoneNumber) {
         log.info("/api/auth/kakaoLogin - GET! code: {}", code);
         log.info("phoneNumber: {}", phoneNumber);
-        LoginResponseDTO responseDTO = kaKaoLoginService.kakaoService(code,phoneNumber);
+        ResponseEntity<?> responseDTO = kaKaoLoginService.kakaoService(code,phoneNumber);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -42,8 +42,8 @@ public class SnsLoginController {
     @GetMapping("/googlelogin")
     public ResponseEntity<?> googleLogin(String code,String phoneNumber) {
         log.info("/api/auth/googleLogin - GET! code: {}", code);
+        log.info("phoneNumber: {}", phoneNumber);
         LoginResponseDTO responseDTO = googleLoginService.googleService(code,phoneNumber);
-
         return ResponseEntity.ok().body(responseDTO);
     }
 

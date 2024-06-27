@@ -42,17 +42,23 @@ public class UserService {
     private SmsUtil smsUtil;
 
 
-    public Boolean isDuplicatePhone(String phone) {
-        if (userRepository.existsByPhoneNumber(phone)) {
-            log.warn(" 전화번호가 중복되었습니다. - {}", phone);
-            log.warn(" 전화번호가 중복되었습니다. - {}", userRepository.existsByPhoneNumber(phone));
+    public Boolean isDuplicatePhone(String phoneNumber) {
+        log.info("isDuplicatePhone(phoneNumber): {}", phoneNumber);
+        if (userRepository.existsByPhoneNumber(phoneNumber)) {
+            log.warn(" 전화번호가 중복되었습니다. - {}", phoneNumber);
             return true;
         } else return false;
     }
 
-    public boolean isDuplicateEmail(String email) {
-        if (userRepository.existsByEmail(email)) {
-            log.warn(" 이메일이 중복되었습니다. - {}", email);
+    public boolean isDuplicateIdentify(String identify) {
+        if (userRepository.existsByidentify(identify.replace("\"", ""))) {
+            log.warn(" ID가 중복되었습니다. - {}", identify);
+            return true;
+        } else return false;
+    }
+    public Boolean isDuplicateId(String id) {
+        if (userRepository.findByIdentify(id) != null) {
+            log.warn(" 아이디가 중복되었습니다.. - {}", id);
             return true;
         } else return false;
     }
@@ -192,6 +198,9 @@ public class UserService {
 
         if (isDuplicatePhone(phone)) {
             throw new RuntimeException("이미 가입된 회원입니다.");
+        }
+        if(isDuplicateId(dto.getId())){
+            throw new RuntimeException("중복된 ID입니다.");
         }
 
 //         패스워드 인코딩
