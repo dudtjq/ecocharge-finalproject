@@ -27,9 +27,11 @@ public class MessageService {
 
 // SingleMessageSentResponse
     public String sendSms(String phoneNumber) {
+
+        verificationCodeMap.remove(phoneNumber);
         log.info("서비스단 확인:{}",phoneNumber);
         String verificationCode = generateVerificationCode();
-        verificationCodeMap.remove(phoneNumber);
+
         verificationCodeMap.put(phoneNumber,verificationCode);
 
         log.info("map확인{}",verificationCodeMap.get(phoneNumber));
@@ -45,8 +47,8 @@ public class MessageService {
             log.info("verificationcode 확인:{}", verificationCodeMap.get(phoneNumber));
             String verificationCode = verificationCodeMap.get(phoneNumber); // 저장된 인증 코드 가져오기
 
-            if (verificationCode == null) {
-                log.info("인증 코드가 null입니다.");
+            if (verificationCodeInput == null) {
+                log.info("인증 코드를 입력해주세요.");
                 return false;
             }
 

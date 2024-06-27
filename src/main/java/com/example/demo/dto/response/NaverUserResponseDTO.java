@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -33,7 +34,8 @@ public class NaverUserResponseDTO {
                 .email(this.naverUserDetail.email)
                 .userName(this.naverUserDetail.name)
                 .profileImg(this.naverUserDetail.profile)
-                .phoneNumber(this.naverUserDetail.phoneNumber)
+                .phoneNumber(phoneNumber)
+                .accessToken(accessToken)
                 .loginMethod(User.LoginMethod.NAVER)
                 .build();
     }

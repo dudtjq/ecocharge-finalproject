@@ -3,7 +3,7 @@ package com.example.demo.dto.response;
 import com.example.demo.entity.User;
 import lombok.*;
 
-
+import java.util.Map;
 
 
 @Getter @Setter @ToString
@@ -22,8 +22,9 @@ public User toEntity(String accessToken,String phoneNumber) {
     return User.builder()
             .email(this.email)
             .userName(this.name)
-            .phoneNumber(this.phoneNumber)
+            .phoneNumber(phoneNumber)
             .profileImg(this.picture)
+            .accessToken(accessToken)
             .loginMethod(User.LoginMethod.GOOGLE)
             .build();
 }

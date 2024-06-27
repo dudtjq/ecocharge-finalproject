@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -19,6 +20,7 @@ public class KakaoUserResponseDTO {
 
     @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;
+
 
 
     @Setter @Getter @ToString
@@ -45,6 +47,8 @@ public class KakaoUserResponseDTO {
         return User.builder()
                 .email(this.kakaoAccount.email)
                 .userName(this.kakaoAccount.profile.nickname)
+                .phoneNumber(phoneNumber)
+                .accessToken(accessToken)
                 .profileImg(this.kakaoAccount.profile.profileImageUrl)
                 .loginMethod(User.LoginMethod.KAKAO)
                 .build();

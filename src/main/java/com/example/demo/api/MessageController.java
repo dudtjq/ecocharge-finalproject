@@ -24,13 +24,22 @@ public class MessageController {
     public ResponseEntity<?> sendMessage(@RequestBody MessageRequestDTO dto) {
         log.info("controller단에 요청이 들어옴");
 //        SingleMessageSentResponse response = messageService.sendSms(dto.getPhoneNumber());
+        String response = String.valueOf(messageService.sendSms("ECO"+dto.getPhoneNumber()));
+
+//        log.info("phoneNumber: {}", phoneNumber);
+        return ResponseEntity.ok().body(response);
+    }
+    @PostMapping("/api/socialSend-sms")
+    public ResponseEntity<?> socialsendMessage(@RequestBody MessageRequestDTO dto) {
+        log.info("controller단에 요청이 들어옴");
+//        SingleMessageSentResponse response = messageService.sendSms(dto.getPhoneNumber());
         String response = String.valueOf(messageService.sendSms(dto.getPhoneNumber()));
 
 //        log.info("phoneNumber: {}", phoneNumber);
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/api/Sverify-code")
+    @PostMapping("/api/Socialverify-code")
     public ResponseEntity<?> SocialverifyCode(@RequestBody MessageRequestDTO request) {
         log.info("request확인: {}",request);
         String phoneNumber = request.getPhoneNumber();
@@ -38,7 +47,7 @@ public class MessageController {
         log.info("서비스단 확인:{}", verificationCodeInput);
         boolean response = messageService.verifyCode(phoneNumber, verificationCodeInput);
 
-        String phone =  request.getPhoneNumber();
+        String phone =request.getPhoneNumber();
         Boolean duplicatePhone = userService.isDuplicatePhone(phone);
         if(duplicatePhone){
             return ResponseEntity.badRequest().body(duplicatePhone);
@@ -50,16 +59,11 @@ public class MessageController {
     @PostMapping("/api/verify-code")
     public ResponseEntity<?> verifyCode(@RequestBody MessageRequestDTO request) {
         log.info("request확인: {}",request);
-        String phoneNumber = request.getPhoneNumber();
+        String phoneNumber = "ECO"+ request.getPhoneNumber();
         String verificationCodeInput = request.getVerificationCodeInput();
         log.info("서비스단 확인:{}", verificationCodeInput);
         boolean response = messageService.verifyCode(phoneNumber, verificationCodeInput);
 
-        String phone = "ECO" + request.getPhoneNumber();
-        Boolean duplicatePhone = userService.isDuplicatePhone(phone);
-        if(duplicatePhone){
-            return ResponseEntity.badRequest().body(duplicatePhone);
-        }
         log.info("reseponse의 결과값: {} ",response);
         return  ResponseEntity.ok().body(response);
     }

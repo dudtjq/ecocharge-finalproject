@@ -33,7 +33,7 @@ public class KaKaoLoginService {
     @Value("${kakao.client_secret}")
     private String KAKAO_CLIENT_SECRET;
 
-    public LoginResponseDTO kakaoService(String code ,String phoneNumber) {
+    public ResponseEntity<?> kakaoService(String code ,String phoneNumber) {
         // 인가 코드를 통해 토큰을 발급받기
         String accessToken = getKakaoAccessToken(code);
         log.info("token: {}", accessToken);
@@ -46,20 +46,25 @@ public class KaKaoLoginService {
         // 회원가입 처리 -> 이메일 중복 검사 진행 -> 자체 jwt를 생성해서 토큰을 화면단에 리턴
         // -> 화면단에서는 적절한 url을 선택하여 redirect를 진행
 
-        if (!userService.isDuplicatePhone(userDTO.getKakaoAccount().getPhoneNumber())){
-            userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
+        if (!userService.isDuplicatePhone(phoneNumber)){
+            log.info("회원가입처리 진입");
+            User save = userRepository.save(userDTO.toEntity(accessToken, phoneNumber));
+            return  ResponseEntity.ok().body(save);
         }
-        // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
         log.info("phoneNumber: {}", phoneNumber);
         User foundUser
                 = userRepository.findByPhoneNumber(userDTO.getKakaoAccount().getPhoneNumber().describeConstable().orElseThrow());
+
+        log.info("진입점 확인");
         // 우리 사이트에서 사용하는 jwt 생성
         Map<String, String> token = userService.getTokenMap(foundUser);
+
 
         foundUser.changeAccessToken(accessToken);
         userRepository.save(foundUser);
 
-        return new LoginResponseDTO(foundUser, token);
+
+        return  ResponseEntity.ok().body(new LoginResponseDTO(foundUser, token));
 
     }
 

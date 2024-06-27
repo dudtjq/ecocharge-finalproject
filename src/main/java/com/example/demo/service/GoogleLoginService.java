@@ -44,13 +44,13 @@ public class GoogleLoginService {
         GoogleUserResponseDTO userDTO = getGoogleUserInfo(accessToken);
         log.info("userDTO: {}", userDTO);
 
-        if (!userService.isDuplicatePhone(userDTO.getPhoneNumber())){
+        if (!userService.isDuplicatePhone(phoneNumber)){
            userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
 
-        // 이메일이 중복됐다? -> 이전에 로그인 한 적이 있다. -> DB에 데이터를 또 넣을 필요는 없다.
+
         User foundUser
-                = userRepository.findByEmail(userDTO.getEmail()).orElseThrow();
+                = userRepository.findByPhoneNumber(userDTO.getPhoneNumber());
 
         Map<String, String> token = userService.getTokenMap(foundUser);
 

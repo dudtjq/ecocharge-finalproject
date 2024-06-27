@@ -44,7 +44,7 @@ public class NaverLoginService {
         log.info("userDTO: {}", userDTO);
 
 
-        if (!userService.isDuplicatePhone(userDTO.getNaverUserDetail().getPhoneNumber())) {
+        if (!userService.isDuplicatePhone(phoneNumber)) {
            userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
 
