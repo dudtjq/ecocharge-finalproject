@@ -24,11 +24,7 @@ public class KakaoUserResponseDTO {
     @Setter @Getter @ToString
     public static class KakaoAccount {
 
-        private String email;
-
         private Profile profile;
-
-        private String phoneNumber;
 
         @Getter
         @Setter
@@ -36,16 +32,14 @@ public class KakaoUserResponseDTO {
         public static class Profile {
             private String nickname;
 
-            @JsonProperty("profile_image_url")
-            private String profileImageUrl;
         }
     }
 
     public User toEntity(String accessToken, String phoneNumber) {
         return User.builder()
-                .email(this.kakaoAccount.email)
+                .accessToken(accessToken)
                 .userName(this.kakaoAccount.profile.nickname)
-                .profileImg(this.kakaoAccount.profile.profileImageUrl)
+                .phoneNumber(phoneNumber)
                 .loginMethod(User.LoginMethod.KAKAO)
                 .build();
     }

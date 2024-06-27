@@ -20,20 +20,16 @@ public class NaverUserResponseDTO {
     public static class NaverUserDetail {
 
         private String name;
-        private String email;
-        @JsonProperty("profile_image")
-        private String profile;
         @JsonProperty("mobile")
         private String phoneNumber;
 
     }
 
-    public User toEntity(String accessToken,String phoneNumber) {
+    public User toEntity(String accessToken, String phoneNumber) {
         return User.builder()
-                .email(this.naverUserDetail.email)
                 .userName(this.naverUserDetail.name)
-                .profileImg(this.naverUserDetail.profile)
-                .phoneNumber(this.naverUserDetail.phoneNumber)
+                .accessToken(accessToken)
+                .phoneNumber(phoneNumber)
                 .loginMethod(User.LoginMethod.NAVER)
                 .build();
     }

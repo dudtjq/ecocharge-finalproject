@@ -17,8 +17,6 @@ import java.util.Map;
 @Builder
 public class LoginResponseDTO {
 
-
-
     private  String id;
 
     @NotBlank
@@ -33,13 +31,18 @@ public class LoginResponseDTO {
 
     private String role;
 
+    private User.LoginMethod loginMethod;
+
+    private String userName;
+
 
     public LoginResponseDTO(User user, Map<String, String> token) {
         this.joinDate = LocalDate.from(user.getJoinDate()); // LocalDateTime 타입이 다르면 from을 이용해서 넣어라!
-        this.password = user.getPassword();
+        this.password=user.getPassword();
+        this.loginMethod = user.getLoginMethod();
+        this.userName = user.getUserName();
         this.token = token;
         this.phoneNumber= user.getPhoneNumber();
         this.id = getId();
-
     }
 }
