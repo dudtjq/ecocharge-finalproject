@@ -31,7 +31,7 @@ public class MessageController {
     }
     @PostMapping("/api/socialSend-sms")
     public ResponseEntity<?> socialsendMessage(@RequestBody MessageRequestDTO dto) {
-        log.info("controller단에 요청이 들어옴");
+        log.info("소셜controller단에 요청이 들어옴");
 //        SingleMessageSentResponse response = messageService.sendSms(dto.getPhoneNumber());
         String response = String.valueOf(messageService.sendSms(dto.getPhoneNumber()));
 
@@ -42,16 +42,11 @@ public class MessageController {
     @PostMapping("/api/Socialverify-code")
     public ResponseEntity<?> SocialverifyCode(@RequestBody MessageRequestDTO request) {
         log.info("request확인: {}",request);
-        String phoneNumber = request.getPhoneNumber();
+        String phoneNumber =  request.getPhoneNumber();
         String verificationCodeInput = request.getVerificationCodeInput();
         log.info("서비스단 확인:{}", verificationCodeInput);
         boolean response = messageService.verifyCode(phoneNumber, verificationCodeInput);
 
-        String phone =request.getPhoneNumber();
-        Boolean duplicatePhone = userService.isDuplicatePhone(phone);
-        if(duplicatePhone){
-            return ResponseEntity.badRequest().body(duplicatePhone);
-        }
         log.info("reseponse의 결과값: {} ",response);
         return  ResponseEntity.ok().body(response);
     }

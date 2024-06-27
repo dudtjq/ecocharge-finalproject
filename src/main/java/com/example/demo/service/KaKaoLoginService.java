@@ -53,7 +53,7 @@ public class KaKaoLoginService {
         }
         log.info("phoneNumber: {}", phoneNumber);
         User foundUser
-                = userRepository.findByPhoneNumber(userDTO.getKakaoAccount().getPhoneNumber().describeConstable().orElseThrow());
+                = userRepository.findByPhoneNumber(userDTO.getKakaoAccount().getPhoneNumber());
 
         log.info("진입점 확인");
         // 우리 사이트에서 사용하는 jwt 생성

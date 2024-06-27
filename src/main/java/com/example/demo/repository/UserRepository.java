@@ -2,8 +2,8 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -25,10 +25,16 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByEmail(String email);
 
-    User findByIdentify(String id);
+    User findByIdentify(String Identify);
 
-    @Query("SELECT u FROM User u WHERE u.phoneNumber = :phoneNumber")
-    User findByPassword(String phoneNumber);
+    @Query("SELECT u.identify FROM User u WHERE u.phoneNumber = :phoneNumber")
+    User showedId(String phoneNumber);
+
+
+    @Modifying
+    @Query("UPDATE User u SET u.password = :newPassword WHERE u.phoneNumber = :phoneNumber")
+    User updatePasswordByPhoneNumber(String phoneNumber, String newPassword);
+
 
 
 
