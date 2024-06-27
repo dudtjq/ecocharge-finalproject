@@ -63,7 +63,6 @@ public class KaKaoLoginService {
         foundUser.changeAccessToken(accessToken);
         userRepository.save(foundUser);
 
-
         return  ResponseEntity.ok().body(new LoginResponseDTO(foundUser, token));
 
     }
