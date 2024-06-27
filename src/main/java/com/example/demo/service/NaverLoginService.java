@@ -45,15 +45,16 @@ public class NaverLoginService {
 
 
         if (!userService.isDuplicatePhone(phoneNumber)) {
-           userRepository.save(userDTO.toEntity(accessToken, phoneNumber));
+            userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
 
-        User foundUser
-                = userRepository.findByPhoneNumber(phoneNumber);
+        Optional<User> foundUser
+                = userRepository.findByEmail(userDTO.getNaverUserDetail().getPhoneNumber());
 
-        Map<String, String> token = userService.getTokenMap(foundUser);
+        Map<String, String> token = userService.getTokenMap(foundUser.orElse(null));
+        foundUser.get().changeAccessToken(accessToken);
 
-        return new LoginResponseDTO(foundUser, token);
+        return new LoginResponseDTO(foundUser.orElse(null), token);
     }
 
     private NaverUserResponseDTO getNaverUserInfo(String accessToken) {

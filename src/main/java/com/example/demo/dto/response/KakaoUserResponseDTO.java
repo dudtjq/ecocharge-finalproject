@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -21,10 +22,15 @@ public class KakaoUserResponseDTO {
     private KakaoAccount kakaoAccount;
 
 
+
     @Setter @Getter @ToString
     public static class KakaoAccount {
 
+        private String email;
+
         private Profile profile;
+
+        private String phoneNumber;
 
         @Getter
         @Setter
@@ -32,14 +38,16 @@ public class KakaoUserResponseDTO {
         public static class Profile {
             private String nickname;
 
+
         }
     }
 
     public User toEntity(String accessToken, String phoneNumber) {
         return User.builder()
-                .accessToken(accessToken)
+                .email(this.kakaoAccount.email)
                 .userName(this.kakaoAccount.profile.nickname)
                 .phoneNumber(phoneNumber)
+                .accessToken(accessToken)
                 .loginMethod(User.LoginMethod.KAKAO)
                 .build();
     }

@@ -12,18 +12,21 @@ import lombok.*;
 @AllArgsConstructor
 public class GoogleUserResponseDTO {
 
-    private String name;
 
+    private String email;
+    private String name;
+    private String picture;
     private String phoneNumber;
 
 public User toEntity(String accessToken,String phoneNumber) {
     return User.builder()
+            .email(this.email)
             .userName(this.name)
-            .accessToken(accessToken)
             .phoneNumber(phoneNumber)
+            .profileImg(this.picture)
+            .accessToken(accessToken)
             .loginMethod(User.LoginMethod.GOOGLE)
             .build();
 }
-
 
 }

@@ -25,7 +25,7 @@ public class MessageService {
     private final Map<String, String> verificationCodeMap = new HashMap<>(); // 인증 코드 저장 맵
     private MessageRequestDTO messageRequestDTO;
 
-// SingleMessageSentResponse
+    // SingleMessageSentResponse
     public String sendSms(String phoneNumber) {
 
         verificationCodeMap.remove(phoneNumber);
