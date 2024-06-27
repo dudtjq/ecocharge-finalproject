@@ -56,9 +56,9 @@ public class UserService {
             return true;
         } else return false;
     }
-    public Boolean isDuplicateId(String id) {
-        if (userRepository.findByIdentify(id) != null) {
-            log.warn(" 아이디가 중복되었습니다.. - {}", id);
+    public Boolean isDuplicateId(String Identify) {
+        if (userRepository.findByIdentify(Identify) != null) {
+            log.warn(" 아이디가 중복되었습니다.. - {}", Identify);
             return true;
         } else return false;
     }
@@ -215,5 +215,15 @@ public class UserService {
         return new UserSignUpResponseDTO(saved);
     }
 
+
+    public ResponseEntity<User> changePassword(String password, String phoneNumber) {
+        User changePassword=userRepository.updatePasswordByPhoneNumber(phoneNumber,password);
+        return ResponseEntity.ok().body(changePassword);
+    }
+
+    public ResponseEntity<User> showid( String phoneNumber) {
+        User showedId=userRepository.showedId(phoneNumber);
+        return ResponseEntity.ok().body(showedId);
+    }
 
 }
