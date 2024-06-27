@@ -11,6 +11,8 @@ public class QnaDetailResponseDTO {
 
     private Long qnaNo;
 
+    private String qCategory;
+
     private String qTitle;
 
     private String qContent;
@@ -22,6 +24,7 @@ public class QnaDetailResponseDTO {
         this.qnaNo = qna.getQnaNo();
         this.qTitle = qna.getQTitle();
         this.qContent = qna.getQContent();
+        this.qCategory = qna.getQCategory();
 
     }
 }

@@ -20,19 +20,18 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/ecocharge/qna")
+@RequestMapping("/qna")
 public class QnaController {
 
     private final QnaService qnaService;
 
     @PostMapping
     public ResponseEntity<?> createQna(
-            @AuthenticationPrincipal TokenUserInfo userInfo,
             @Validated @RequestBody QnaRequestDTO requestDTO,
             BindingResult result){
 
-        log.info("/ecocharge/qna GET! - dto: {}", requestDTO);
-        log.info("TokenUserInfo: {}", userInfo);
+        log.info("/ecocharge/qna Post! - dto: {}", requestDTO);
+//        log.info("TokenUserInfo: {}", userInfo);
 
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if(validatedResult != null) return validatedResult;
@@ -75,9 +74,7 @@ public class QnaController {
 
             return ResponseEntity
                     .internalServerError()
-                    .body(QnaListResponseDTO.builder()
-                            .error(e.getMessage())
-                            .build());
+                    .body(e.getMessage());
 
         }
 

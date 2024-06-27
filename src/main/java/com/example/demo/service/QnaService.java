@@ -27,8 +27,7 @@ public class QnaService {
         //  User user = getUser(userId);
 
         qnaRepository.save(requestDTO.toEntity());
-        log.info("qna 작성 완료! qna 제목 : {}", requestDTO.getQTitle());
-        log.info("qna 작성 완료! qna 내용 : {}", requestDTO.getQContent());
+        log.info("qna 작성 완료! qna : {}", requestDTO);
 
         return retrieve();
     }
