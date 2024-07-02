@@ -4,7 +4,10 @@ import com.example.demo.auth.TokenProvider;
 import com.example.demo.auth.TokenUserInfo;
 import com.example.demo.dto.request.LoginRequestDTO;
 import com.example.demo.dto.request.UserSignUpRequestDTO;
+import com.example.demo.dto.request.ModifyUserRequestDTO;
 import com.example.demo.dto.response.LoginResponseDTO;
+import com.example.demo.dto.response.ModifyUserResponseDTO;
+import com.example.demo.dto.response.UserResponseDTO;
 import com.example.demo.dto.response.UserSignUpResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
@@ -34,6 +37,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private  final PasswordEncoder passwordEncoder;
+
     private MessageService messageService;
 
     @Value("${upload.path}")
@@ -226,4 +230,38 @@ public class UserService {
         return ResponseEntity.ok().body(showedId);
     }
 
+    public UserResponseDTO findUser (String phoneNumber) {
+        User findUser = userRepository.findByPhoneNumber(phoneNumber);
+        return new UserResponseDTO(findUser);
+
+    }
+
+    public ModifyUserResponseDTO modifyUserInfo(ModifyUserRequestDTO dto) {
+        String savedphoneNumber = dto.getPhoneNumber();
+        if (dto.getLoginMethod().equals(User.LoginMethod.COMMON)) {
+            savedphoneNumber = "ECO" + dto.getPhoneNumber();
+        }
+
+        log.info("modify phoneNumber: {}", savedphoneNumber);
+        log.info("original phoneNumber: {}", dto.getOriginalPhone());
+
+        String findPhone = dto.getOriginalPhone();
+        if (dto.getLoginMethod().equals(User.LoginMethod.COMMON)) {
+            findPhone = "ECO" + dto.getOriginalPhone();
+        }
+        log.info("findPhoneNumber: {}", findPhone);
+        User foundUser = userRepository.findByPhoneNumber(findPhone);
+
+        String encoded = passwordEncoder.encode(dto.getPassword());
+        foundUser.setPassword(encoded);
+        foundUser.setUserName(dto.getUserName());
+        foundUser.setPhoneNumber(savedphoneNumber);
+
+        log.info("foundUser: {}", foundUser);
+        User saved = userRepository.save(foundUser);
+
+//        saved.setPhoneNumber(dto.getPhoneNumber());
+
+        return new ModifyUserResponseDTO(saved);
+    }
 }
