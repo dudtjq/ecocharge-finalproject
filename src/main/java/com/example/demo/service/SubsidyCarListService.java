@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.common.ItemWithSequence;
 import com.example.demo.common.Page;
 import com.example.demo.common.PageMaker;
 import com.example.demo.dto.response.SubsidyCarResponseDTO;

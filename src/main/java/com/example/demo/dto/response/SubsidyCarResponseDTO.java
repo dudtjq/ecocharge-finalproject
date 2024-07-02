@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.common.ItemWithSequence;
 import com.example.demo.common.PageMaker;
 import com.example.demo.entity.SubsidyCar;
 import jakarta.persistence.Column;
