@@ -81,7 +81,7 @@ public class UserService {
 
         if (!passwordEncoder.matches(rawPassword.trim(), encodedPassword.trim())) {
             log.info("hi");
-            throw new RuntimeException("비밀번호가 틀렸습니다.");
+            throw new RuntimeException("비밀번호가 틀렸0습니다.");
         }
         log.info("{}님 로그인 성공!", user.getUserName());
 

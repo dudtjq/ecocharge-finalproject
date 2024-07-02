@@ -25,7 +25,7 @@ public class SnsLoginController {
     public ResponseEntity<?> kakaoLogin(String code,String phoneNumber) {
         log.info("/api/auth/kakaoLogin - GET! code: {}", code);
         log.info("phoneNumber: {}", phoneNumber);
-        ResponseEntity<?> responseDTO = kaKaoLoginService.kakaoService(code,phoneNumber);
+        LoginResponseDTO responseDTO = kaKaoLoginService.kakaoService(code,phoneNumber);
 
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -44,6 +44,7 @@ public class SnsLoginController {
         log.info("/api/auth/googleLogin - GET! code: {}", code);
         log.info("phoneNumber: {}", phoneNumber);
         LoginResponseDTO responseDTO = googleLoginService.googleService(code,phoneNumber);
+        log.info("responseDTO: {}", responseDTO);
         return ResponseEntity.ok().body(responseDTO);
     }
 

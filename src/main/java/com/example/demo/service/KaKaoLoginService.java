@@ -15,7 +15,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -33,7 +32,8 @@ public class KaKaoLoginService {
     @Value("${kakao.client_secret}")
     private String KAKAO_CLIENT_SECRET;
 
-    public ResponseEntity<?> kakaoService(String code ,String phoneNumber) {
+    public LoginResponseDTO kakaoService(String code , String phoneNumber) {
+
         // 인가 코드를 통해 토큰을 발급받기
         String accessToken = getKakaoAccessToken(code);
         log.info("token: {}", accessToken);
@@ -48,22 +48,24 @@ public class KaKaoLoginService {
 
         if (!userService.isDuplicatePhone(phoneNumber)){
             log.info("회원가입처리 진입");
-            User save = userRepository.save(userDTO.toEntity(accessToken, phoneNumber));
-            return  ResponseEntity.ok().body(save);
+            userRepository.save(userDTO.toEntity(accessToken, phoneNumber));
         }
         log.info("phoneNumber: {}", phoneNumber);
         User foundUser
-                = userRepository.findByPhoneNumber(userDTO.getKakaoAccount().getPhoneNumber());
+                = userRepository.findByPhoneNumber(phoneNumber);
 
         log.info("진입점 확인");
+        log.info("foundUser: {}", foundUser);
         // 우리 사이트에서 사용하는 jwt 생성
         Map<String, String> token = userService.getTokenMap(foundUser);
 
 
         foundUser.changeAccessToken(accessToken);
         userRepository.save(foundUser);
+        log.info("반환:{}", foundUser);
+        log.info("token: {}", token);
 
-        return  ResponseEntity.ok().body(new LoginResponseDTO(foundUser, token));
+        return  new LoginResponseDTO(foundUser, token);
 
     }
 

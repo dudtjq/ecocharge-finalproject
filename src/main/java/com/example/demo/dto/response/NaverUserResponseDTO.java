@@ -22,8 +22,6 @@ public class NaverUserResponseDTO {
 
         private String name;
         private String email;
-        @JsonProperty("profile_image")
-        private String profile;
         @JsonProperty("mobile")
         private String phoneNumber;
 
@@ -33,7 +31,6 @@ public class NaverUserResponseDTO {
         return User.builder()
                 .email(this.naverUserDetail.email)
                 .userName(this.naverUserDetail.name)
-                .profileImg(this.naverUserDetail.profile)
                 .phoneNumber(phoneNumber)
                 .accessToken(accessToken)
                 .loginMethod(User.LoginMethod.NAVER)

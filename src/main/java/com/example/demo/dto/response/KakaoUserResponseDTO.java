@@ -38,8 +38,7 @@ public class KakaoUserResponseDTO {
         public static class Profile {
             private String nickname;
 
-            @JsonProperty("profile_image_url")
-            private String profileImageUrl;
+
         }
     }
 
@@ -49,7 +48,6 @@ public class KakaoUserResponseDTO {
                 .userName(this.kakaoAccount.profile.nickname)
                 .phoneNumber(phoneNumber)
                 .accessToken(accessToken)
-                .profileImg(this.kakaoAccount.profile.profileImageUrl)
                 .loginMethod(User.LoginMethod.KAKAO)
                 .build();
     }
