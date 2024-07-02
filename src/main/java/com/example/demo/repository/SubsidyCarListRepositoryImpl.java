@@ -1,13 +1,14 @@
 package com.example.demo.repository;
 
+import com.example.demo.common.ItemWithSequence;
 import com.example.demo.common.Page;
-import com.example.demo.dto.response.SubsidyCarResponseDTO;
 import com.example.demo.entity.SubsidyCar;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.example.demo.entity.QSubsidyCar.subsidyCar;
 
@@ -18,6 +19,7 @@ public class SubsidyCarListRepositoryImpl implements SubsidyCarListRepositoryCus
     
     @Override
     public List<SubsidyCar> findAll(Page page) {
+        
         return jpaQueryFactory
                 .selectFrom(subsidyCar)
                 .offset(page.getPageStart())

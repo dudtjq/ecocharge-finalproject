@@ -46,7 +46,7 @@ public class QnaController {
     public ResponseEntity<?> qnaDetail(
             @PathVariable("qnaNo") Long qnaNo
     ){
-        log.info("/ecocharge/qna/detail GET response");
+        log.info("/qna/detail GET response");
 
 
         try {
@@ -61,13 +61,13 @@ public class QnaController {
 
     // qna 목록 리스트 요청
     @GetMapping
-    public ResponseEntity<?> retrieveQnaList(){
+    public ResponseEntity<?> retrieveQnaList(@RequestParam(name = "page", defaultValue = "1") int pageNo){
 
-        log.info("/ecocharge/qna GET request");
+        log.info("/qna GET request");
 
         try {
-
-            QnaListResponseDTO responseDTO = qnaService.retrieve();
+            log.info("뭔데");
+            QnaListResponseDTO responseDTO = qnaService.retrieve(pageNo);
             return ResponseEntity.ok().body(responseDTO);
 
         }catch (Exception e){

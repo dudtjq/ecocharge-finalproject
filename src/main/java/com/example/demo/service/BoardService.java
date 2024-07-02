@@ -1,11 +1,15 @@
 package com.example.demo.service;
 
+import com.example.demo.common.ItemWithSequence;
+import com.example.demo.common.Page;
+import com.example.demo.common.PageMaker;
 import com.example.demo.dto.request.BoardRequestDTO;
 import com.example.demo.dto.request.BoardUpdateRequestDTO;
 import com.example.demo.dto.response.BoardDetailResponseDTO;
 import com.example.demo.dto.response.BoardListResponseDTO;
 import com.example.demo.entity.Board;
 import com.example.demo.repository.BoardRepository;
+import com.example.demo.repository.BoardRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @Slf4j
@@ -22,7 +28,9 @@ public class BoardService {
 
 
     private final BoardRepository boardRepository;
-
+    
+    private final BoardRepositoryImpl boardRepositoryImpl;
+    
     private final S3Service s3Service;
 
     public BoardListResponseDTO create(final BoardRequestDTO requestDTO) throws IOException {
@@ -31,20 +39,26 @@ public class BoardService {
         final String s = s3Service.uploadToS3Bucket(requestDTO.getBProfileImage().getBytes(), UUID.randomUUID().toString() + ".png");
         boardRepository.save(requestDTO.toEntity(s));
 
-        return retrieve();
+        return retrieve(1);
 
     }
 
     // board 전체 목록 가져오기
-    public BoardListResponseDTO retrieve() {
-        List<Board> boardList = boardRepository.findAll();
-
-        List<BoardDetailResponseDTO> dtoList = boardList.stream()
-                .map(BoardDetailResponseDTO::new)
+    public BoardListResponseDTO retrieve(int pageNo) {
+        Page page = new Page();
+        page.setPageNo(pageNo);
+        List<ItemWithSequence> items = boardRepositoryImpl.findAll(page);
+        
+        List<BoardDetailResponseDTO> dtoList = items.stream()
+                .map(item -> new BoardDetailResponseDTO(item.getBoard(), item.getSequence()))
                 .toList();
-
+        
+        
+        PageMaker pageMaker = new PageMaker(page, (int) boardRepository.count());
+        
         return BoardListResponseDTO.builder()
                 .boards(dtoList)
+                .pageMaker(pageMaker)
                 .build();
     }
 
@@ -55,7 +69,7 @@ public class BoardService {
                 () -> new RuntimeException("존재하지 않는 게시물입니다.")
         );
 
-        return new BoardDetailResponseDTO(board);
+        return new BoardDetailResponseDTO(board, 1);
 
     }
 
@@ -71,8 +85,8 @@ public class BoardService {
                 }
         );
         boardRepository.deleteById(boardNo);
-
-        return retrieve();
+        
+        return retrieve(1);
 
     }
 

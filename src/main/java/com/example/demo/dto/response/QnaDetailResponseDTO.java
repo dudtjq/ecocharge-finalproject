@@ -16,15 +16,17 @@ public class QnaDetailResponseDTO {
     private String qTitle;
 
     private String qContent;
+    
+    private int count;
 
 
 
     // 엔터티를 DTO로 변경하는 생성자
-    public QnaDetailResponseDTO(Qna qna) {
+    public QnaDetailResponseDTO(Qna qna, int count) {
         this.qnaNo = qna.getQnaNo();
         this.qTitle = qna.getQTitle();
         this.qContent = qna.getQContent();
         this.qCategory = qna.getQCategory();
-
+        this.count = count;
     }
 }
