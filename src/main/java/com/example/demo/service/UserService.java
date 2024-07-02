@@ -128,6 +128,7 @@ public class UserService {
 
     public String logout(TokenUserInfo userInfo) {
         User foundUser = userRepository.findById(userInfo.getUserId()).orElseThrow();
+        log.info("foundUser: {}", foundUser);
 
         String accessToken = foundUser.getAccessToken();
         HttpHeaders headers = new HttpHeaders();
@@ -172,7 +173,7 @@ public class UserService {
                     }
                 }
             } catch (Exception e) {
-                log.error("Logout failed for user: {}", userInfo.getEmail(), e);
+                log.error("Logout failed for user: {}", userInfo.getUserId(), e);
             }
         }
 
@@ -182,6 +183,7 @@ public class UserService {
     public String renewalAccessToken(Map<String, String> tokenRequest) {
         String refreshToken = tokenRequest.get("refreshToken");
         boolean isValid = tokenProvider.validateRefreshToken(refreshToken);  // tokenProvider 추가
+        log.info("isValid: {}", isValid);
         if (isValid) {
             User foundUser = userRepository.findByRefreshToken(refreshToken).orElseThrow();
             if (!foundUser.getRefreshTokenExpiryDate().before(new Date())) {
