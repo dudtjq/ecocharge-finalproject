@@ -75,13 +75,17 @@ public class UserService {
         // 패스워드 검증
         String rawPassword = dto.getPassword();
         log.info("rawPassword={}", rawPassword);
+        if (rawPassword.trim().equals("")) {
+            log.info("비밀번호는 null");
+            throw new IllegalArgumentException("비밀번호를 입력해주세요.");
+        }
         // 입력한 비번
         String encodedPassword = user.getPassword(); // DB에 저장된 암호화된 비번
         log.info("encodedPassword={}", encodedPassword);
 
         if (!passwordEncoder.matches(rawPassword.trim(), encodedPassword.trim())) {
             log.info("hi");
-            throw new RuntimeException("비밀번호가 틀렸0습니다.");
+            throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
         log.info("{}님 로그인 성공!", user.getUserName());
 
