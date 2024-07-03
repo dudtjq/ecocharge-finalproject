@@ -4,7 +4,10 @@ import com.example.demo.auth.TokenProvider;
 import com.example.demo.auth.TokenUserInfo;
 import com.example.demo.dto.request.LoginRequestDTO;
 import com.example.demo.dto.request.UserSignUpRequestDTO;
+import com.example.demo.dto.request.ModifyUserRequestDTO;
 import com.example.demo.dto.response.LoginResponseDTO;
+import com.example.demo.dto.response.ModifyUserResponseDTO;
+import com.example.demo.dto.response.UserResponseDTO;
 import com.example.demo.dto.response.UserSignUpResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.filter.JwtAuthFilter;
@@ -126,9 +129,23 @@ public class UserController {
         return ResponseEntity.ok().body(showid);
     }
 
-    @GetMapping("/validate")
-    public ResponseEntity<?> validatedToken () {
-        return ResponseEntity.ok().body("권한이 있는 사용자입니다.");
+    // 회원 정보 렌더링
+    @PostMapping("/myPage")
+    public ResponseEntity<?> myInfo (@RequestBody String phoneNumber) {
+        log.info("/myPage POST 요청 - phoneNumber: {}", phoneNumber);
+        UserResponseDTO foundUser = userService.findUser(phoneNumber);
+        log.info("/myPage foundUser: {}", foundUser);
+        return ResponseEntity.ok().body(foundUser);
+    }
+
+    // 회원 정보 수정
+    @PostMapping("/modify")
+    public ResponseEntity<?> modifyMyInfo(@RequestBody ModifyUserRequestDTO requestDTO) {
+        log.info("/modify POST 요청 - requestDTO: {}", requestDTO);
+        ModifyUserResponseDTO responseDTO = userService.modifyUserInfo(requestDTO);
+        log.info("/modifyResponseDTO: {}", responseDTO);
+        return ResponseEntity.ok().body(responseDTO);
+
     }
 
 
