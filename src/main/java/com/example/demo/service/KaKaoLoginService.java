@@ -33,7 +33,8 @@ public class KaKaoLoginService {
     @Value("${kakao.client_secret}")
     private String KAKAO_CLIENT_SECRET;
 
-    public ResponseEntity<?> kakaoService(String code ,String phoneNumber) {
+    public LoginResponseDTO kakaoService(String code , String phoneNumber) {
+
         // 인가 코드를 통해 토큰을 발급받기
         String accessToken = getKakaoAccessToken(code);
         log.info("token: {}", accessToken);
