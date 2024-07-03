@@ -3,6 +3,8 @@ package com.example.demo.dto.response;
 import com.example.demo.entity.Qna;
 import lombok.*;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter @Setter @ToString
 @EqualsAndHashCode @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +19,10 @@ public class QnaDetailResponseDTO {
 
     private String qContent;
     
+    private String date;
+    
+    private String qwriter;
+    
     private int count;
 
 
@@ -27,6 +33,8 @@ public class QnaDetailResponseDTO {
         this.qTitle = qna.getQTitle();
         this.qContent = qna.getQContent();
         this.qCategory = qna.getQCategory();
+        this.date = qna.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.qwriter = qna.getUser().getUserName();
         this.count = count;
     }
 }
