@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.common.ItemWithSequence;
+import com.example.demo.common.Page;
+import com.example.demo.common.PageMaker;
 import com.example.demo.dto.request.QnaUpdateRequestDTO;
 import com.example.demo.entity.User;
 import com.example.demo.dto.request.QnaRequestDTO;
@@ -7,6 +10,7 @@ import com.example.demo.dto.response.QnaDetailResponseDTO;
 import com.example.demo.dto.response.QnaListResponseDTO;
 import com.example.demo.entity.Qna;
 import com.example.demo.repository.QnaRepository;
+import com.example.demo.repository.QnaRepositoryImpl;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +26,15 @@ public class QnaService {
 
     private final UserRepository userRepository;
     private final QnaRepository qnaRepository;
+    private final QnaRepositoryImpl qnaRepositoryImpl;
 
     public QnaListResponseDTO create(QnaRequestDTO requestDTO) {
         //  User user = getUser(userId);
 
         qnaRepository.save(requestDTO.toEntity());
-        log.info("qna 작성 완료! qna 제목 : {}", requestDTO.getQTitle());
-        log.info("qna 작성 완료! qna 내용 : {}", requestDTO.getQContent());
+        log.info("qna 작성 완료! qna : {}", requestDTO);
 
-        return retrieve();
+        return retrieve(1);
     }
 
     // qna detail (하나의 QnA 보여주는 로직)
@@ -40,20 +44,26 @@ public class QnaService {
                 () -> new RuntimeException("존재하지 않은 QnA 입니다.")
         );
 
-        return new QnaDetailResponseDTO(qna);
+        return new QnaDetailResponseDTO(qna, 1);
 
     }
 
     // qna 전체 목록 가져오기
-    public QnaListResponseDTO retrieve() {
-        List<Qna> entityList = qnaRepository.findAll();
+    public QnaListResponseDTO retrieve(int pageNo) {
+        Page page = new Page();
+        page.setPageNo(pageNo);
+        
+        List<ItemWithSequence> entityList = qnaRepositoryImpl.findAll(page);
 
         List<QnaDetailResponseDTO> dtoList = entityList.stream()
-                .map(QnaDetailResponseDTO::new)
+                .map(item -> new QnaDetailResponseDTO(item.getQna(), item.getSequence()))
                 .toList();
+        
+        PageMaker pageMaker = new PageMaker(page, (int) qnaRepository.count());
 
         return QnaListResponseDTO.builder()
                 .qnas(dtoList)
+                .pageMaker(pageMaker)
                 .build();
     }
 
@@ -81,7 +91,7 @@ public class QnaService {
         );
         qnaRepository.deleteById(qnaNo);
 
-        return retrieve();
+        return retrieve(1);
 
 
     }

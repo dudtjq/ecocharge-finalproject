@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import lombok.*;
@@ -31,6 +32,10 @@ public class Qna {
     @Column(name = "q_content", nullable = false)
     @NotNull
     private String qContent;
+
+    @Column(name = "q_category", nullable = false)
+    @NotBlank
+    private String qCategory;
 
     @CreationTimestamp
     private LocalDateTime createDate;

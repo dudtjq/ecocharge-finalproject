@@ -45,7 +45,7 @@ public class GoogleLoginService {
         log.info("userDTO: {}", userDTO);
 
         if (!userService.isDuplicatePhone(phoneNumber)){
-           userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
+            userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
 
         User foundUser

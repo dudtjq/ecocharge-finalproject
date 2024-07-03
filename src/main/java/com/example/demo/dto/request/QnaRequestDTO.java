@@ -9,6 +9,8 @@ import lombok.*;
 @Builder
 public class QnaRequestDTO {
 
+    private String qCategory;
+
     private String qTitle;
 
     private String qContent;
@@ -20,6 +22,7 @@ public class QnaRequestDTO {
         return Qna.builder()
                 .qTitle(qTitle)
                 .qContent(qContent)
+                .qCategory(qCategory)
                 //.user(user)
                 .build();
 

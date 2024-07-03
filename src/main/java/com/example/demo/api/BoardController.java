@@ -46,7 +46,7 @@ public class BoardController {
     public ResponseEntity<?> boardDetail(
             @RequestParam(name = "boardNo", defaultValue = "1") int boardNo
     ){
-        log.info("/ecocharge/board/detail?boardNo={} GET response", boardNo);
+        log.info("/board/detail?boardNo={} GET response", boardNo);
 
         try {
             final BoardDetailResponseDTO responseDTO = boardService.boardDetail((long) boardNo);
@@ -59,10 +59,10 @@ public class BoardController {
 
     // 게시판 리스트 목록 불러오기
     @GetMapping
-    public ResponseEntity<?> boardList(){
-
+    public ResponseEntity<?> boardList(@RequestParam(name = "page", defaultValue = "1") int pageNo){
+        log.info("/board GET!, pageNo: {}", pageNo);
        try {
-           BoardListResponseDTO responseDTO = boardService.retrieve();
+           BoardListResponseDTO responseDTO = boardService.retrieve(pageNo);
 
            return ResponseEntity.ok().body(responseDTO);
 

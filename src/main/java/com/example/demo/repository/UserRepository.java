@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     boolean existsByPhoneNumber(String phoneNumber);
 
-   User findByPhoneNumber(String PhoneNumber);
+    User findByPhoneNumber(String PhoneNumber);
 
 
     // 리프레시 토큰으로 사용자 정보 조회하기

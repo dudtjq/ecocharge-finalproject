@@ -1,11 +1,17 @@
 package com.example.demo.api;
 
+import com.example.demo.auth.TokenProvider;
 import com.example.demo.auth.TokenUserInfo;
 import com.example.demo.dto.request.LoginRequestDTO;
 import com.example.demo.dto.request.UserSignUpRequestDTO;
+import com.example.demo.dto.request.ModifyUserRequestDTO;
 import com.example.demo.dto.response.LoginResponseDTO;
+import com.example.demo.dto.response.ModifyUserResponseDTO;
+import com.example.demo.dto.response.UserResponseDTO;
 import com.example.demo.dto.response.UserSignUpResponseDTO;
 import com.example.demo.entity.User;
+import com.example.demo.entity.User;
+import com.example.demo.filter.JwtAuthFilter;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +34,8 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final TokenProvider tokenProvider;
+    private final JwtAuthFilter jwtAuthFilter;
 
     // 회원 가입 요청 처리
     // POST: /api/auth
@@ -101,8 +109,10 @@ public class UserController {
     public ResponseEntity<?> refresh(@RequestBody Map<String, String> tokenRequest) {
         log.info("/api/auth/refresh: POST! - tokenRequest: {}", tokenRequest);
         String renewalAccessToken = userService.renewalAccessToken(tokenRequest);
+        log.info("renewalAccessToken: {}", renewalAccessToken);
         if (renewalAccessToken != null) {
-            return ResponseEntity.ok().body(Map.of("access_token", renewalAccessToken));
+            log.info("map: {}",Map.of("accessToken", renewalAccessToken));
+            return ResponseEntity.ok().body(Map.of("accessToken", renewalAccessToken));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
     }
