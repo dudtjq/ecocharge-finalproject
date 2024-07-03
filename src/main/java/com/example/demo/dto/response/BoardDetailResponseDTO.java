@@ -3,6 +3,8 @@ package com.example.demo.dto.response;
 import com.example.demo.entity.Board;
 import lombok.*;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter @Setter @EqualsAndHashCode
 @ToString @AllArgsConstructor
 @NoArgsConstructor @Builder
@@ -31,7 +33,7 @@ public class BoardDetailResponseDTO {
         this.bTitle = board.getBTitle();
         this.bContent = board.getBContent();
         this.bProfileImage = board.getBProfileImage();
-        this.createDate = board.getCreateDate().toString();
+        this.createDate = board.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.count = count;
     }
 
