@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -46,6 +47,8 @@ public class QChargeInfo extends EntityPathBase<ChargeInfo> {
     public final StringPath parkingFree = createString("parkingFree");
 
     public final StringPath powerType = createString("powerType");
+
+    public final ListPath<Review, QReview> reviewList = this.<Review, QReview>createList("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> stat = createNumber("stat", Long.class);
 
