@@ -1,16 +1,16 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import kotlinx.datetime.LocalDateTime;
 import lombok.*;
+
+import java.util.List;
 
 @Getter @Setter @ToString
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode @Builder
 @Entity
-@Table(name = "tbl_charge_spot")
+@Table(name = "tbl_imsi")
 public class ChargeInfo {
 
 
@@ -52,6 +52,9 @@ public class ChargeInfo {
     private Long output;
 
     private String method;
+
+    @OneToMany(mappedBy = "chargeInfo")
+    private List<Review> reviewList;
 
 
 

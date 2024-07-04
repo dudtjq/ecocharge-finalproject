@@ -57,6 +57,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Board> boardList;
 
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviewList;
+
 
 
     // 소셜 로그인 access token 저장하는 메서드
