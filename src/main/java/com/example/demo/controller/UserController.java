@@ -10,16 +10,19 @@ import com.example.demo.dto.response.ModifyUserResponseDTO;
 import com.example.demo.dto.response.UserResponseDTO;
 import com.example.demo.dto.response.UserSignUpResponseDTO;
 import com.example.demo.entity.User;
+import com.example.demo.entity.User;
 import com.example.demo.filter.JwtAuthFilter;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 
 import java.util.Map;
@@ -54,20 +57,28 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn (@RequestBody LoginRequestDTO dto,
-                                     BindingResult result
-    ) {
+    public ResponseEntity<?> signIn(@RequestBody LoginRequestDTO dto, BindingResult result) {
         log.info("/api/auth/signin - POST - {}", dto);
 
-        log.info("result: {}", result);
+        // 유효성 검사 결과를 확인하고 에러가 있으면 에러 응답을 반환합니다.
         ResponseEntity<FieldError> response = getFieldErrorResponseEntity(result);
         log.info("response : {}", response);
-        if (response != null) return response;
+        if (response != null) {
+            return response;
+        }
 
-        LoginResponseDTO responseDTO = userService.authenticate(dto);
-        log.info("responseDTO: {}", responseDTO);
-        return ResponseEntity.ok().body(responseDTO);
-
+        try {
+            // 사용자 서비스를 통해 인증을 시도합니다.
+            LoginResponseDTO responseDTO = userService.authenticate(dto);
+            log.info("responseDTO: {}", responseDTO);
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (AuthenticationException e) {
+            // 인증 예외가 발생한 경우, 예외 메시지를 클라이언트에게 전달합니다.
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        } catch (Exception e) {
+            // 그 외의 예외가 발생한 경우, 400 Bad Request 상태 코드와 예외 메시지를 클라이언트에게 반환합니다.
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/check")
@@ -118,14 +129,17 @@ public class UserController {
     }
 
     @PostMapping("/pwsearch")
-    private ResponseEntity<ResponseEntity<User>> pwChange(@RequestBody String password, String phoneNumber) {
-        ResponseEntity<User> findPassword= userService.changePassword( password,phoneNumber);
-        return ResponseEntity.ok().body(findPassword);
+    private ResponseEntity<?> pwChange(@RequestBody ModifyUserRequestDTO Request) {
+        log.info("request:{}",Request);
+         userService.changePassword(Request);
+        log.info("서비스 로직을 거침");
+        return ResponseEntity.ok().body("변경 완료");
     }
 
     @PostMapping("/showid")
     private ResponseEntity<?>showId(@RequestBody String phoneNumber) {
-        ResponseEntity<User> showid=userService.showid(phoneNumber);
+        String showid=userService.showid(phoneNumber);
+        log.info(showid);
         return ResponseEntity.ok().body(showid);
     }
 

@@ -48,9 +48,9 @@ public class GoogleLoginService {
             userRepository.save(userDTO.toEntity(accessToken,phoneNumber));
         }
 
-
         User foundUser
-                = userRepository.findByPhoneNumber(userDTO.getPhoneNumber());
+                = userRepository.findByPhoneNumber(phoneNumber);
+        log.info("foundUser: {}", foundUser);
 
         Map<String, String> token = userService.getTokenMap(foundUser);
 

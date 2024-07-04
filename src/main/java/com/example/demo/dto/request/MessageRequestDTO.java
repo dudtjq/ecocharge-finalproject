@@ -15,7 +15,6 @@ public class MessageRequestDTO {
     public User toEntity(String request) {
         return User.builder()
                 .phoneNumber(this.phoneNumber)
-
                 .build();
     }
 

@@ -79,6 +79,10 @@ public class UserService {
         // 패스워드 검증
         String rawPassword = dto.getPassword();
         log.info("rawPassword={}", rawPassword);
+        if (rawPassword.trim().equals("")) {
+            log.info("비밀번호는 null");
+            throw new IllegalArgumentException("비밀번호를 입력해주세요.");
+        }
         // 입력한 비번
         String encodedPassword = user.getPassword(); // DB에 저장된 암호화된 비번
         log.info("encodedPassword={}", encodedPassword);
@@ -222,14 +226,24 @@ public class UserService {
     }
 
 
-    public ResponseEntity<User> changePassword(String password, String phoneNumber) {
-        User changePassword=userRepository.updatePasswordByPhoneNumber(phoneNumber,password);
-        return ResponseEntity.ok().body(changePassword);
+
+    public void changePassword(ModifyUserRequestDTO dto) {
+        log.info("dto: {}", dto.getPassword());
+        log.info("dto: {}", dto.getPhoneNumber());
+        String password = passwordEncoder.encode(dto.getPassword());
+        String phoneNumber = "ECO"+dto.getPhoneNumber();
+
+//        User user = userRepository.findByPhoneNumber(phoneNumber);
+//        user.setPassword(password);
+//        userRepository.save(user);
+
+        userRepository.updatePassword(phoneNumber, password);
     }
 
-    public ResponseEntity<User> showid( String phoneNumber) {
-        User showedId=userRepository.showedId(phoneNumber);
-        return ResponseEntity.ok().body(showedId);
+    public String showid( String phoneNumber) {
+        String number = "ECO" + phoneNumber;
+        User user = userRepository.showedId(number);
+        return user.getIdentify();
     }
 
     public UserResponseDTO findUser (String userId) {
