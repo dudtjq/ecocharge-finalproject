@@ -226,14 +226,24 @@ public class UserService {
     }
 
 
-    public ResponseEntity<User> changePassword(String password, String phoneNumber) {
-        User changePassword=userRepository.updatePasswordByPhoneNumber(phoneNumber,password);
-        return ResponseEntity.ok().body(changePassword);
+
+    public void changePassword(ModifyUserRequestDTO dto) {
+        log.info("dto: {}", dto.getPassword());
+        log.info("dto: {}", dto.getPhoneNumber());
+        String password = passwordEncoder.encode(dto.getPassword());
+        String phoneNumber = "ECO"+dto.getPhoneNumber();
+
+//        User user = userRepository.findByPhoneNumber(phoneNumber);
+//        user.setPassword(password);
+//        userRepository.save(user);
+
+        userRepository.updatePassword(phoneNumber, password);
     }
 
-    public ResponseEntity<User> showid( String phoneNumber) {
-        User showedId=userRepository.showedId(phoneNumber);
-        return ResponseEntity.ok().body(showedId);
+    public String showid( String phoneNumber) {
+        String number = "ECO" + phoneNumber;
+        User user = userRepository.showedId(number);
+        return user.getIdentify();
     }
 
     public UserResponseDTO findUser (String phoneNumber) {

@@ -22,6 +22,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 
 import java.util.Map;
@@ -128,15 +129,37 @@ public class UserController {
     }
 
     @PostMapping("/pwsearch")
-    private ResponseEntity<ResponseEntity<User>> pwChange(@RequestBody String password, String phoneNumber) {
-        ResponseEntity<User> findPassword= userService.changePassword( password,phoneNumber);
-        return ResponseEntity.ok().body(findPassword);
+    private ResponseEntity<?> pwChange(@RequestBody ModifyUserRequestDTO Request) {
+        log.info("request:{}",Request);
+         userService.changePassword(Request);
+        log.info("서비스 로직을 거침");
+        return ResponseEntity.ok().body("변경 완료");
     }
 
     @PostMapping("/showid")
     private ResponseEntity<?>showId(@RequestBody String phoneNumber) {
-        ResponseEntity<User> showid=userService.showid(phoneNumber);
+        String showid=userService.showid(phoneNumber);
+        log.info(showid);
         return ResponseEntity.ok().body(showid);
+    }
+
+    // 회원 정보 렌더링
+    @PostMapping("/myPage")
+    public ResponseEntity<?> myInfo (@RequestBody String phoneNumber) {
+        log.info("/myPage POST 요청 - phoneNumber: {}", phoneNumber);
+        UserResponseDTO foundUser = userService.findUser(phoneNumber);
+        log.info("/myPage foundUser: {}", foundUser);
+        return ResponseEntity.ok().body(foundUser);
+    }
+
+    // 회원 정보 수정
+    @PostMapping("/modify")
+    public ResponseEntity<?> modifyMyInfo(@RequestBody ModifyUserRequestDTO requestDTO) {
+        log.info("/modify POST 요청 - requestDTO: {}", requestDTO);
+        ModifyUserResponseDTO responseDTO = userService.modifyUserInfo(requestDTO);
+        log.info("/modifyResponseDTO: {}", responseDTO);
+        return ResponseEntity.ok().body(responseDTO);
+
     }
 
 
