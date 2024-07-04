@@ -44,6 +44,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final DateTimePath<java.util.Date> refreshTokenExpiryDate = createDateTime("refreshTokenExpiryDate", java.util.Date.class);
 
+    public final ListPath<Review, QReview> reviewList = this.<Review, QReview>createList("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
+
     public final StringPath userId = createString("userId");
 
     public final StringPath userName = createString("userName");
