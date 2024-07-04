@@ -136,9 +136,9 @@ public class UserController {
 
     // 회원 정보 렌더링
     @PostMapping("/myPage")
-    public ResponseEntity<?> myInfo (@RequestBody String phoneNumber) {
-        log.info("/myPage POST 요청 - phoneNumber: {}", phoneNumber);
-        UserResponseDTO foundUser = userService.findUser(phoneNumber);
+    public ResponseEntity<?> myInfo (@RequestBody String id) {
+        log.info("/myPage POST 요청 - id: {}", id);
+        UserResponseDTO foundUser = userService.findUser(id);
         log.info("/myPage foundUser: {}", foundUser);
         return ResponseEntity.ok().body(foundUser);
     }
