@@ -1,4 +1,4 @@
-package com.example.demo.api;
+package com.example.demo.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -6,8 +6,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,9 +30,9 @@ public class WidgetController {
     @PostMapping
     @RequestMapping("/confirm")
     public ResponseEntity<JSONObject> confirmPayment(
-           @Validated @RequestBody String jsonBody) throws Exception {
+            @RequestBody String jsonBody) throws Exception {
 
-        log.info("jsonBody : {}", jsonBody );
+        log.info("SECRET_KEY : {}", SECRET_KEY );
 
         JSONParser parser = new JSONParser();
         String orderId;
@@ -49,7 +49,7 @@ public class WidgetController {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        ;
+
         JSONObject obj = new JSONObject();
         obj.put("orderId", orderId);
         obj.put("amount", amount);

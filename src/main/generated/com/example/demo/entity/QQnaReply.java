@@ -34,8 +34,6 @@ public class QQnaReply extends EntityPathBase<QnaReply> {
 
     public final StringPath replyWriter = createString("replyWriter");
 
-    public final DateTimePath<java.time.LocalDateTime> updateReplyDate = createDateTime("updateReplyDate", java.time.LocalDateTime.class);
-
     public QQnaReply(String variable) {
         this(QnaReply.class, forVariable(variable), INITS);
     }

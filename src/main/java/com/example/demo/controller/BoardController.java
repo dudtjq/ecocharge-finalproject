@@ -1,13 +1,10 @@
-package com.example.demo.api;
+package com.example.demo.controller;
 
 import com.example.demo.auth.TokenUserInfo;
 import com.example.demo.dto.request.BoardRequestDTO;
 import com.example.demo.dto.request.BoardUpdateRequestDTO;
-import com.example.demo.dto.request.QnaUpdateRequestDTO;
 import com.example.demo.dto.response.BoardDetailResponseDTO;
 import com.example.demo.dto.response.BoardListResponseDTO;
-import com.example.demo.dto.response.QnaDetailResponseDTO;
-import com.example.demo.dto.response.QnaListResponseDTO;
 import com.example.demo.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

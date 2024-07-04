@@ -1,11 +1,9 @@
-package com.example.demo.api;
+package com.example.demo.controller;
 
 import com.example.demo.dto.request.BoardReplyRequestDTO;
 import com.example.demo.dto.request.BoardReplyUpdateRequestDTO;
-import com.example.demo.dto.response.BoardDetailResponseDTO;
 import com.example.demo.dto.response.BoardReplyDetailResponseDTO;
 import com.example.demo.dto.response.BoardReplyListResponseDTO;
-import com.example.demo.entity.Board;
 import com.example.demo.service.BoardReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

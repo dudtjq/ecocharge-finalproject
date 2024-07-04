@@ -31,9 +31,6 @@ public class QnaReply {
     @CreationTimestamp
     private LocalDateTime replyDate;
 
-    @CreationTimestamp
-    private LocalDateTime updateReplyDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "qna_nos")
     private Qna qna;

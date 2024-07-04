@@ -1,4 +1,4 @@
-package com.example.demo.api;
+package com.example.demo.controller;
 
 import com.example.demo.auth.TokenProvider;
 import com.example.demo.auth.TokenUserInfo;
@@ -127,6 +127,11 @@ public class UserController {
     private ResponseEntity<?>showId(@RequestBody String phoneNumber) {
         ResponseEntity<User> showid=userService.showid(phoneNumber);
         return ResponseEntity.ok().body(showid);
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<?> validatedToken () {
+        return ResponseEntity.ok().body("권한이 있는 사용자입니다.");
     }
 
     // 회원 정보 렌더링

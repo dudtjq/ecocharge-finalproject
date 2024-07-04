@@ -1,11 +1,6 @@
-package com.example.demo.api;
+package com.example.demo.controller;
 
-import com.example.demo.dto.request.BoardReplyRequestDTO;
-import com.example.demo.dto.request.BoardReplyUpdateRequestDTO;
 import com.example.demo.dto.request.QnaReplyRequestDTO;
-import com.example.demo.dto.request.QnaReplyUpdateRequestDTO;
-import com.example.demo.dto.response.BoardReplyDetailResponseDTO;
-import com.example.demo.dto.response.BoardReplyListResponseDTO;
 import com.example.demo.dto.response.QnaReplyDetailResponseDTO;
 import com.example.demo.dto.response.QnaReplyListResponseDTO;
 import com.example.demo.service.QnaReplyService;
