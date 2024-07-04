@@ -232,8 +232,8 @@ public class UserService {
         return ResponseEntity.ok().body(showedId);
     }
 
-    public UserResponseDTO findUser (String phoneNumber) {
-        User findUser = userRepository.findByPhoneNumber(phoneNumber);
+    public UserResponseDTO findUser (String userId) {
+        User findUser = userRepository.findById(userId).orElseThrow();
         return new UserResponseDTO(findUser);
 
     }

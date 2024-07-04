@@ -17,7 +17,7 @@ import java.util.Map;
 @Builder
 public class LoginResponseDTO {
 
-    private  String id;
+    private  String userId;
 
     @NotBlank
     private String password;
@@ -43,6 +43,6 @@ public class LoginResponseDTO {
         this.userName = user.getUserName();
         this.token = token;
         this.phoneNumber= user.getPhoneNumber();
-        this.id = getId();
+        this.userId = user.getUserId();
     }
 }
