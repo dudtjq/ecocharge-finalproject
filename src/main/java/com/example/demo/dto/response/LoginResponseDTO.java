@@ -1,4 +1,5 @@
 package com.example.demo.dto.response;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
@@ -29,7 +30,7 @@ public class LoginResponseDTO {
 
     private String phoneNumber;
 
-    private String role;
+    private Role role;
 
     private User.LoginMethod loginMethod;
 
@@ -42,6 +43,7 @@ public class LoginResponseDTO {
         this.loginMethod = user.getLoginMethod();
         this.userName = user.getUserName();
         this.token = token;
+        this.role=user.getRole();
         this.phoneNumber= user.getPhoneNumber();
         this.userId = user.getUserId();
     }

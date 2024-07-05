@@ -47,6 +47,7 @@ public class BoardController {
 
         try {
             final BoardDetailResponseDTO responseDTO = boardService.boardDetail((long) boardNo);
+            log.info("Board detail response: {}", responseDTO);
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -74,7 +75,7 @@ public class BoardController {
     // QnA 삭제 요청 처리 (관리자)
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
     @DeleteMapping("/{boardNo}")
-    public ResponseEntity<?> deleteQna(
+    public ResponseEntity<?> deleteBoard(
             @AuthenticationPrincipal TokenUserInfo userInfo,
             @PathVariable("boardNo") Long boardNo
     ){

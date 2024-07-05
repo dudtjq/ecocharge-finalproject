@@ -91,15 +91,18 @@ public class QnaController {
         log.info("/api/todos/{} DELETE request!", qnaNo);
 
         if(qnaNo == null){
+            log.info("게시글이 없습니다.");
             return ResponseEntity.badRequest()
                     .body("QnA 번호를 전달해 주세요.");
         }
 
         try {
             QnaListResponseDTO responseDTO = qnaService.delete(qnaNo);
+            log.info("요청을 보냅니다:{}", responseDTO);
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             e.printStackTrace();
+            log.info("그 외의 오류");
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
