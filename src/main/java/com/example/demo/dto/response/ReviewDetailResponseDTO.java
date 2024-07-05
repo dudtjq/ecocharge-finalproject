@@ -35,6 +35,6 @@ public class ReviewDetailResponseDTO {
         this.reviewDate = review.getReviewDate();
         this.updateReviewDate = review.getUpdateReviewDate();
         this.userName = review.getUser().getUserName();
-        this.statNm = review.getChargeInfo().getStatNm();
+        this.statNm = review.getChargeSpot().getStatNm();
     }
 }

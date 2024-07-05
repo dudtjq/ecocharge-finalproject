@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode @Builder
 @Entity
-@Table(name = "tbl_charge_spot")
+@Table(name = "tbl_charge_spots")
 public class ChargeSpot {
 
     private String addr; // 충전소 주소

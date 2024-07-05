@@ -4,14 +4,16 @@ import com.example.demo.dto.request.ReviewModifyRequestDTO;
 import com.example.demo.dto.request.ReviewRequestDTO;
 import com.example.demo.dto.response.ReviewDetailResponseDTO;
 import com.example.demo.dto.response.ReviewListResponseDTO;
-import com.example.demo.entity.ChargeInfo;
+
+import com.example.demo.entity.ChargeSpot;
 import com.example.demo.entity.Review;
 import com.example.demo.entity.User;
-import com.example.demo.repository.ChargeInfoRepository;
+
+import com.example.demo.repository.ChargeSpotRepository;
 import com.example.demo.repository.ReviewRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,12 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
-    private final ChargeInfoRepository chargeInfoRepository;
+    private final ChargeSpotRepository chargeSpotRepository;
 
     public void create(final ReviewRequestDTO requestDTO) {
         User user = userRepository.findById(requestDTO.getUserId()).orElseThrow();
-        ChargeInfo chargeInfo = chargeInfoRepository.findById(requestDTO.getStatId()).orElseThrow();
-        reviewRepository.save(requestDTO.toEntity(user, chargeInfo));
+        ChargeSpot chargeSpot = chargeSpotRepository.findById(requestDTO.getStatId()).orElseThrow();
+        reviewRepository.save(requestDTO.toEntity(user, chargeSpot));
     }
 
     public ReviewListResponseDTO getList(String key, String reviewId) {

@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    @Query("SELECT COUNT(r) FROM Review r WHERE r.chargeInfo.statId = :statId")
+    @Query("SELECT COUNT(r) FROM Review r WHERE r.chargeSpot.statId = :statId")
     int countByStatId(String statId);
 
-    @Query("SELECT r FROM Review r WHERE r.chargeInfo.statId = :statId")
+    @Query("SELECT r FROM Review r WHERE r.chargeSpot.statId = :statId")
     List<Review> findAllByStatId(String statId);
 
     @Query("SELECT COUNT(r) FROM Review r WHERE r.user.userId = :userId")

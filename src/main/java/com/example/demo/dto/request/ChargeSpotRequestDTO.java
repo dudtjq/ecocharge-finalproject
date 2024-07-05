@@ -9,10 +9,6 @@ import lombok.*;
 @Builder
 public class ChargeSpotRequestDTO {
 
-    private String addr; // 충전소 주소
-
-    private String statNm; // 충전소 명
-
     private String facilityBig; // 시설구분(대)
 
     private String facilitySmall; // 시설구분(소)
@@ -26,8 +22,6 @@ public class ChargeSpotRequestDTO {
     public ChargeSpot toEntity(){
 
         return ChargeSpot.builder()
-                .addr(addr)
-                .statNm(statNm)
                 .facilityBig(facilityBig)
                 .facilitySmall(facilitySmall)
                 .limitYn(limitYn)

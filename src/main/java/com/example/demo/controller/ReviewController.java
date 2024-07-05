@@ -1,4 +1,4 @@
-package com.example.demo.api;
+package com.example.demo.controller;
 
 import com.example.demo.dto.request.ReviewModifyRequestDTO;
 import com.example.demo.dto.request.ReviewRequestDTO;

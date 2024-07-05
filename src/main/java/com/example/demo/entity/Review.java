@@ -41,6 +41,6 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stat_id")
     @NotBlank
-    private ChargeInfo chargeInfo;
+    private ChargeSpot chargeSpot;
 
 }
