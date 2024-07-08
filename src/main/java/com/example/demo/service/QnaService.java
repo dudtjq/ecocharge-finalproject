@@ -95,7 +95,7 @@ public class QnaService {
             log.error("해당 글을 삭제할 권한이 없습니다. qnaNo: {}, userId: {}", qnaNo, userId);
             throw new RuntimeException("글을 삭제할 권한이 없습니다.");
         }
-        qnaRepository.deleteById(qnaNo);
+        qnaRepository.deleteByQnaNo(qnaNo);
 
         return retrieve(1);
 

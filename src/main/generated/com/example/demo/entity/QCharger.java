@@ -26,9 +26,9 @@ public class QCharger extends EntityPathBase<Charger> {
 
     public final StringPath busiNm = createString("busiNm");
 
-    public final QChargeSpot chargeInfo;
-
     public final StringPath chargerId = createString("chargerId");
+
+    public final QChargeSpot chargeSpot;
 
     public final StringPath chgerType = createString("chgerType");
 
@@ -54,7 +54,7 @@ public class QCharger extends EntityPathBase<Charger> {
 
     public QCharger(Class<? extends Charger> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.chargeInfo = inits.isInitialized("chargeInfo") ? new QChargeSpot(forProperty("chargeInfo")) : null;
+        this.chargeSpot = inits.isInitialized("chargeSpot") ? new QChargeSpot(forProperty("chargeSpot")) : null;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.ChargeSpotRequestDTO;
 import com.example.demo.repository.ChargeSpotRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -12,9 +13,6 @@ import org.springframework.stereotype.Service;
 public class ChargerSpotService {
 
     private final ChargeSpotRepository chargeSpotRepository;
-
-
-
 
 
 }

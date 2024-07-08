@@ -32,6 +32,6 @@ public class Charger {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stat_id")
-    private ChargeSpot chargeInfo;
+    private ChargeSpot chargeSpot;
 
 }
