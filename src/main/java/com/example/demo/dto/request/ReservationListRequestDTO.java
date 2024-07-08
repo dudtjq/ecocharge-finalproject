@@ -10,12 +10,10 @@ import lombok.*;
 @Builder
 public class ReservationListRequestDTO {
 
-    private String reservationNo;
     private String userId;
 
     public Reservation toEntity(User user) {
         return Reservation.builder()
-                .reservationNo(reservationNo)
                 .user(user)
                 .build();
     }

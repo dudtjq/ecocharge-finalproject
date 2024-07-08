@@ -21,15 +21,12 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String reservationNo;
 
-    @NotBlank
     @Enumerated(value = EnumType.STRING)
     private RSTATUS rStatus;
 
-    @NotBlank
     @CreationTimestamp
     private LocalDateTime date;
 
-    @NotBlank
     @CreationTimestamp
     private LocalDateTime reservationDate;
 

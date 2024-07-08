@@ -44,8 +44,9 @@ public class ReservationController {
     // 예약 불러오기
     @PostMapping("/list")
     public ResponseEntity<?> retrieve (@RequestBody ReservationListRequestDTO dto) {
-        log.info("/reservation/list - request: {}", dto);
+        log.info("/reservation/list - post: {}", dto);
         List<ReservationResponseDTO> retrieve = reservationService.retrieve(dto);
+        log.info("/reservation/list - responseDTO: {}", retrieve);
         return ResponseEntity.ok().body(retrieve);
     }
 

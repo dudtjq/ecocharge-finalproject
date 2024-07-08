@@ -5,7 +5,7 @@ import lombok.*;
 
 import java.util.List;
 
-@Getter @Setter @ToString
+@Getter @Setter @ToString(exclude = "reservationList")
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode @Builder
 @Entity
