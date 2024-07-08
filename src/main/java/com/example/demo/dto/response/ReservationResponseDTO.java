@@ -25,7 +25,7 @@ public class ReservationResponseDTO {
     private String startTime;
     private String finishTime;
     private String userId;
-    private String statId;
+    private String statNm;
 
     public ReservationResponseDTO(Reservation reservation) {
         this.reservationNo = reservation.getReservationNo();
@@ -35,6 +35,6 @@ public class ReservationResponseDTO {
         this.startTime = reservation.getStartTime();
         this.finishTime = reservation.getFinishTime();
         this.userId = reservation.getUser().getUserId();
-        this.statId = reservation.getChargeSpot().getStatId();
+        this.statNm = reservation.getChargeSpot().getStatNm();
     }
 }
