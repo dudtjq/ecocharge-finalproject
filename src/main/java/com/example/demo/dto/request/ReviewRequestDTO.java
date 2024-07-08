@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Builder
 public class ReviewRequestDTO {
 
-    @NotBlank
     private long reviewNo;
 
     @NotBlank
@@ -35,7 +34,6 @@ public class ReviewRequestDTO {
                 .content(content)
                 .user(user)
                 .chargeSpot(chargeSpot)
-                .reviewDate(reviewDate)
                 .build();
     }
 
