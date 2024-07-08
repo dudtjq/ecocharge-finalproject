@@ -12,9 +12,9 @@ import lombok.*;
 public class Charger {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    
     private String bnm; //  운영기관(대)
 
     private String busiNm; //  운영기관(소)
@@ -27,6 +27,6 @@ public class Charger {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stat_id")
-    private ChargeSpot chargeInfo;
+    private ChargeSpot chargeSpot;
 
 }

@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter @Setter @ToString
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode @Builder
@@ -24,5 +26,8 @@ public class ChargeSpot {
     private String statId; // 충전소 ID
 
     private String latLng; // 위도 경도
+    
+    @OneToMany(mappedBy = "chargeSpot")
+    private List<Charger> chargerList;
 
 }
