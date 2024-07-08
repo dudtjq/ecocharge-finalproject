@@ -1,35 +1,31 @@
 package com.example.demo.controller;
 
-import com.example.demo.service.ChargerService;
-import com.example.demo.service.ChargerSpotService;
+import com.example.demo.dto.response.ChargeSpotMarkerResponsDTO;
+import com.example.demo.service.ChargeSpotService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+import java.util.List;
+
 @Slf4j
-@RequestMapping("/charger")
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/chargespot")
 public class ChargeSpotController {
 
-    private final ChargerSpotService chargerSpotService;
-
-
-//    @PostMapping
-//    public ResponseEntity<?> charger(
-//            @Validated @RequestBody ChargeSpotRequestDTO requestDTO
-//            ){
-//
-//            chargerService.showCharger(requestDTO);
-//
-//
-//
-//
-//
-//
-//
-//    }
+    private final ChargeSpotService chargeSpotService;
+    
+    @GetMapping("/marker")
+    public ResponseEntity<?> createChargeSpotMarker(@RequestParam(name = "lat") double lat, @RequestParam(name = "lng") double lng) {
+        
+        log.info("/chargespot/marker?lat={}&lng={} GET!!", lat, lng);
+        
+        List<ChargeSpotMarkerResponsDTO> markerList = chargeSpotService.getMarker(lat, lng);
+        
+        return ResponseEntity.ok().body(markerList);
+    }
 
 
 

@@ -33,10 +33,10 @@ public class ChargeSpot {
 
     @Column(name = "lat_lng")
     private String latLng; // 위도 경도
-
+    
     @OneToMany(mappedBy = "chargeSpot")
     private List<Charger> chargerList;
-
+    
     @OneToMany(mappedBy = "chargeSpot")
     private List<Reservation> reservationList;
 

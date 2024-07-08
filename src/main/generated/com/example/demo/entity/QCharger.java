@@ -32,7 +32,7 @@ public class QCharger extends EntityPathBase<Charger> {
 
     public final StringPath chgerType = createString("chgerType");
 
-    public final StringPath id = createString("id");
+    public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
     public final StringPath powerType = createString("powerType");
 
