@@ -58,7 +58,11 @@ public class User {
     private List<Board> boardList;
 
     @OneToMany(mappedBy = "user")
+
     private List<Review> reviewList;
+
+    private List<Reservation> reservationList;
+
 
 
 
