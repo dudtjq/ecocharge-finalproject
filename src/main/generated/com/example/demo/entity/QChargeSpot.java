@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -28,6 +29,8 @@ public class QChargeSpot extends EntityPathBase<ChargeSpot> {
     public final StringPath latLng = createString("latLng");
 
     public final StringPath limitYn = createString("limitYn");
+
+    public final ListPath<Reservation, QReservation> reservationList = this.<Reservation, QReservation>createList("reservationList", Reservation.class, QReservation.class, PathInits.DIRECT2);
 
     public final StringPath statId = createString("statId");
 

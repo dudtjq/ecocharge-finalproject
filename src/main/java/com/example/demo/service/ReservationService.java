@@ -6,7 +6,7 @@ import com.example.demo.dto.response.ReservationResponseDTO;
 import com.example.demo.entity.ChargeSpot;
 import com.example.demo.entity.Reservation;
 import com.example.demo.entity.User;
-import com.example.demo.repository.ChargeInfoRepository;
+import com.example.demo.repository.ChargeSpotRepository;
 import com.example.demo.repository.ReservationRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
-    private final ChargeInfoRepository chargeInfoRepository;
+    private final ChargeSpotRepository chargeInfoRepository;
 
     public void create(final ReservationRequestDTO requestDTO) {
         User user = userRepository.findById(requestDTO.getUserId())
@@ -48,7 +48,7 @@ public class ReservationService {
     }
 
     public List<ReservationResponseDTO> retrieve(final ReservationListRequestDTO dto) {
-        List<Reservation> reservationList = reservationRepository.findByUserId(dto.getUserId());
+        List<Reservation> reservationList = reservationRepository.findByUser_UserId(dto.getUserId());
         LocalDateTime today = LocalDateTime.now();
 
         for (Reservation reservation : reservationList) {
