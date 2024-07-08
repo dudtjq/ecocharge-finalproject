@@ -9,4 +9,7 @@ import java.util.List;
 
 public interface QnaRepository extends JpaRepository<Qna, Long> {
 
+
+    @Query("DELETE FROM Qna q WHERE q.qnaNo = :qnaNo")
+    void deleteByQnaNo(Long qnaNo);
 }

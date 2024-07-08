@@ -12,6 +12,8 @@ public class ChargerRequestDTO {
 
     private String chgerType;
 
+
+
     public Charger toEntity(){
         return  Charger.builder()
                 .powerType(powerType)

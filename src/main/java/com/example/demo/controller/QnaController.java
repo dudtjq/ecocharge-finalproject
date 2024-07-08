@@ -28,16 +28,17 @@ public class QnaController {
     @PostMapping
     public ResponseEntity<?> createQna(
             @Validated @RequestBody QnaRequestDTO requestDTO,
+            @AuthenticationPrincipal TokenUserInfo userInfo,
             BindingResult result){
 
         log.info("/ecocharge/qna Post! - dto: {}", requestDTO);
-//        log.info("TokenUserInfo: {}", userInfo);
+        log.info("TokenUserInfo: {}", userInfo);
 
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if(validatedResult != null) return validatedResult;
 
-        QnaListResponseDTO qnaListResponseDTO = qnaService.create(requestDTO);
-        return ResponseEntity.ok().body(qnaListResponseDTO);
+        qnaService.create(requestDTO, userInfo.getUserId());
+        return ResponseEntity.ok().body("작성 완료");
 
     }
 
@@ -88,18 +89,25 @@ public class QnaController {
             @PathVariable("qnaNo") Long qnaNo
     ){
 
-        log.info("/api/todos/{} DELETE request!", qnaNo);
+        log.info("DELETE request!: {}", qnaNo);
+        log.info("userInfo : {}", userInfo);
 
         if(qnaNo == null){
+            log.info("게시글이 없습니다.");
             return ResponseEntity.badRequest()
                     .body("QnA 번호를 전달해 주세요.");
         }
 
         try {
-            QnaListResponseDTO responseDTO = qnaService.delete(qnaNo);
+
+            QnaListResponseDTO responseDTO = qnaService.delete(qnaNo, userInfo.getUserId());
+
+            log.info("요청을 보냅니다:{}", responseDTO);
+
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             e.printStackTrace();
+            log.info("그 외의 오류");
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
@@ -110,6 +118,7 @@ public class QnaController {
     @PatchMapping("/{qnaNo}")
     public ResponseEntity<?> updateQna(
             @Validated @RequestBody QnaUpdateRequestDTO requestDTO,
+            @AuthenticationPrincipal TokenUserInfo userInfo,
             BindingResult result
             ){
 
@@ -118,7 +127,7 @@ public class QnaController {
 
         try {
 
-            QnaDetailResponseDTO updateDTO = qnaService.update(requestDTO);
+            QnaDetailResponseDTO updateDTO = qnaService.update(requestDTO, userInfo.getUserId());
             return ResponseEntity.ok().body(updateDTO);
 
         }catch (Exception e){

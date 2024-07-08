@@ -6,5 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ChargeSpotRepository extends JpaRepository<ChargeSpot, Long> {
+public interface ChargeSpotRepository extends JpaRepository<ChargeSpot, String> {
+
+    @Query("SELECT c, s FROM ChargeSpot c RIGHT JOIN c.statId s")
+    List<ChargeSpot> searchCharger();
+
+
 }

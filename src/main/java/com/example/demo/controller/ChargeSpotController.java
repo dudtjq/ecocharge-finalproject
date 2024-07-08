@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.response.ChargeSpotMarkerResponsDTO;
-import com.example.demo.entity.ChargeSpot;
 import com.example.demo.service.ChargeSpotService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

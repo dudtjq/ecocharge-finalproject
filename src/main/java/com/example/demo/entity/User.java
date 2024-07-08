@@ -60,6 +60,11 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Review> reviewList;
 
+    @OneToMany(mappedBy = "user")
+    private List<Reservation> reservationList;
+
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
 
     // 소셜 로그인 access token 저장하는 메서드

@@ -6,6 +6,7 @@ import com.example.demo.dto.request.BoardUpdateRequestDTO;
 import com.example.demo.dto.response.BoardDetailResponseDTO;
 import com.example.demo.dto.response.BoardListResponseDTO;
 import com.example.demo.service.BoardService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +27,12 @@ public class BoardController {
 
     private final BoardService boardService;
 
-
     // 게시판 생성
     @PostMapping
-    public ResponseEntity<?> createBoard(BoardRequestDTO requestDTO
+    public ResponseEntity<?> createBoard(BoardRequestDTO requestDTO,
+                                         @AuthenticationPrincipal TokenUserInfo userInfo
     ) throws IOException {
-        BoardListResponseDTO boardListResponseDTO = boardService.create(requestDTO);
+        BoardListResponseDTO boardListResponseDTO = boardService.create(requestDTO,userInfo);
 
         return ResponseEntity.ok().body(boardListResponseDTO);
 
@@ -47,6 +48,7 @@ public class BoardController {
 
         try {
             final BoardDetailResponseDTO responseDTO = boardService.boardDetail((long) boardNo);
+            log.info("Board detail response: {}", responseDTO);
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -74,7 +76,7 @@ public class BoardController {
     // QnA 삭제 요청 처리 (관리자)
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
     @DeleteMapping("/{boardNo}")
-    public ResponseEntity<?> deleteQna(
+    public ResponseEntity<?> deleteBoard(
             @AuthenticationPrincipal TokenUserInfo userInfo,
             @PathVariable("boardNo") Long boardNo
     ){
@@ -87,7 +89,7 @@ public class BoardController {
         }
 
         try {
-            BoardListResponseDTO responseDTO = boardService.delete(boardNo);
+            BoardListResponseDTO responseDTO = boardService.delete(boardNo, userInfo.getUserId());
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             e.printStackTrace();
@@ -101,6 +103,7 @@ public class BoardController {
     @PatchMapping("/{boardNo}")
     public ResponseEntity<?> updateBoard(
             @Validated @RequestBody BoardUpdateRequestDTO requestDTO,
+            @AuthenticationPrincipal TokenUserInfo userInfo,
             BindingResult result
     ){
 
@@ -108,7 +111,7 @@ public class BoardController {
         if(validatedResult != null) return validatedResult;
 
         try {
-            BoardDetailResponseDTO responseDTO = boardService.update(requestDTO);
+            BoardDetailResponseDTO responseDTO = boardService.update(requestDTO, userInfo);
             return ResponseEntity.ok().body(responseDTO);
 
         }catch (Exception e){
