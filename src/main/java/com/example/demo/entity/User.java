@@ -58,9 +58,9 @@ public class User {
     private List<Board> boardList;
 
     @OneToMany(mappedBy = "user")
-
     private List<Review> reviewList;
 
+    @OneToMany(mappedBy = "user")
     private List<Reservation> reservationList;
 
     @Enumerated(value = EnumType.STRING)
