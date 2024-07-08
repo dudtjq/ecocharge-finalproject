@@ -20,7 +20,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     // 예약 등록
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> create (@RequestBody ReservationRequestDTO requestDTO) {
         log.info("/reservation - POST 요청 requestDTO: {}", requestDTO);
         reservationService.create(requestDTO);
@@ -34,7 +34,10 @@ public class ReservationController {
         if(id == null || id.trim().isEmpty()) {
             return ResponseEntity.badRequest().body("올바른 예약 id를 보내주세요.");
         }
-        reservationService.delete(id);
+        boolean isDeleted =  reservationService.delete(id);
+        if (!isDeleted) {
+            return ResponseEntity.badRequest().body("해당 예약이 존재하지 않습니다");
+        }
         return ResponseEntity.ok().body("예약이 취소되었습니다.");
     }
 

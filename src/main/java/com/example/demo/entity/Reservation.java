@@ -47,7 +47,7 @@ public class Reservation {
     @JoinColumn(name = "stat_id")
     private ChargeSpot chargeSpot;
 
-    public static enum RSTATUS {
+    public enum RSTATUS {
         AVAILABLE, USE
     }
 

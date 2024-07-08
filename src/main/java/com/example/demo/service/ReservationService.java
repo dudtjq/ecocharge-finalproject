@@ -28,37 +28,39 @@ public class ReservationService {
     private final ChargeInfoRepository chargeInfoRepository;
 
     public void create(final ReservationRequestDTO requestDTO) {
-        User user = userRepository.findById(requestDTO.getUserId()).orElseThrow();
-        ChargeSpot chargeSpot = chargeInfoRepository.findById(requestDTO.getStatId()).orElseThrow();
+        User user = userRepository.findById(requestDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        ChargeSpot chargeSpot = chargeInfoRepository.findById(requestDTO.getStatId())
+                .orElseThrow(() -> new RuntimeException("충전소를 찾을 수 없습니다."));
         requestDTO.setRStatus(Reservation.RSTATUS.USE);
         reservationRepository.save(requestDTO.toEntity(user, chargeSpot));
     }
 
-    public void delete(String id) {
-        reservationRepository.findById(id).orElseThrow(
-                () -> {
+    public boolean delete(final String id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> {
                     log.error("예약이 존재하지 않습니다.");
                     throw new RuntimeException("예약이 존재하지 않습니다.");
                 }
         );
-        reservationRepository.deleteById(id);
+        reservationRepository.delete(reservation);
+        return true;
     }
 
-    public List<ReservationResponseDTO> retrieve(ReservationListRequestDTO dto) {
-        List<Reservation> reservationList = new ArrayList<>();
-        String status;
+    public List<ReservationResponseDTO> retrieve(final ReservationListRequestDTO dto) {
+        List<Reservation> reservationList = reservationRepository.findByUserId(dto.getUserId());
         LocalDateTime today = LocalDateTime.now();
-        Reservation reservation = reservationRepository.findById(dto.getUserId()).orElseThrow();
-        if(reservation.getReservationDate().isBefore(today)) {
-            reservation.setRStatus(Reservation.RSTATUS.AVAILABLE);
-            reservationRepository.save(reservation);
+
+        for (Reservation reservation : reservationList) {
+            if (reservation.getReservationDate().isBefore(today)) {
+                reservation.setRStatus(Reservation.RSTATUS.AVAILABLE);
+                reservationRepository.save(reservation);
+            }
         }
-        reservationList.add(reservation);
         log.info("reservationList: {}", reservationList);
         List<ReservationResponseDTO> dtoList = reservationList.stream()
                 .map(ReservationResponseDTO::new)
                 .collect(Collectors.toList());
-
         return dtoList;
     }
 }
