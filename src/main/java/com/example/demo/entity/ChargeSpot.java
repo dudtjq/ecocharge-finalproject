@@ -36,10 +36,7 @@ public class ChargeSpot {
     
     @OneToMany(mappedBy = "chargeSpot")
     private List<Charger> chargerList;
-
-    @OneToMany(mappedBy = "chargeSpot")
-    private List<Charger> chargerList;
-
+    
     @OneToMany(mappedBy = "chargeSpot")
     private List<Reservation> reservationList;
 
