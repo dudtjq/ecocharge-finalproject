@@ -18,14 +18,15 @@ import java.util.UUID;
 public class Reservation {
 
     @Id
-    @NotBlank
     @GeneratedValue(strategy = GenerationType.UUID)
     private String reservationNo;
 
     @NotBlank
+    @Enumerated(value = EnumType.STRING)
     private RSTATUS rStatus;
 
     @NotBlank
+    @CreationTimestamp
     private LocalDateTime date;
 
     @NotBlank
@@ -33,7 +34,6 @@ public class Reservation {
     private LocalDateTime reservationDate;
 
     @NotBlank
-    @CreationTimestamp
     private String startTime;
 
     @NotBlank

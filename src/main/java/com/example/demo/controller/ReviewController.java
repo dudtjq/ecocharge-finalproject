@@ -19,7 +19,7 @@ public class ReviewController {
 
     // 리뷰 생성
     @PostMapping("/create")
-    public ResponseEntity<?> createReview(ReviewRequestDTO requestDTO) {
+    public ResponseEntity<?> createReview(@RequestBody ReviewRequestDTO requestDTO) {
         reviewService.create(requestDTO);
         return ResponseEntity.ok().body("리뷰 작성이 완료되었습니다.");
     }
@@ -42,11 +42,13 @@ public class ReviewController {
 
     // 리뷰 리스트 불러오기
     @GetMapping("/retrieve")
-    public ResponseEntity<?> retrieveReview(@RequestParam(defaultValue = "") String userId, @RequestParam(defaultValue = "") String statId) {
+    public ResponseEntity<?> retrieveReview(
+            @RequestParam(defaultValue = "") String userId,
+            @RequestParam(defaultValue = "") String statId) {
         ReviewListResponseDTO responseDTO = new ReviewListResponseDTO();
-        if (userId != null && !userId.isEmpty()) {
+        if (!userId.isEmpty()) {
             responseDTO = reviewService.getList("userId", userId);
-        } else if (statId != null && !statId.isEmpty()) {
+        } else if (!statId.isEmpty()) {
             responseDTO = reviewService.getList("statId", statId);
         }
 
