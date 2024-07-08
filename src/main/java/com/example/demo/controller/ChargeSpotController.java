@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.ChargeSpotRequestDTO;
+import com.example.demo.dto.request.ChargerRequestDTO;
 import com.example.demo.entity.ChargeSpot;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/chargespot")
 public class ChargeSpotController {
 
-    @PostMapping
-    public ResponseEntity<?> crateChargeSpot(
-            @Validated @RequestBody ChargeSpotRequestDTO requestDTO
-            ){
-
-    }
+//    @PostMapping
+//    public ResponseEntity<?> crateChargeSpot(
+//            @Validated @RequestBody ChargeSpotRequestDTO requestDTO
+//            ){
+//
+//
+//
+//    }
 
 
 

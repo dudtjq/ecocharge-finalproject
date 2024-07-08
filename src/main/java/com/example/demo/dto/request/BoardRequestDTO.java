@@ -1,6 +1,7 @@
 package com.example.demo.dto.request;
 
 import com.example.demo.entity.Board;
+import com.example.demo.entity.User;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,13 +21,14 @@ public class BoardRequestDTO {
 
     // 엔터티 변환
     // 나중에 User 추가해주기
-    public Board toEntity(String s){
+    public Board toEntity(String s, User user){
         return Board.builder()
                 .bAddress(bAddress)
                 .bWriter(bWriter)
                 .bTitle(bTitle)
                 .bContent(bContent)
                 .bProfileImage(s)
+                .user(user)
                 .build();
     }
 
