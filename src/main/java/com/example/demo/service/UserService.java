@@ -92,6 +92,7 @@ public class UserService {
             throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
         log.info("{}님 로그인 성공!", user.getUserName());
+        log.info("권한:{}",user.getRole());
 
         Map<String, String> token = getTokenMap(user);
 
