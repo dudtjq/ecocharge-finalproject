@@ -19,7 +19,7 @@ public class Review {
 
     @Id
     @Column(name = "review_no")
-    @NotBlank
+//    @NotBlank
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewNo;
 
@@ -30,17 +30,17 @@ public class Review {
     @CreationTimestamp
     private LocalDateTime reviewDate;
 
-    @CreationTimestamp
+//    @CreationTimestamp
     private LocalDateTime updateReviewDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @NotBlank
+//    @NotBlank
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stat_id")
-    @NotBlank
+//    @NotBlank
     private ChargeSpot chargeSpot;
 
 }
