@@ -28,10 +28,10 @@ public class QnaService {
     private final QnaRepository qnaRepository;
     private final QnaRepositoryImpl qnaRepositoryImpl;
 
-    public QnaListResponseDTO create(QnaRequestDTO requestDTO) {
-        //  User user = getUser(userId);
+    public QnaListResponseDTO create(QnaRequestDTO requestDTO, String userId) {
+        User user = getUser(userId);
 
-        qnaRepository.save(requestDTO.toEntity());
+        qnaRepository.save(requestDTO.toEntity(user));
         log.info("qna 작성 완료! qna : {}", requestDTO);
 
         return retrieve(1);
@@ -80,15 +80,21 @@ public class QnaService {
     }
 
     // qna 삭제
-    public QnaListResponseDTO delete(final Long qnaNo) {
+    public QnaListResponseDTO delete(final Long qnaNo, String userId) {
 
-        qnaRepository.findById(qnaNo).orElseThrow(
+        final Qna qna = qnaRepository.findById(qnaNo).orElseThrow(
                 () -> {
                     log.error("글번호가 존재하지 않아 삭제에 실패하였습니다. qnaNo : {}", qnaNo);
                     throw new RuntimeException("글번호가 존재하지 않아 삭제에 실패하였습니다.");
 
                 }
         );
+
+        // 삭제 권한 체크 - 본인이거나 관리자만 삭제 가능
+        if (!qna.getUser().getUserId().equals(userId) && !userId.equals("ADMIN")) {
+            log.error("해당 글을 삭제할 권한이 없습니다. qnaNo: {}, userId: {}", qnaNo, userId);
+            throw new RuntimeException("글을 삭제할 권한이 없습니다.");
+        }
         qnaRepository.deleteById(qnaNo);
 
         return retrieve(1);
@@ -97,14 +103,28 @@ public class QnaService {
     }
 
     // qna 수정
-    public QnaDetailResponseDTO update(final QnaUpdateRequestDTO requestDTO) {
+    public QnaDetailResponseDTO update(final QnaUpdateRequestDTO requestDTO, String userId) {
+
+        final Qna qna = qnaRepository.findById(requestDTO.getQnaNo()).orElseThrow(
+                () -> {
+                    log.error("글번호가 존재하지 않아 수정에 실패하였습니다. qnaNo : {}", requestDTO.getQnaNo());
+                    throw new RuntimeException("글번호가 존재하지 않아 수정에 실패하였습니다.");
+
+                }
+        );
+
+        // 본인만 수정 가능한 조건 체크
+        if (!qna.getUser().getUserId().equals(userId)) {
+            log.error("해당 글을 수정할 권한이 없습니다. qnaNo: {}, userId: {}", requestDTO.getQnaNo(), userId);
+            throw new RuntimeException("글을 수정할 권한이 없습니다.");
+        }
 
         Optional<Qna> byId = qnaRepository.findById(requestDTO.getQnaNo());
 
-        byId.ifPresent(qna -> {
-            qna.setQTitle(requestDTO.getQTitle());
-            qna.setQContent(requestDTO.getQContent());
-            qnaRepository.save(qna);
+        byId.ifPresent(qna1 -> {
+            qna1.setQTitle(requestDTO.getQTitle());
+            qna1.setQContent(requestDTO.getQContent());
+            qnaRepository.save(qna1);
         });
 
         return qnaDetail(requestDTO.getQnaNo());

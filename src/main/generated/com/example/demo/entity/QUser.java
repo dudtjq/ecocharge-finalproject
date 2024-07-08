@@ -44,7 +44,11 @@ public class QUser extends EntityPathBase<User> {
 
     public final DateTimePath<java.util.Date> refreshTokenExpiryDate = createDateTime("refreshTokenExpiryDate", java.util.Date.class);
 
+<<<<<<< HEAD
     public final ListPath<Review, QReview> reviewList = this.<Review, QReview>createList("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
+=======
+    public final ListPath<Reservation, QReservation> reservationList = this.<Reservation, QReservation>createList("reservationList", Reservation.class, QReservation.class, PathInits.DIRECT2);
+>>>>>>> 331784a1556c1db10346f52c067397be3a01477b
 
     public final EnumPath<Role> role = createEnum("role", Role.class);
 

@@ -1,7 +1,10 @@
 package com.example.demo.dto.request;
 
 import com.example.demo.entity.Qna;
+import com.example.demo.entity.User;
 import lombok.*;
+
+
 
 @Getter @Setter @ToString
 @NoArgsConstructor @AllArgsConstructor
@@ -17,13 +20,13 @@ public class QnaRequestDTO {
 
 
     // 엔터티 변환
-    public Qna toEntity(){
+    public Qna toEntity(User user){
 
         return Qna.builder()
                 .qTitle(qTitle)
                 .qContent(qContent)
                 .qCategory(qCategory)
-                //.user(user)
+                .user(user)
                 .build();
 
     }
