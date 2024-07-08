@@ -21,23 +21,13 @@ public class ChargeSpotService {
     public List<ChargeSpotMarkerResponsDTO> getMarker(double lat, double lng) {
         log.info("getMarker 동작!");
         List<ChargeSpot> chargeSpotList = chargeSpotRepository.findAll();
-//        log.info(chargeSpotList.toString());
-        
-        double rLat = Math.floor(lat * 100.0) / 100.0;
-        double rLng = Math.floor(lng * 100.0) / 100.0;
         
         List<ChargeSpotMarkerResponsDTO> spotList = new ArrayList<>();
                 chargeSpotList.forEach((chargeSpot -> {
                     String latLng = chargeSpot.getLatLng();
                     String[] split = latLng.split(",");
-//                    log.info(String.valueOf(chargeSpot));
-
-                    double v1 = Math.floor(Double.parseDouble(split[0]) * 100.0) / 100.0;
-                    double v2 = Math.floor(Double.parseDouble(split[1]) * 100.0) / 100.0;
-                    double epsilon = 0.02;
                     
-//                    log.info(String.valueOf(v1));
-//                    log.info(String.valueOf(v2));
+                    double epsilon = 0.02;
 
 
                     if (Math.abs(Double.parseDouble(split[0]) - lat) < epsilon) {
