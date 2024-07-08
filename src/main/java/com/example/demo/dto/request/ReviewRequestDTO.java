@@ -25,7 +25,7 @@ public class ReviewRequestDTO {
     private String userId;
 
 //    @NotBlank
-    private Long statId;
+    private String statId;
 
     private LocalDateTime reviewDate;
 

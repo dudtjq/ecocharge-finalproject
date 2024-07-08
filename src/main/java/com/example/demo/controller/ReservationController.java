@@ -1,4 +1,4 @@
-package com.example.demo.api;
+package com.example.demo.controller;
 
 import com.example.demo.dto.request.ReservationListRequestDTO;
 import com.example.demo.dto.request.ReservationRequestDTO;

@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter @Setter @ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -18,14 +19,15 @@ import java.util.UUID;
 public class Reservation {
 
     @Id
-    @NotBlank
     @GeneratedValue(strategy = GenerationType.UUID)
     private String reservationNo;
 
     @NotBlank
+    @Enumerated(value = EnumType.STRING)
     private RSTATUS rStatus;
 
     @NotBlank
+    @CreationTimestamp
     private LocalDateTime date;
 
     @NotBlank
@@ -33,7 +35,6 @@ public class Reservation {
     private LocalDateTime reservationDate;
 
     @NotBlank
-    @CreationTimestamp
     private String startTime;
 
     @NotBlank
@@ -50,5 +51,6 @@ public class Reservation {
     public enum RSTATUS {
         AVAILABLE, USE
     }
+
 
 }
