@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.ChargeSpotRequestDTO;
 import com.example.demo.dto.response.ChargeSpotMarkerResponsDTO;
+import com.example.demo.dto.response.ChargerSpotResponseDTO;
+import com.example.demo.entity.ChargeSpot;
 import com.example.demo.service.ChargeSpotService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,19 @@ public class ChargeSpotController {
         List<ChargeSpotMarkerResponsDTO> markerList = chargeSpotService.getMarker(lat, lng);
         
         return ResponseEntity.ok().body(markerList);
+    }
+
+    @PostMapping
+    private ResponseEntity<?> searchSpot(@RequestBody ChargeSpotRequestDTO requestDTO){
+
+        log.info("/chargespot requestDTO POST! : {}",requestDTO);
+
+        List<ChargeSpot> spotList = chargeSpotService.findSearch(requestDTO);
+
+        log.info(String.valueOf(spotList));
+
+        return ResponseEntity.ok().body(spotList);
+
     }
 
 

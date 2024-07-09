@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.ChargeSpotRequestDTO;
 import com.example.demo.dto.response.ChargeSpotMarkerResponsDTO;
+import com.example.demo.dto.response.ChargerSpotResponseDTO;
 import com.example.demo.entity.ChargeSpot;
 import com.example.demo.repository.ChargeSpotRepository;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +63,20 @@ public class ChargeSpotService {
                 log.info(spotList.toString());
         
         return spotList;
+    }
+
+    public List<ChargeSpot> findSearch(ChargeSpotRequestDTO requestDTO) {
+
+        List<ChargeSpot> bySearch = chargeSpotRepository.findAll();
+
+        List<ChargerSpotResponseDTO> responseDTO = new ArrayList<>();
+
+
+
+
+        log.info(bySearch.toString());
+
+        return bySearch;
+
     }
 }
