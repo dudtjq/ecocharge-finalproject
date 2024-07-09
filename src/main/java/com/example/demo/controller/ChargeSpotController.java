@@ -31,11 +31,14 @@ public class ChargeSpotController {
     }
 
     @PostMapping
-    private ResponseEntity<?> searchSpot(@RequestBody ChargeSpotRequestDTO requestDTO){
+    private ResponseEntity<?> searchSpot(@RequestBody ChargeSpotRequestDTO requestDTO,
+                                         @RequestParam(name = "lat") double lat, @RequestParam(name = "lng") double lng){
 
         log.info("/chargespot requestDTO POST! : {}",requestDTO);
 
         List<ChargeSpot> spotList = chargeSpotService.findSearch(requestDTO);
+
+        List<ChargeSpotMarkerResponsDTO> markerList = chargeSpotService.getMarker(lat, lng);
 
         log.info(String.valueOf(spotList));
 

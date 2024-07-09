@@ -5,6 +5,7 @@ import com.example.demo.dto.response.ChargeSpotMarkerResponsDTO;
 import com.example.demo.dto.response.ChargerSpotResponseDTO;
 import com.example.demo.entity.ChargeSpot;
 import com.example.demo.repository.ChargeSpotRepository;
+import com.example.demo.repository.ChargeSpotRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,9 @@ import java.util.List;
 public class ChargeSpotService {
     
     private final ChargeSpotRepository chargeSpotRepository;
-    
+
+    private final ChargeSpotRepositoryImpl chargeSpotRepositoryImpl;
+
     
     public List<ChargeSpotMarkerResponsDTO> getMarker(double lat, double lng) {
         log.info("getMarker 동작!");
@@ -57,16 +60,11 @@ public class ChargeSpotService {
 
     public List<ChargeSpot> findSearch(ChargeSpotRequestDTO requestDTO) {
 
-        List<ChargeSpot> bySearch = chargeSpotRepository.findAll();
+        final List<ChargeSpot> spotList = chargeSpotRepositoryImpl.findAll(requestDTO);
 
-        List<ChargerSpotResponseDTO> responseDTO = new ArrayList<>();
+        log.info(spotList.toString());
 
-
-
-
-        log.info(bySearch.toString());
-
-        return bySearch;
+        return spotList;
 
     }
 }

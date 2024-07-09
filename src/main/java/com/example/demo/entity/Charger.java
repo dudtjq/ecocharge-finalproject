@@ -1,9 +1,10 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter @ToString
+@Getter @ToString(exclude = "chargeSpot")
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode
 @Builder
@@ -27,6 +28,7 @@ public class Charger {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stat_id")
+    @JsonIgnore
     private ChargeSpot chargeSpot;
 
 }
