@@ -19,4 +19,10 @@ public class ChargeSpotRequestDTO {
     private String chgerType;
 
     private String powerType;
+
+    private String lat;
+
+    private String lng;
+
+    private String zoom;
 }
