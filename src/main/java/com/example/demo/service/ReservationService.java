@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +50,10 @@ public class ReservationService {
 
     public List<ReservationResponseDTO> retrieve(final ReservationListRequestDTO dto) {
         List<Reservation> reservationList = reservationRepository.findByUser_UserId(dto.getUserId());
-        LocalDateTime today = LocalDateTime.now();
+        LocalDate today = LocalDate.now();
 
         for (Reservation reservation : reservationList) {
-            if (reservation.getReservationDate().isBefore(today)) {
+            if (reservation.getReservationDate().toLocalDate().isAfter(today)) {
                 reservation.setRStatus(Reservation.RSTATUS.AVAILABLE);
                 reservationRepository.save(reservation);
             }
