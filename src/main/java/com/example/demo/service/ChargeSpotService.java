@@ -23,7 +23,7 @@ public class ChargeSpotService {
     private final ChargeSpotRepositoryImpl chargeSpotRepositoryImpl;
 
     
-    public List<ChargeSpotMarkerResponsDTO> getMarker(double lat, double lng) {
+    public List<ChargeSpotMarkerResponsDTO> getMarker(double lat, double lng, int zoom) {
         log.info("getMarker 동작!");
         List<ChargeSpot> chargeSpotList = chargeSpotRepository.findAll();
         
@@ -32,11 +32,23 @@ public class ChargeSpotService {
                     String latLng = chargeSpot.getLatLng();
                     String[] split = latLng.split(",");
                     
-                    double epsilon = 0.02;
+                    double yEpsilon = 0.02;
+                    double xEpsilon = 0.03;
+                    
+                    switch (zoom) {
+                        case 15, 16, 17, 18:
+                            xEpsilon = 0.02;
+                            yEpsilon = 0.01;
+                            break;
+                        case 19, 20, 21:
+                            xEpsilon = 0.007;
+                            yEpsilon = 0.005;
+                            break;
+                    }
 
 
-                    if (Math.abs(Double.parseDouble(split[0]) - lat) < epsilon) {
-                        if (Math.abs(Double.parseDouble(split[1]) - lng) < epsilon) {
+                    if (Math.abs(Double.parseDouble(split[0]) - lat) < yEpsilon) {
+                        if (Math.abs(Double.parseDouble(split[1]) - lng) < xEpsilon) {
                             ChargeSpotMarkerResponsDTO dto = ChargeSpotMarkerResponsDTO.builder()
                                     .addr(chargeSpot.getAddr())
                                     .statNm(chargeSpot.getStatNm())
@@ -53,7 +65,7 @@ public class ChargeSpotService {
                     }
                 }));
                 
-                log.info(spotList.toString());
+//                log.info(spotList.toString());
         
         return spotList;
     }
