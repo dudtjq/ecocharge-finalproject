@@ -4,6 +4,7 @@ import com.example.demo.dto.request.ChargeSpotRequestDTO;
 import com.example.demo.entity.ChargeSpot;
 import com.example.demo.entity.QChargeSpot;
 import com.example.demo.entity.QCharger;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -19,14 +20,24 @@ public class ChargeSpotRepositoryImpl implements ChargeSpotRepositoryCustom{
 
     @Override
     public List<ChargeSpot> findAll(ChargeSpotRequestDTO requestDTO) {
-       return   jpaQueryFactory.select(chargeSpot)
+        BooleanBuilder builder = new BooleanBuilder();
+
+        // 조건 추가
+        if (!requestDTO.getLimitYn().isEmpty()) {
+            builder.and(chargeSpot.limitYn.like(requestDTO.getLimitYn()));
+        }
+        if (!requestDTO.getChgerType().isEmpty()) {
+            builder.and(charger.chgerType.like("%" + requestDTO.getChgerType() + "%"));
+        }
+        if (!requestDTO.getPowerType().isEmpty()) {
+            builder.and(charger.powerType.like(requestDTO.getPowerType() + "%"));
+        }
+
+
+        return   jpaQueryFactory.select(chargeSpot)
                 .from(chargeSpot)
                 .leftJoin(chargeSpot.chargerList, charger)
-                .where(chargeSpot.limitYn.eq(requestDTO.getLimitYn()),
-                        charger.chgerType.eq(requestDTO.getChgerType()),
-                        charger.powerType.eq(requestDTO.getPowerType())
-                )
+                .where(builder)
                 .fetch();
-
     }
 }
