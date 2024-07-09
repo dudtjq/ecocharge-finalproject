@@ -61,6 +61,11 @@ public class ReviewService {
     public void modifyReview(final ReviewModifyRequestDTO requestDTO) {
         Review findReview = reviewRepository.findById(requestDTO.getReviewNo())
                 .orElseThrow(() -> new RuntimeException("리뷰가 존재하지 않습니다."));
+        User findUser = userRepository.findById(requestDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+        if (!findUser.getUserId().equals(requestDTO.getUserId())) {
+            return;
+        }
         findReview.setContent(requestDTO.getContent());
         findReview.setUpdateReviewDate(LocalDateTime.now());
         reviewRepository.save(findReview);
