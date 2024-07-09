@@ -16,5 +16,7 @@ public class QnaUpdateRequestDTO {
 
     private String qContent;
 
+    private String qAnswer;
+
 
 }
