@@ -72,7 +72,7 @@ public class BoardService {
         Board board = boardRepository.findById(boardNo).orElseThrow(
                 () -> new RuntimeException("존재하지 않는 게시물입니다.")
         );
-
+        
         return new BoardDetailResponseDTO(board, 1);
 
     }
@@ -141,7 +141,12 @@ public class BoardService {
         );
         return user;
     }
-
-
-
+    
+    
+    public void updateViewCount(Long boardNo) {
+        Board board = boardRepository.findById(boardNo).orElseThrow();
+        
+        board.setViewCount(board.getViewCount() + 1);
+        boardRepository.save(board);
+    }
 }
