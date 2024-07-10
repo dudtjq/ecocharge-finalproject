@@ -36,6 +36,8 @@ public class QCharger extends EntityPathBase<Charger> {
 
     public final StringPath powerType = createString("powerType");
 
+    public final StringPath ynCheck = createString("ynCheck");
+
     public QCharger(String variable) {
         this(Charger.class, forVariable(variable), INITS);
     }

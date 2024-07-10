@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter @ToString(exclude = "chargeSpot")
+@Getter @Setter @ToString(exclude = "chargeSpot")
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode
 @Builder
@@ -25,6 +25,9 @@ public class Charger {
     private String chgerType; // 충전기 타입
 
     private String chargerId; // 충전기 ID
+
+    @Column(name = "yn_check")
+    private String ynCheck;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stat_id")

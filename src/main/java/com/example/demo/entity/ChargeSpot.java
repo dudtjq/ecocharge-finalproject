@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Random;
 
 @Getter @Setter @ToString(exclude = {"reservationList", "chargerList"})
 @AllArgsConstructor @NoArgsConstructor
@@ -39,5 +40,7 @@ public class ChargeSpot {
     
     @OneToMany(mappedBy = "chargeSpot")
     private List<Reservation> reservationList;
+
+
 
 }
