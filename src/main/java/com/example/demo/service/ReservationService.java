@@ -52,9 +52,11 @@ public class ReservationService {
     public List<ReservationResponseDTO> retrieve(final ReservationListRequestDTO dto) {
         List<Reservation> reservationList = reservationRepository.findByUser_UserId(dto.getUserId());
         LocalDate today = LocalDate.now();
+        log.info("today: {}", today);
 
         for (Reservation reservation : reservationList) {
-            if (reservation.getReservationDate().toLocalDate().isAfter(today)) {
+                log.info("reservation day: {}", reservation.getReservationDate().toLocalDate());
+            if (reservation.getReservationDate().toLocalDate().isBefore(today)) {
                 reservation.setRStatus(Reservation.RSTATUS.AVAILABLE);
                 reservationRepository.save(reservation);
             }

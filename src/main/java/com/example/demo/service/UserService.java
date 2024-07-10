@@ -150,10 +150,10 @@ public class UserService {
                     logoutUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken;
                     ResponseEntity<String> response = restTemplate.postForEntity(logoutUrl, null, String.class);
                     if (response.getStatusCode() == HttpStatus.OK) {
-                        log.info("Google logout successful for user: {}", userInfo.getEmail());
+                        log.info("Google logout successful for user: {}", userInfo.getUserId());
                         foundUser.changeAccessToken(null);
                         userRepository.save(foundUser);
-                        log.error("Google logout failed for user: {}", userInfo.getEmail());
+                        log.error("Google logout failed for user: {}", userInfo.getUserId());
                     }
                 } else if (foundUser.getLoginMethod() == User.LoginMethod.KAKAO) {
                     headers.add("Authorization", "Bearer " + accessToken);
@@ -161,11 +161,11 @@ public class UserService {
                     logoutUrl = "https://kapi.kakao.com/v1/user/logout";
                     ResponseEntity<String> response = restTemplate.postForEntity(logoutUrl, entity, String.class);
                     if (response.getStatusCode() == HttpStatus.OK) {
-                        log.info("Kakao logout successful for user: {}", userInfo.getEmail());
+                        log.info("Kakao logout successful for user: {}", userInfo.getUserId());
                         foundUser.changeAccessToken(null);
                         userRepository.save(foundUser);
                     } else {
-                        log.error("Kakao logout failed for user: {}", userInfo.getEmail());
+                        log.error("Kakao logout failed for user: {}", userInfo.getUserId());
                     }
 
                 } else if (foundUser.getLoginMethod() == User.LoginMethod.NAVER) {
@@ -174,11 +174,11 @@ public class UserService {
                     logoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete&access_token=" + accessToken;
                     ResponseEntity<String> response = restTemplate.exchange(logoutUrl, HttpMethod.GET, entity, String.class);
                     if (response.getStatusCode() == HttpStatus.OK) {
-                        log.info("Naver logout successful for user: {}", userInfo.getEmail());
+                        log.info("Naver logout successful for user: {}", userInfo.getUserId());
                         foundUser.changeAccessToken(null);
                         userRepository.save(foundUser);
                     } else {
-                        log.error("Naver logout failed for user: {}", userInfo.getEmail());
+                        log.error("Naver logout failed for user: {}", userInfo.getUserId());
                     }
                 }
             } catch (Exception e) {
@@ -255,6 +255,11 @@ public class UserService {
 
     public ModifyUserResponseDTO modifyUserInfo(ModifyUserRequestDTO dto) {
         String savedphoneNumber = dto.getPhoneNumber();
+
+        if (isDuplicatePhone(savedphoneNumber)) {
+            throw new RuntimeException("사용중인 핸드폰 번호 입니다");
+        }
+
         if (dto.getLoginMethod().equals(User.LoginMethod.COMMON)) {
             savedphoneNumber = "ECO" + dto.getPhoneNumber();
         }
@@ -276,8 +281,6 @@ public class UserService {
 
         log.info("foundUser: {}", foundUser);
         User saved = userRepository.save(foundUser);
-
-//        saved.setPhoneNumber(dto.getPhoneNumber());
 
         return new ModifyUserResponseDTO(saved);
     }
