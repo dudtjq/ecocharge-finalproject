@@ -5,7 +5,6 @@ import com.example.demo.entity.User;
 import lombok.*;
 
 
-
 @Getter @Setter @ToString
 @NoArgsConstructor @AllArgsConstructor
 @EqualsAndHashCode
@@ -18,15 +17,17 @@ public class QnaRequestDTO {
 
     private String qContent;
 
+    private String userId;
+
 
     // 엔터티 변환
-    public Qna toEntity(User user){
+    public Qna toEntity(User userId){
 
         return Qna.builder()
                 .qTitle(qTitle)
                 .qContent(qContent)
                 .qCategory(qCategory)
-                .user(user)
+                .user(userId)
                 .build();
 
     }

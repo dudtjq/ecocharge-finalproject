@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
+import com.example.demo.auth.TokenUserInfo;
 import com.example.demo.common.ItemWithSequence;
 import com.example.demo.common.Page;
 import com.example.demo.common.PageMaker;
 import com.example.demo.dto.request.QnaUpdateRequestDTO;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.dto.request.QnaRequestDTO;
 import com.example.demo.dto.response.QnaDetailResponseDTO;
@@ -12,6 +14,7 @@ import com.example.demo.entity.Qna;
 import com.example.demo.repository.QnaRepository;
 import com.example.demo.repository.QnaRepositoryImpl;
 import com.example.demo.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,10 +31,16 @@ public class QnaService {
     private final QnaRepository qnaRepository;
     private final QnaRepositoryImpl qnaRepositoryImpl;
 
-    public QnaListResponseDTO create(QnaRequestDTO requestDTO, String userId) {
-        User user = getUser(userId);
+    public QnaListResponseDTO create(QnaRequestDTO requestDTO) {
+        log.info("create 작동");
+        // userId를 사용하여 User 엔티티를 조회
+        User user = userRepository.findById(requestDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("회원정보를 찾을 수 없습니다."));
 
-        qnaRepository.save(requestDTO.toEntity(user));
+        // Qna 엔티티 생성
+        Qna qna = requestDTO.toEntity(user);
+
+        qnaRepository.save(qna);
         log.info("qna 작성 완료! qna : {}", requestDTO);
 
         return retrieve(1);
@@ -50,15 +59,59 @@ public class QnaService {
 
     // qna 전체 목록 가져오기
     public QnaListResponseDTO retrieve(int pageNo) {
+        log.info("page no: {}", pageNo);
         Page page = new Page();
         page.setPageNo(pageNo);
+        log.info("page: {}", page);
+
         
         List<ItemWithSequence> entityList = qnaRepositoryImpl.findAll(page);
+        log.info("entityList : {}", entityList);
+
+
+        List<QnaDetailResponseDTO> dtoList = entityList.stream()
+                .map(item -> {
+                        log.info(item.getQna().toString());
+                        log.info(item.getQna().getUser().toString());
+                        return new QnaDetailResponseDTO(item.getQna(), item.getSequence());
+                }
+                )
+                .toList();
+
+
+        log.info("dtoList : {}", dtoList);
+        
+        PageMaker pageMaker = new PageMaker(page, (int) qnaRepository.count());
+        log.info("pageMaker : {}", pageMaker);
+
+        return QnaListResponseDTO.builder()
+                .qnas(dtoList)
+                .pageMaker(pageMaker)
+                .build();
+    }
+
+    // qna 개인 목록 가져오기
+    public QnaListResponseDTO myRetrieve(int pageNo, String userId) {
+        Page page = new Page();
+        page.setPageNo(pageNo);
+
+        log.info("userid:{}",userId);
+
+        // userId를 사용하여 User 엔티티를 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("회원정보를 찾을 수 없습니다."));
+
+        log.info("user:{}",user);
+
+        // User 엔티티를 기준으로 페이지 조회
+        List<ItemWithSequence> entityList = qnaRepositoryImpl.findAllByUser(page, user);
+        log.info("entityList : {}", entityList);
 
         List<QnaDetailResponseDTO> dtoList = entityList.stream()
                 .map(item -> new QnaDetailResponseDTO(item.getQna(), item.getSequence()))
                 .toList();
-        
+        log.info("dtoList : {}", dtoList);
+
         PageMaker pageMaker = new PageMaker(page, (int) qnaRepository.count());
 
         return QnaListResponseDTO.builder()
@@ -66,6 +119,8 @@ public class QnaService {
                 .pageMaker(pageMaker)
                 .build();
     }
+
+
 
 //    // qna 검색 시 목록 불러오기
 //    public QnaListResponseDTO searchQna(String qTitle){
@@ -80,21 +135,20 @@ public class QnaService {
     }
 
     // qna 삭제
+    @Transactional
     public QnaListResponseDTO delete(final Long qnaNo, String userId) {
 
-        final Qna qna = qnaRepository.findById(qnaNo).orElseThrow(
-                () -> {
-                    log.error("글번호가 존재하지 않아 삭제에 실패하였습니다. qnaNo : {}", qnaNo);
-                    throw new RuntimeException("글번호가 존재하지 않아 삭제에 실패하였습니다.");
 
-                }
-        );
+       User user = userRepository.findById(userId).orElseThrow();
 
         // 삭제 권한 체크 - 본인이거나 관리자만 삭제 가능
-        if (!qna.getUser().getUserId().equals(userId) && !userId.equals("ADMIN")) {
+        if (!user.getRole().equals(Role.ADMIN)) {
+            log.info(user.toString());
             log.error("해당 글을 삭제할 권한이 없습니다. qnaNo: {}, userId: {}", qnaNo, userId);
             throw new RuntimeException("글을 삭제할 권한이 없습니다.");
         }
+
+
         qnaRepository.deleteByQnaNo(qnaNo);
 
         return retrieve(1);
@@ -132,18 +186,18 @@ public class QnaService {
     }
 
 
-    // 답변 추가 로직
-//    public QnaDetailResponseDTO addAnswer(QnaUpdateRequestDTO requestDTO) {
-//        Optional<Qna> qnaByNo = qnaRepository.findById(requestDTO.getQnaNo());
-//
-//
-//
-//        qnaByNo.ifPresent(qna -> {
-//            qna.setQAnswer(requestDTO.getQAnswer());
-//            log.info("getQAnswer: {}", requestDTO.getQAnswer());
-//            qnaRepository.save(qna);
-//        });
-//        return qnaDetail(requestDTO.getQnaNo());
-//    }
+   //  답변 추가 로직
+    public QnaDetailResponseDTO addAnswer(QnaUpdateRequestDTO requestDTO) {
+        Optional<Qna> qnaByNo = qnaRepository.findById(requestDTO.getQnaNo());
+
+        log.info("테이블번호:{}",qnaByNo);
+
+        qnaByNo.ifPresent(qna -> {
+            qna.setQAnswer(requestDTO.getQAnswer());
+            log.info("getQAnswer: {}", requestDTO.getQAnswer());
+            qnaRepository.save(qna);
+        });
+        return qnaDetail(requestDTO.getQnaNo());
+    }
 
 }

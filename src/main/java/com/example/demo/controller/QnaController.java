@@ -5,11 +5,13 @@ import com.example.demo.dto.request.QnaRequestDTO;
 import com.example.demo.dto.request.QnaUpdateRequestDTO;
 import com.example.demo.dto.response.QnaDetailResponseDTO;
 import com.example.demo.dto.response.QnaListResponseDTO;
+import com.example.demo.entity.User;
 import com.example.demo.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -28,16 +30,16 @@ public class QnaController {
     @PostMapping
     public ResponseEntity<?> createQna(
             @Validated @RequestBody QnaRequestDTO requestDTO,
-            @AuthenticationPrincipal TokenUserInfo userInfo,
             BindingResult result){
 
         log.info("/ecocharge/qna Post! - dto: {}", requestDTO);
-        log.info("TokenUserInfo: {}", userInfo);
+        log.info("TokenUserInfo: {}", requestDTO.getUserId());
 
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if(validatedResult != null) return validatedResult;
 
-        qnaService.create(requestDTO, userInfo.getUserId());
+        QnaListResponseDTO qnaListResponseDTO = qnaService.create(requestDTO);
+        log.info("Created Qna: {}", qnaListResponseDTO);
         return ResponseEntity.ok().body("작성 완료");
 
     }
@@ -62,12 +64,21 @@ public class QnaController {
 
     // qna 목록 리스트 요청
     @GetMapping
-    public ResponseEntity<?> retrieveQnaList(@RequestParam(name = "page", defaultValue = "1") int pageNo){
+    public ResponseEntity<?> retrieveQnaList(@RequestParam(name = "page", defaultValue = "1") int pageNo
+    ,   @RequestParam(value = "userId" ,required = false) String userId){
 
-        log.info("/qna GET request");
+        log.info("/qna GET request:{}",pageNo);
+        log.info("/qna GET request:{}",userId);
 
         try {
-            log.info("뭔데");
+
+            if(userId !=null && !userId.isEmpty()){
+                QnaListResponseDTO responseDTO = qnaService.myRetrieve(pageNo,userId);
+                log.info("retrieved MyQnaList: {}", responseDTO);
+                return ResponseEntity.ok().body(responseDTO);
+            }
+
+            log.info("All Find retrieved QnaList");
             QnaListResponseDTO responseDTO = qnaService.retrieve(pageNo);
             return ResponseEntity.ok().body(responseDTO);
 
@@ -81,16 +92,17 @@ public class QnaController {
 
     }
 
+
     // QnA 삭제 요청 처리 (관리자)
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
     @DeleteMapping("/{qnaNo}")
     public ResponseEntity<?> deleteQna(
-            @AuthenticationPrincipal TokenUserInfo userInfo,
+            @RequestParam("userId") String userId,
             @PathVariable("qnaNo") Long qnaNo
     ){
 
         log.info("DELETE request!: {}", qnaNo);
-        log.info("userInfo : {}", userInfo);
+        log.info("userInfo : {}", userId);
 
         if(qnaNo == null){
             log.info("게시글이 없습니다.");
@@ -100,7 +112,7 @@ public class QnaController {
 
         try {
 
-            QnaListResponseDTO responseDTO = qnaService.delete(qnaNo, userInfo.getUserId());
+            QnaListResponseDTO responseDTO = qnaService.delete(qnaNo, userId);
 
             log.info("요청을 보냅니다:{}", responseDTO);
 
@@ -137,20 +149,21 @@ public class QnaController {
 
     }
 
-    // QnA 답변 controller
+   //  QnA 답변 controller
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
-//    @PatchMapping("/add/{qnaNo}")
-//    public ResponseEntity<?> addAnswerToQna(
-//            @Validated QnaUpdateRequestDTO responseDTO
-//            ) {
-//
-//        try {
-//            QnaDetailResponseDTO updateAnswerDTO = qnaService.addAnswer(responseDTO);
-//            return ResponseEntity.ok().body(updateAnswerDTO);
-//        } catch (Exception e) {
-//            return ResponseEntity.internalServerError().body(e.getMessage());
-//        }
-//    }
+   @PatchMapping("/add/{qnaNo}")
+   public ResponseEntity<?> addAnswerToQna(@Validated @RequestBody QnaUpdateRequestDTO responseDTO) {
+       try {
+           log.info("responseDTO: {}", responseDTO.getQAnswer());
+           log.info("no:{}",responseDTO.getQnaNo());
+           // qnaNo와 responseDTO를 사용하여 답변 추가 처리 로직 수행
+           QnaDetailResponseDTO updateAnswerDTO = qnaService.addAnswer( responseDTO);
+           log.info("updateAnswerDTO: {}", updateAnswerDTO);
+           return ResponseEntity.ok().body(updateAnswerDTO);
+       } catch (Exception e) {
+           return ResponseEntity.internalServerError().body(e.getMessage());
+       }
+   }
 
 
     // 입력값 검증(Validation)의 결과를 처리해 주는 전역 메서드

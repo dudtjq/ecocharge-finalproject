@@ -5,6 +5,8 @@ import com.example.demo.entity.Reservation;
 import com.example.demo.entity.User;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter @ToString
 @NoArgsConstructor
 @AllArgsConstructor

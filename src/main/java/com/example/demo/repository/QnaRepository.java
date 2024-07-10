@@ -3,13 +3,11 @@ package com.example.demo.repository;
 import com.example.demo.entity.Qna;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
+import org.springframework.data.repository.query.Param;
 
 
 public interface QnaRepository extends JpaRepository<Qna, Long> {
 
 
-    @Query("DELETE FROM Qna q WHERE q.qnaNo = :qnaNo")
     void deleteByQnaNo(Long qnaNo);
 }

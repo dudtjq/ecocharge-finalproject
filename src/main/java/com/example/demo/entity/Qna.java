@@ -1,10 +1,8 @@
 package com.example.demo.entity;
 
-import com.example.demo.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -33,9 +31,11 @@ public class Qna {
     @NotNull
     private String qContent;
 
-    @Column(name = "q_category", nullable = false)
-    @NotBlank
+    @Column(name = "q_category")
     private String qCategory;
+
+    @Column(name = "q_answer", nullable = true)
+    private String qAnswer;
 
     @CreationTimestamp
     private LocalDateTime createDate;
@@ -46,6 +46,8 @@ public class Qna {
 
     @OneToMany(mappedBy = "qna")
     private List<QnaReply> qnaReplyList;
+
+
 
 
 }
