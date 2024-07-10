@@ -73,6 +73,13 @@ public class BoardController {
 
 
     }
+    
+    @GetMapping("/{boardNo}")
+    public void updateViewCount(@PathVariable("boardNo") Long boardNo) {
+        log.info("/api/todos/{} GET", boardNo);
+        
+        boardService.updateViewCount(boardNo);
+    }
     // QnA 삭제 요청 처리 (관리자)
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
     @DeleteMapping("/{boardNo}")

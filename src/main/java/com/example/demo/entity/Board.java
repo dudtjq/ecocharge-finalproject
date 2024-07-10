@@ -43,6 +43,9 @@ public class Board {
 
     @CreationTimestamp
     private LocalDateTime createDate;
+    
+    @Column(name = "viewCount")
+    private int viewCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
