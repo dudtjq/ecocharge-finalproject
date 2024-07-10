@@ -112,7 +112,6 @@ public class TokenProvider {
 
         return TokenUserInfo.builder()
                 .userId(claims.getSubject())
-                .email(claims.get("email", String.class))
                 .build();
     }
 

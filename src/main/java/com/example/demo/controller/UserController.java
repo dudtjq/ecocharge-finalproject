@@ -98,7 +98,7 @@ public class UserController {
     public ResponseEntity<?> logout(
             @AuthenticationPrincipal TokenUserInfo userInfo
     ) {
-        log.info("/api/auth/logout - GET! - user: {}", userInfo.getEmail());
+        log.info("/api/auth/logout - GET! - user: {}", userInfo.getUserId());
 
         String result = userService.logout(userInfo);
 
@@ -161,6 +161,7 @@ public class UserController {
     @PostMapping("/modify")
     public ResponseEntity<?> modifyMyInfo(@RequestBody ModifyUserRequestDTO requestDTO) {
         log.info("/modify POST 요청 - requestDTO: {}", requestDTO);
+
         ModifyUserResponseDTO responseDTO = userService.modifyUserInfo(requestDTO);
         log.info("/modifyResponseDTO: {}", responseDTO);
         return ResponseEntity.ok().body(responseDTO);

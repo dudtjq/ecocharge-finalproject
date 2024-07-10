@@ -22,6 +22,7 @@ public class MessageService {
 
     private final SmsUtil smsUtil;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final Map<String, String> verificationCodeMap = new HashMap<>(); // 인증 코드 저장 맵
     private MessageRequestDTO messageRequestDTO;
 

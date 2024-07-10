@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class ModifyUserRequestDTO {
 
+    private String userId;
     private String userName;
     private String phoneNumber;
     private String password;

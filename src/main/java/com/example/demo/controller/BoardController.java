@@ -28,10 +28,11 @@ public class BoardController {
     private final BoardService boardService;
 
     // 게시판 생성
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> createBoard(BoardRequestDTO requestDTO,
                                          @AuthenticationPrincipal TokenUserInfo userInfo
     ) throws IOException {
+        log.info("/board/create - POST 요청: {}", requestDTO);
         BoardListResponseDTO boardListResponseDTO = boardService.create(requestDTO,userInfo);
 
         return ResponseEntity.ok().body(boardListResponseDTO);
@@ -82,13 +83,14 @@ public class BoardController {
     }
     // QnA 삭제 요청 처리 (관리자)
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
-    @DeleteMapping("/{boardNo}")
+    @DeleteMapping("/delete/{boardNo}")
     public ResponseEntity<?> deleteBoard(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @PathVariable("boardNo") Long boardNo
+            @PathVariable("boardNo") String boardNo
     ){
 
         log.info("/api/todos/{} DELETE request!", boardNo);
+        log.info("delete userInfo: {}", userInfo);
 
         if(boardNo == null){
             return ResponseEntity.badRequest()
@@ -96,7 +98,7 @@ public class BoardController {
         }
 
         try {
-            BoardListResponseDTO responseDTO = boardService.delete(boardNo, userInfo.getUserId());
+            BoardListResponseDTO responseDTO = boardService.delete(Long.valueOf(boardNo), userInfo.getUserId());
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             e.printStackTrace();
