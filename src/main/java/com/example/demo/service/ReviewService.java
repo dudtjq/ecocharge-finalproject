@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +51,8 @@ public class ReviewService {
             reviewList.addAll(reviewRepository.findAllByStatId(reviewId));
             count = reviewRepository.countByStatId(reviewId);
         }
+
+        reviewList.sort(Comparator.comparing(Review::getReviewDate).reversed());
 
         List<ReviewDetailResponseDTO> dtoList = reviewList.stream()
                 .map(ReviewDetailResponseDTO::new)

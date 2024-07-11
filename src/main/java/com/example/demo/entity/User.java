@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@ToString(exclude = "qnaList")
+@ToString(exclude = {"qnaList", "boardList", "reviewList", "reservationList"} )
 @Table(name = "tbl_user")
 public class User {
 
