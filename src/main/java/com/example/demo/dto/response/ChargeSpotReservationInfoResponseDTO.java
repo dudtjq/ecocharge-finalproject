@@ -1,6 +1,9 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.entity.Charger;
 import lombok.*;
+
+import java.util.List;
 
 @Getter @Setter @ToString
 @EqualsAndHashCode @AllArgsConstructor @NoArgsConstructor
@@ -18,4 +21,8 @@ public class ChargeSpotReservationInfoResponseDTO {
     private String limitYn; // 이용제한
 
     private String statId; // 충전소 ID
+
+    private String latLng;
+
+    List<Charger> chargerList;
 }

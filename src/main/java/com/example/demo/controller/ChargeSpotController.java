@@ -49,7 +49,7 @@ public class ChargeSpotController {
     @GetMapping("/detail")
     private ResponseEntity<?> reservationDetail(@RequestParam(name = "statId") String statId){
 
-        final ChargeSpot responseDTOS = chargeSpotService.reservationDetail(statId);
+        final ChargeSpotReservationInfoResponseDTO responseDTOS = chargeSpotService.reservationDetail(statId);
 
 //        log.info(responseDTOS.toString());
 
@@ -61,7 +61,7 @@ public class ChargeSpotController {
     public ResponseEntity<?> chargerList(@RequestParam(name = "lat") double lat,
                                          @RequestParam(name = "lng") double lng){
 
-        final List<ChargeSpot> chargeSpots = chargeSpotService.aroundCharger(lat, lng);
+        final List<ChargeSpotMarkerDetailResponseDTO> chargeSpots = chargeSpotService.aroundCharger(lat, lng);
 
         return ResponseEntity.ok().body(chargeSpots);
     }

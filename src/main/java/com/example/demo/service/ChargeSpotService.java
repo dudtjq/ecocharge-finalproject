@@ -4,6 +4,7 @@ import com.example.demo.dto.request.ChargeSpotMakerRequestDTO;
 import com.example.demo.dto.request.ChargeSpotRequestDTO;
 import com.example.demo.dto.response.ChargeSpotMarkerDetailResponseDTO;
 import com.example.demo.dto.response.ChargeSpotMarkerResponsDTO;
+import com.example.demo.dto.response.ChargeSpotReservationInfoResponseDTO;
 import com.example.demo.entity.ChargeSpot;
 import com.example.demo.repository.ChargeSpotRepository;
 import com.example.demo.repository.ChargeSpotRepositoryImpl;
@@ -88,23 +89,32 @@ public class ChargeSpotService {
     }
 
 
-    public ChargeSpot reservationDetail(String statId) {
+    public ChargeSpotReservationInfoResponseDTO reservationDetail(String statId) {
 
 
         final ChargeSpot responseDTOS = chargeSpotRepositoryImpl.reservationInfo(statId);
 
-//        log.info(responseDTOS.toString());
+        log.info(responseDTOS.toString());
 
-        return responseDTOS;
+        return ChargeSpotReservationInfoResponseDTO.builder()
+                .addr(responseDTOS.getAddr())
+                .statId(responseDTOS.getStatId())
+                .statNm(responseDTOS.getStatNm())
+                .limitYn(responseDTOS.getLimitYn())
+                .facilitySmall(responseDTOS.getFacilitySmall())
+                .facilityBig(responseDTOS.getFacilityBig())
+                .latLng(responseDTOS.getLatLng())
+                .chargerList(responseDTOS.getChargerList())
+                .build();
 
 
     }
 
-    public List<ChargeSpot> aroundCharger(double lat, double lng) {
+    public List<ChargeSpotMarkerDetailResponseDTO> aroundCharger(double lat, double lng) {
 
         final List<ChargeSpot> spotList = chargeSpotRepository.findAll();
 
-        List<ChargeSpot> chargeSpotList = new ArrayList<>();
+        List<ChargeSpotMarkerDetailResponseDTO> chargeSpotList = new ArrayList<>();
 
         spotList.forEach((chargeSpot -> {
             String latLng = chargeSpot.getLatLng();
@@ -117,7 +127,14 @@ public class ChargeSpotService {
                     Math.abs(Double.parseDouble(split[0]) - lat) < yEpsilon &&
                             Math.abs(Double.parseDouble(split[1]) - lng) < xEpsilon
             ) {
-                chargeSpotList.add(chargeSpot);
+                chargeSpotList.add(ChargeSpotMarkerDetailResponseDTO.builder()
+                                .addr(chargeSpot.getAddr())
+                                .statNm(chargeSpot.getStatNm())
+                                .facilityBig(chargeSpot.getFacilityBig())
+                                .facilitySmall(chargeSpot.getFacilitySmall())
+                                .limitYn(chargeSpot.getLimitYn())
+                                .statId(chargeSpot.getStatId())
+                                .build());
             }
         }));
 
