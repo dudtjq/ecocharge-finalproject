@@ -27,7 +27,7 @@ public class SubsidyCarListService {
         Page page = new Page();
         page.setPageNo(pageNo);
         log.info("search: {}", search);
-        List<SubsidyCar> carList = new ArrayList<>();
+        List<SubsidyCar> carList;
         if (search.trim().isEmpty()) {
             carList = subsidyCarListRepositoryImpl.findAll(page);
             count = subsidyCarListRepository.count();
@@ -43,7 +43,7 @@ public class SubsidyCarListService {
                 .subsidyCarList(carList)
                 .pageMaker(pageMaker)
                 .build();
-        
+
 //        log.info("dto: {}", dto);
         
         return dto;
