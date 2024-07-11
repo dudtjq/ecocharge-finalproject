@@ -34,6 +34,8 @@ public class QQna extends EntityPathBase<Qna> {
 
     public final ListPath<QnaReply, QQnaReply> qnaReplyList = this.<QnaReply, QQnaReply>createList("qnaReplyList", QnaReply.class, QQnaReply.class, PathInits.DIRECT2);
 
+    public final StringPath qRole = createString("qRole");
+
     public final StringPath qTitle = createString("qTitle");
 
     public final QUser user;

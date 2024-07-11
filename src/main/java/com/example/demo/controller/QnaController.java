@@ -64,17 +64,71 @@ public class QnaController {
 
     // qna 목록 리스트 요청
     @GetMapping
-    public ResponseEntity<?> retrieveQnaList(@RequestParam(name = "page", defaultValue = "1") int pageNo
-    ,   @RequestParam(value = "userId" ,required = false) String userId){
+    public ResponseEntity<?> retrieveQnaList(@RequestParam(name = "page", defaultValue = "1") int pageNo){
 
         log.info("/qna GET request:{}",pageNo);
-        log.info("/qna GET request:{}",userId);
+        try {
+
+            log.info("All Find retrieved QnaList");
+            QnaListResponseDTO responseDTO = qnaService.retrieve(pageNo);
+            return ResponseEntity.ok().body(responseDTO);
+
+        }catch (Exception e){
+
+            return ResponseEntity
+                    .internalServerError()
+                    .body(e.getMessage());
+
+        }
+
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> myRetrieveQnaList(@RequestParam(name = "page", defaultValue = "1") int pageNo
+            ,   @RequestParam(value = "userId" ,required = false) String userId){
+
+        log.info("/user/qna GET request:{}",pageNo);
+        log.info("/user/qna GET request:{}",userId);
 
         try {
 
-            if(userId !=null && !userId.isEmpty()){
+
                 QnaListResponseDTO responseDTO = qnaService.myRetrieve(pageNo,userId);
-                log.info("retrieved MyQnaList: {}", responseDTO);
+                log.info(" NOT ADMINretrieved MyQnaList: {}", responseDTO);
+                return ResponseEntity.ok().body(responseDTO);
+
+        }catch (Exception e){
+
+            return ResponseEntity
+                    .internalServerError()
+                    .body(e.getMessage());
+
+        }
+
+    }
+
+
+
+    @GetMapping("/admin")
+    public ResponseEntity<?> daminRetrieveQnaList(@RequestParam(name = "page", defaultValue = "1") int pageNo
+            ,   @RequestParam(value = "userId" ,required = false) String userId
+            ,    @RequestParam(value = "userRole" ,required = false) String userRole){
+
+        log.info("/qna GET request:{}",pageNo);
+        log.info("/qna GET request:{}",userId);
+        log.info("/qna GET request:{}",userRole);
+
+        try {
+
+            if(userId !=null && !userId.isEmpty()&& !userRole.equals(("ADMIN"))){
+                QnaListResponseDTO responseDTO = qnaService.myRetrieve(pageNo,userId);
+                log.info(" NOT ADMINretrieved MyQnaList: {}", responseDTO);
+                return ResponseEntity.ok().body(responseDTO);
+            }
+
+            if(userRole.equals(("ADMIN"))){
+                QnaListResponseDTO responseDTO = qnaService.adminRetrieve(pageNo,userId, userRole);
+                log.info("ADMIN retrieved MyQnaList: {}", responseDTO);
                 return ResponseEntity.ok().body(responseDTO);
             }
 
@@ -91,6 +145,7 @@ public class QnaController {
         }
 
     }
+
 
 
     // QnA 삭제 요청 처리 (관리자)

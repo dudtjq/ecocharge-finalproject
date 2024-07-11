@@ -5,6 +5,7 @@ import com.example.demo.service.MessageService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,8 +22,8 @@ public class MessageController {
     @PostMapping("/api/send-sms")
     public ResponseEntity<?> sendMessage(@RequestBody MessageRequestDTO dto) {
         log.info("controller단에 요청이 들어옴");
-//        SingleMessageSentResponse response = messageService.sendSms(dto.getPhoneNumber());
-        String response = String.valueOf(messageService.sendSms("ECO"+dto.getPhoneNumber()));
+        SingleMessageSentResponse response = messageService.sendSms("ECO"+dto.getPhoneNumber());
+//        String response = String.valueOf(messageService.sendSms("ECO"+dto.getPhoneNumber()));
 
 //        log.info("phoneNumber: {}", phoneNumber);
         return ResponseEntity.ok().body(response);
@@ -30,8 +31,8 @@ public class MessageController {
     @PostMapping("/api/socialSend-sms")
     public ResponseEntity<?> socialsendMessage(@RequestBody MessageRequestDTO dto) {
         log.info("소셜controller단에 요청이 들어옴");
-//        SingleMessageSentResponse response = messageService.sendSms(dto.getPhoneNumber());
-        String response = String.valueOf(messageService.sendSms(dto.getPhoneNumber()));
+        SingleMessageSentResponse response = messageService.sendSms(dto.getPhoneNumber());
+//        String response = String.valueOf(messageService.sendSms(dto.getPhoneNumber()));
 
 //        log.info("phoneNumber: {}", phoneNumber);
         return ResponseEntity.ok().body(response);

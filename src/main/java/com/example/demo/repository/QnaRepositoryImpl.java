@@ -58,4 +58,19 @@ public class QnaRepositoryImpl implements QnaRepositoryCustom {
                 .mapToObj(i -> new ItemWithSequence(i + 1 + page.getPageStart(), items.get(i)))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional
+    public List<ItemWithSequence> findAllByAdminRole(Page page) {
+        List<Qna> items = em.createQuery(
+                        "SELECT q FROM Qna q JOIN q.user u WHERE u.role = 'ADMIN' ORDER BY q.createDate DESC", Qna.class)
+                .setFirstResult(page.getPageStart())
+                .setMaxResults(page.getAmount())
+                .getResultList();
+
+        return IntStream.range(0, items.size())
+                .mapToObj(i -> new ItemWithSequence(i + 1 + page.getPageStart(), items.get(i)))
+                .collect(Collectors.toList());
+    }
+
 }

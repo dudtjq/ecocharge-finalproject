@@ -27,7 +27,7 @@ public class MessageService {
     private MessageRequestDTO messageRequestDTO;
 
     // SingleMessageSentResponse
-    public String sendSms(String phoneNumber) {
+    public SingleMessageSentResponse sendSms(String phoneNumber) {
 
         verificationCodeMap.remove(phoneNumber);
         log.info("서비스단 확인:{}",phoneNumber);
@@ -36,8 +36,8 @@ public class MessageService {
         verificationCodeMap.put(phoneNumber,verificationCode);
 
         log.info("map확인{}",verificationCodeMap.get(phoneNumber));
-//       SingleMessageSentResponse response = smsUtil.sendOne(phoneNumber, verificationCode);
-        String response = verificationCode;
+       SingleMessageSentResponse response = smsUtil.sendOne(phoneNumber, verificationCode);
+//        String response = verificationCode;
         // SMS 전송
         return response;
     }
@@ -45,7 +45,7 @@ public class MessageService {
 
     public Boolean verifyCode(String phoneNumber, String verificationCodeInput) {
         try {
-            log.info("verificationcode 확인:{}", verificationCodeMap.get(phoneNumber));
+            log.info("verificationcode 확인:{}", verificationCodeMap);
             String verificationCode = verificationCodeMap.get(phoneNumber); // 저장된 인증 코드 가져오기
 
             if (verificationCodeInput == null) {
