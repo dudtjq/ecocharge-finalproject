@@ -46,10 +46,10 @@ public class ChargeSpotController {
 
     }
 
-    @PostMapping("/reservationInfo")
-    private ResponseEntity<?> reservationDetail(@RequestBody ChargeSpotInfoRequestDTO requestDTO){
+    @GetMapping("/detail")
+    private ResponseEntity<?> reservationDetail(@RequestParam(name = "statId") String statId){
 
-        final List<ChargeSpotReservationInfoResponseDTO> responseDTOS = chargeSpotService.reservationDetail(requestDTO);
+        final ChargeSpot responseDTOS = chargeSpotService.reservationDetail(statId);
 
         log.info(responseDTOS.toString());
 

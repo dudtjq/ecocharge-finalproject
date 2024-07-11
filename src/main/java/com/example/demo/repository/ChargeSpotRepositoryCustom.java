@@ -12,4 +12,7 @@ public interface ChargeSpotRepositoryCustom {
     List<ChargeSpot> findAll(ChargeSpotRequestDTO requestDTO);
 
     List<ChargeSpotMarkerDetailResponseDTO> findInfoList(ChargeSpotMakerRequestDTO requestDTO);
+
+    ChargeSpot reservationInfo(String statId);
+
 }

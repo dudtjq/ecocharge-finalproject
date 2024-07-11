@@ -90,10 +90,10 @@ public class ChargeSpotService {
     }
 
 
-    public List<ChargeSpotReservationInfoResponseDTO> reservationDetail(ChargeSpotInfoRequestDTO requestDTO) {
+    public ChargeSpot reservationDetail(String statId) {
 
 
-        final List<ChargeSpotReservationInfoResponseDTO> responseDTOS = chargeSpotRepositoryImpl.reservationInfo(requestDTO);
+        final ChargeSpot responseDTOS = chargeSpotRepositoryImpl.reservationInfo(statId);
 
         log.info(responseDTOS.toString());
 

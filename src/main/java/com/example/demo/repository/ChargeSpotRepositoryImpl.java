@@ -67,14 +67,12 @@ public class ChargeSpotRepositoryImpl implements ChargeSpotRepositoryCustom{
                 .fetch();
     }
 
-    public List<ChargeSpotReservationInfoResponseDTO> reservationInfo(ChargeSpotInfoRequestDTO requestDTO) {
+    public ChargeSpot reservationInfo(String statId) {
 
-        String id = requestDTO.getStatId();
 
-         List<ChargeSpotReservationInfoResponseDTO> fetch = jpaQueryFactory.select(Projections.bean(ChargeSpotReservationInfoResponseDTO.class))
-                .from(chargeSpot)
-                .where(chargeSpot.statId.eq(id))
-                .fetch();
+         ChargeSpot fetch = jpaQueryFactory.selectFrom(chargeSpot)
+                .where(chargeSpot.statId.eq(statId))
+                .fetchOne();
 
          return fetch;
 
