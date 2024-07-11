@@ -1,8 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.ChargeSpotInfoRequestDTO;
+import com.example.demo.dto.request.ChargeSpotMakerRequestDTO;
 import com.example.demo.dto.request.ChargeSpotRequestDTO;
-import com.example.demo.dto.response.ChargeSpotMarkerResponsDTO;
-import com.example.demo.dto.response.ChargerSpotResponseDTO;
+import com.example.demo.dto.response.*;
 import com.example.demo.entity.ChargeSpot;
 import com.example.demo.service.ChargeSpotService;
 import lombok.RequiredArgsConstructor;
@@ -19,19 +20,20 @@ import java.util.List;
 public class ChargeSpotController {
 
     private final ChargeSpotService chargeSpotService;
-    
-    @GetMapping("/marker")
-    public ResponseEntity<?> createChargeSpotMarker(
-            @RequestParam(name = "lat") double lat,
-            @RequestParam(name = "lng") double lng,
-            @RequestParam(name = "zoom") int zoom
-    ) {
+
+    // 마커 클릭 시 상세보기 정보
+    @PostMapping("/detail")
+    public ResponseEntity<?> infoDetail(@RequestBody ChargeSpotMakerRequestDTO requestDTO
+            ) {
         
-        log.info("/chargespot/marker?lat={}&lng={}&zoom={} GET!!", lat, lng, zoom);
-        
-        List<ChargeSpotMarkerResponsDTO> markerList = chargeSpotService.getMarker(lat, lng, zoom);
-        
-        return ResponseEntity.ok().body(markerList);
+        log.info("/chargespot/marker? GET!! requestDTO: {}", requestDTO);
+
+
+        List<ChargeSpotMarkerDetailResponseDTO> chargeSpots = chargeSpotService.infoDetail(requestDTO);
+
+        log.info(chargeSpots.toString());
+
+        return ResponseEntity.ok().body(chargeSpots);
     }
 
     @PostMapping
@@ -40,11 +42,25 @@ public class ChargeSpotController {
 
         List<ChargeSpotMarkerResponsDTO> spotList = chargeSpotService.findSearch(requestDTO);
 
-        log.info(String.valueOf(spotList));
-
         return ResponseEntity.ok().body(spotList);
 
     }
+
+    @PostMapping("/reservationInfo")
+    private ResponseEntity<?> reservationDetail(@RequestBody ChargeSpotInfoRequestDTO requestDTO){
+
+        final List<ChargeSpotReservationInfoResponseDTO> responseDTOS = chargeSpotService.reservationDetail(requestDTO);
+
+        log.info(responseDTOS.toString());
+
+        return ResponseEntity.ok().body(responseDTOS);
+
+    }
+    
+
+
+
+
 
 
 

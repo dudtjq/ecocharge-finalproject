@@ -1,13 +1,19 @@
 package com.example.demo.repository;
 
+import com.example.demo.dto.request.ChargeSpotInfoRequestDTO;
+import com.example.demo.dto.request.ChargeSpotMakerRequestDTO;
 import com.example.demo.dto.request.ChargeSpotRequestDTO;
+import com.example.demo.dto.response.ChargeSpotMarkerDetailResponseDTO;
+import com.example.demo.dto.response.ChargeSpotReservationInfoResponseDTO;
 import com.example.demo.entity.ChargeSpot;
 import com.example.demo.entity.QChargeSpot;
 import com.example.demo.entity.QCharger;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.demo.entity.QChargeSpot.chargeSpot;
@@ -16,7 +22,27 @@ import static com.example.demo.entity.QCharger.charger;
 @RequiredArgsConstructor
 public class ChargeSpotRepositoryImpl implements ChargeSpotRepositoryCustom{
 
+
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public List<ChargeSpotMarkerDetailResponseDTO> findInfoList(ChargeSpotMakerRequestDTO requestDTO) {
+
+        String latLng = requestDTO.getLat() + "," + requestDTO.getLng();
+
+        final List<ChargeSpotMarkerDetailResponseDTO> dtoList = jpaQueryFactory.select(Projections.bean(ChargeSpotMarkerDetailResponseDTO.class,
+                        chargeSpot.addr,
+                        chargeSpot.statNm,
+                        chargeSpot.facilityBig,
+                        chargeSpot.facilitySmall,
+                        chargeSpot.limitYn,
+                        chargeSpot.statId))
+                .from(chargeSpot)
+                .where(chargeSpot.latLng.eq(latLng))
+                .fetch();
+
+        return dtoList;
+    }
 
     @Override
     public List<ChargeSpot> findAll(ChargeSpotRequestDTO requestDTO) {
@@ -39,5 +65,18 @@ public class ChargeSpotRepositoryImpl implements ChargeSpotRepositoryCustom{
                 .leftJoin(chargeSpot.chargerList, charger)
                 .where(builder)
                 .fetch();
+    }
+
+    public List<ChargeSpotReservationInfoResponseDTO> reservationInfo(ChargeSpotInfoRequestDTO requestDTO) {
+
+        String id = requestDTO.getStatId();
+
+         List<ChargeSpotReservationInfoResponseDTO> fetch = jpaQueryFactory.select(Projections.bean(ChargeSpotReservationInfoResponseDTO.class))
+                .from(chargeSpot)
+                .where(chargeSpot.statId.eq(id))
+                .fetch();
+
+         return fetch;
+
     }
 }

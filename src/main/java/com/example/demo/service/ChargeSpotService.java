@@ -1,7 +1,11 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.ChargeSpotInfoRequestDTO;
+import com.example.demo.dto.request.ChargeSpotMakerRequestDTO;
 import com.example.demo.dto.request.ChargeSpotRequestDTO;
+import com.example.demo.dto.response.ChargeSpotMarkerDetailResponseDTO;
 import com.example.demo.dto.response.ChargeSpotMarkerResponsDTO;
+import com.example.demo.dto.response.ChargeSpotReservationInfoResponseDTO;
 import com.example.demo.entity.ChargeSpot;
 import com.example.demo.repository.ChargeSpotRepository;
 import com.example.demo.repository.ChargeSpotRepositoryImpl;
@@ -10,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.lang.invoke.VolatileCallSite;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,19 +26,15 @@ public class ChargeSpotService {
 
     private final ChargeSpotRepositoryImpl chargeSpotRepositoryImpl;
 
-    
-    public List<ChargeSpotMarkerResponsDTO> getMarker(double lat, double lng, int zoom) {
-        log.info("getMarker 동작!");
-        List<ChargeSpot> chargeSpotList = chargeSpotRepository.findAll();
 
-        // 마커 메서드
-        final List<ChargeSpotMarkerResponsDTO> spotList = getChargeSpotMarkerResponsDTOS(lat, lng, zoom, chargeSpotList);
+    public List<ChargeSpotMarkerDetailResponseDTO> infoDetail(ChargeSpotMakerRequestDTO requestDTO) {
 
-//                log.info(spotList.toString());
-        
-        return spotList;
+        final List<ChargeSpotMarkerDetailResponseDTO> infoList = chargeSpotRepositoryImpl.findInfoList(requestDTO);
+
+        log.info(infoList.toString());
+
+        return infoList;
     }
-
 
 
     public List<ChargeSpotMarkerResponsDTO> findSearch(ChargeSpotRequestDTO requestDTO) {
@@ -47,7 +46,7 @@ public class ChargeSpotService {
 
         final List<ChargeSpotMarkerResponsDTO> spotList = getChargeSpotMarkerResponsDTOS(lat, lng, zoom, list);
 
-        log.info(spotList.toString());
+//        log.info(spotList.toString());
 
         return spotList;
 
@@ -80,12 +79,6 @@ public class ChargeSpotService {
                             Math.abs(Double.parseDouble(split[1]) - lng) < xEpsilon
             ) {
                 ChargeSpotMarkerResponsDTO dto = ChargeSpotMarkerResponsDTO.builder()
-                        .addr(chargeSpot.getAddr())
-                        .statNm(chargeSpot.getStatNm())
-                        .facilityBig(chargeSpot.getFacilityBig())
-                        .facilitySmall(chargeSpot.getFacilitySmall())
-                        .statId(chargeSpot.getStatId())
-                        .limitYn(chargeSpot.getLimitYn())
                         .lat(split[0])
                         .lng(split[1])
                         .build();
@@ -96,4 +89,16 @@ public class ChargeSpotService {
         return spotList;
     }
 
+
+    public List<ChargeSpotReservationInfoResponseDTO> reservationDetail(ChargeSpotInfoRequestDTO requestDTO) {
+
+
+        final List<ChargeSpotReservationInfoResponseDTO> responseDTOS = chargeSpotRepositoryImpl.reservationInfo(requestDTO);
+
+        log.info(responseDTOS.toString());
+
+        return responseDTOS;
+
+
+    }
 }
