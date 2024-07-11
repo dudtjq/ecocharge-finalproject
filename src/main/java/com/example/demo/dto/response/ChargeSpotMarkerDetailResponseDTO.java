@@ -1,6 +1,9 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.entity.Charger;
 import lombok.*;
+
+import java.util.List;
 
 @Getter @Setter @ToString
 @EqualsAndHashCode

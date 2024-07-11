@@ -112,7 +112,7 @@ public class QnaService {
                 .toList();
         log.info("dtoList : {}", dtoList);
 
-        PageMaker pageMaker = new PageMaker(page, (int) qnaRepository.count());
+        PageMaker pageMaker = new PageMaker(page, entityList.size());
 
         return QnaListResponseDTO.builder()
                 .qnas(dtoList)
@@ -170,9 +170,10 @@ public class QnaService {
 
 
        User user = userRepository.findById(userId).orElseThrow();
+        Qna qna = qnaRepository.findById(qnaNo).orElseThrow();
 
         // 삭제 권한 체크 - 본인이거나 관리자만 삭제 가능
-        if (!user.getRole().equals(Role.ADMIN)) {
+        if (!user.getRole().equals(Role.ADMIN) && !qna.getUser().getUserId().equals(userId)) {
             log.info(user.toString());
             log.error("해당 글을 삭제할 권한이 없습니다. qnaNo: {}, userId: {}", qnaNo, userId);
             throw new RuntimeException("글을 삭제할 권한이 없습니다.");
