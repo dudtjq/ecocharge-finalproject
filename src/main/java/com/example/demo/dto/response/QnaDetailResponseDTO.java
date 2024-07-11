@@ -31,6 +31,8 @@ public class QnaDetailResponseDTO {
 
     private String qAnswer;
 
+    private  String qRole;
+
 
 
 
@@ -47,6 +49,7 @@ public class QnaDetailResponseDTO {
         this.date = qna.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.qwriter=qna.getUser().getUserName();
         this.qUserId = qna.getUser().getUserId();
+        this.qRole= String.valueOf(qna.getUser().getRole());
         this.count = count;
     }
 }

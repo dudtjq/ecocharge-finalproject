@@ -19,6 +19,7 @@ public class QnaRequestDTO {
 
     private String userId;
 
+    private String role;
 
     // 엔터티 변환
     public Qna toEntity(User userId){
@@ -28,6 +29,7 @@ public class QnaRequestDTO {
                 .qContent(qContent)
                 .qCategory(qCategory)
                 .user(userId)
+                .qRole(role)
                 .build();
 
     }

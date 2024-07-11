@@ -59,7 +59,7 @@ public class QnaService {
 
     // qna 전체 목록 가져오기
     public QnaListResponseDTO retrieve(int pageNo) {
-        log.info("page no: {}", pageNo);
+        log.info("Allpage no: {}", pageNo);
         Page page = new Page();
         page.setPageNo(pageNo);
         log.info("page: {}", page);
@@ -120,12 +120,42 @@ public class QnaService {
                 .build();
     }
 
+    public QnaListResponseDTO adminRetrieve(int pageNo, String userId, String userRole) {
+        Page page = new Page();
+        page.setPageNo(pageNo);
+
+        log.info("userid:{}",userRole);
+
+        // userId를 사용하여 User 엔티티를 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("회원정보를 찾을 수 없습니다."));
+
+        log.info("user:{}",user.getRole());
+
+        String role= String.valueOf(user.getRole());
+        if(role=="ADMIN"){
+            // User 엔티티를 기준으로 페이지 조회
+            log.info("관리자 게시글 탐색로직 ");
+            List<ItemWithSequence> entityList = qnaRepositoryImpl.findAllByAdminRole(page);
+            log.info("entityList : {}", entityList);
+
+            List<QnaDetailResponseDTO> dtoList = entityList.stream()
+                    .map(item -> new QnaDetailResponseDTO(item.getQna(), item.getSequence()))
+                    .toList();
+            log.info("dtoList : {}", dtoList);
+
+            PageMaker pageMaker = new PageMaker(page, (int) qnaRepository.count());
+
+            return QnaListResponseDTO.builder()
+                    .qnas(dtoList)
+                    .pageMaker(pageMaker)
+                    .build();
+        }
+
+        return null;
+    }
 
 
-//    // qna 검색 시 목록 불러오기
-//    public QnaListResponseDTO searchQna(String qTitle){
-//        qnaRepository.QnaByTitle(qTitle);
-//    }
 
     private User getUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(

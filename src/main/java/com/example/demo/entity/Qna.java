@@ -37,6 +37,9 @@ public class Qna {
     @Column(name = "q_answer", nullable = true)
     private String qAnswer;
 
+    @Column(name = "q_role", nullable = true)
+    private String qRole;
+
     @CreationTimestamp
     private LocalDateTime createDate;
 
@@ -46,8 +49,6 @@ public class Qna {
 
     @OneToMany(mappedBy = "qna")
     private List<QnaReply> qnaReplyList;
-
-
 
 
 }
