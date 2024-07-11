@@ -93,7 +93,7 @@ public class ChargeSpotService {
 
         final ChargeSpot responseDTOS = chargeSpotRepositoryImpl.reservationInfo(statId);
 
-        log.info(responseDTOS.toString());
+//        log.info(responseDTOS.toString());
 
         return responseDTOS;
 

@@ -17,11 +17,11 @@ public class ReviewDetailResponseDTO {
     private String content;
 
     @CreationTimestamp
-    @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm")
+    @JsonFormat(pattern = "yyyy년 MM월 dd일")
     private LocalDateTime reviewDate;
 
     @CreationTimestamp
-    @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm (수정됨)")
+    @JsonFormat(pattern = "yyyy년 MM월 dd일 (수정됨)")
     private LocalDateTime updateReviewDate;
 
     private String userName;
