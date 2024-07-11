@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 import com.example.demo.common.ItemWithSequence;
 import com.example.demo.common.Page;
+import com.example.demo.common.PageMaker;
 import com.example.demo.entity.Board;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
     
     @Override
-    public List<ItemWithSequence> findAll(Page page) {
+    public List<ItemWithSequence> findAll(Page page, PageMaker pageMaker) {
         
         List<Board> items = jpaQueryFactory
                 .selectFrom(board)
@@ -28,7 +29,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .fetch();
         
         return IntStream.range(0, items.size())
-                .mapToObj(i -> new ItemWithSequence(i + 1 +(page.getPageStart()), items.get(i)))
+                .mapToObj(i -> new ItemWithSequence(items.size() * (pageMaker.getFinalPage() - (page.getPageNo() - 1)) - i, items.get(i)))
                 .collect(Collectors.toList());
     }
 }
