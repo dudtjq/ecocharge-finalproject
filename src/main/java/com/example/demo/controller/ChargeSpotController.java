@@ -56,6 +56,15 @@ public class ChargeSpotController {
         return ResponseEntity.ok().body(responseDTOS);
 
     }
+
+    @GetMapping("/aroundlist")
+    public ResponseEntity<?> chargerList(@RequestParam(name = "lat") double lat,
+                                         @RequestParam(name = "lng") double lng){
+
+        final List<ChargeSpot> chargeSpots = chargeSpotService.aroundCharger(lat, lng);
+
+        return ResponseEntity.ok().body(chargeSpots);
+    }
     
 
 

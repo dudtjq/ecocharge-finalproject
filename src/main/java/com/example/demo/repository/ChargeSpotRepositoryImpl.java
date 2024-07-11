@@ -20,7 +20,7 @@ import static com.example.demo.entity.QChargeSpot.chargeSpot;
 import static com.example.demo.entity.QCharger.charger;
 
 @RequiredArgsConstructor
-public class ChargeSpotRepositoryImpl implements ChargeSpotRepositoryCustom{
+public class ChargeSpotRepositoryImpl implements ChargeSpotRepositoryCustom {
 
 
     private final JPAQueryFactory jpaQueryFactory;

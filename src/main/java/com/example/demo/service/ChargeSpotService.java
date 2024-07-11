@@ -1,11 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.ChargeSpotInfoRequestDTO;
 import com.example.demo.dto.request.ChargeSpotMakerRequestDTO;
 import com.example.demo.dto.request.ChargeSpotRequestDTO;
 import com.example.demo.dto.response.ChargeSpotMarkerDetailResponseDTO;
 import com.example.demo.dto.response.ChargeSpotMarkerResponsDTO;
-import com.example.demo.dto.response.ChargeSpotReservationInfoResponseDTO;
 import com.example.demo.entity.ChargeSpot;
 import com.example.demo.repository.ChargeSpotRepository;
 import com.example.demo.repository.ChargeSpotRepositoryImpl;
@@ -100,5 +98,29 @@ public class ChargeSpotService {
         return responseDTOS;
 
 
+    }
+
+    public List<ChargeSpot> aroundCharger(double lat, double lng) {
+
+        final List<ChargeSpot> spotList = chargeSpotRepository.findAll();
+
+        List<ChargeSpot> chargeSpotList = new ArrayList<>();
+
+        spotList.forEach((chargeSpot -> {
+            String latLng = chargeSpot.getLatLng();
+            String[] split = latLng.split(",");
+
+            double yEpsilon = 0.001;
+            double xEpsilon = 0.002;
+
+            if (
+                    Math.abs(Double.parseDouble(split[0]) - lat) < yEpsilon &&
+                            Math.abs(Double.parseDouble(split[1]) - lng) < xEpsilon
+            ) {
+                chargeSpotList.add(chargeSpot);
+            }
+        }));
+
+        return chargeSpotList;
     }
 }
