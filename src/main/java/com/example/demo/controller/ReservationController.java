@@ -24,7 +24,8 @@ public class ReservationController {
     public ResponseEntity<?> create (@RequestBody ReservationRequestDTO requestDTO) {
         log.info("/reservation - POST 요청 requestDTO: {}", requestDTO);
         reservationService.create(requestDTO);
-        return ResponseEntity.ok().body("예약이 완료되었습니다.");
+        log.info("성공");
+        return ResponseEntity.ok().body("");
     }
 
     // 예약 취소

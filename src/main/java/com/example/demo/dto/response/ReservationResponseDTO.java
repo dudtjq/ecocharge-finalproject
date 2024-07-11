@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.entity.ChargeSpot;
 import com.example.demo.entity.Reservation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

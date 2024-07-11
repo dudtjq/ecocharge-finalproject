@@ -35,7 +35,8 @@ public class ReservationService {
         ChargeSpot chargeSpot = chargeSpotRepository.findById(requestDTO.getStatId())
                 .orElseThrow(() -> new RuntimeException("충전소를 찾을 수 없습니다."));
         requestDTO.setRStatus(Reservation.RSTATUS.USE);
-        reservationRepository.save(requestDTO.toEntity(user, chargeSpot));
+        Reservation save = reservationRepository.save(requestDTO.toEntity(user, chargeSpot));
+        log.info(save.toString());
     }
 
     public boolean delete(final String id) {

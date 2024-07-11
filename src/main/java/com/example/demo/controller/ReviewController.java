@@ -20,6 +20,7 @@ public class ReviewController {
     // 리뷰 생성
     @PostMapping("/create")
     public ResponseEntity<?> createReview(@RequestBody ReviewRequestDTO requestDTO) {
+        log.info("/review/create POST requestDTO: {}", requestDTO);
         reviewService.create(requestDTO);
         return ResponseEntity.ok().body("리뷰 작성이 완료되었습니다.");
     }
