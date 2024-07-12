@@ -17,7 +17,7 @@ public class HealthCheckController {
        로드 밸런서가 사본 인스턴스로 요청을 전환하여 계속해서 서비스가 제공되도록 유도함.
      */
 
-    @GetMapping("/")
+    @GetMapping("/health")
     public ResponseEntity<?> healthCheck() {
         log.info("server is running.... I'm Healthy!");
         log.info("Hello World!");
