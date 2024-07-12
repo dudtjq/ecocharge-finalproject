@@ -4,8 +4,10 @@ import com.example.demo.dto.request.BoardReplyRequestDTO;
 import com.example.demo.dto.request.BoardReplyUpdateRequestDTO;
 import com.example.demo.dto.response.BoardReplyDetailResponseDTO;
 import com.example.demo.dto.response.BoardReplyListResponseDTO;
+import com.example.demo.entity.Board;
 import com.example.demo.entity.BoardReply;
 import com.example.demo.repository.BoardReplyRepository;
+import com.example.demo.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,12 +22,14 @@ import java.util.Optional;
 public class BoardReplyService {
 
     private final BoardReplyRepository boardReplyRepository;
+    private final BoardRepository boardRepository;
 
 
     // 게시물 댓글 생성
     public BoardReplyListResponseDTO create(final BoardReplyRequestDTO requestDTO) {
+        Board board = boardRepository.findById(requestDTO.getBoardNo()).orElseThrow();
 
-        boardReplyRepository.save(requestDTO.toEntity());
+        boardReplyRepository.save(requestDTO.toEntity(board));
 
         return getList(requestDTO.getBoardNo());
 
@@ -46,24 +50,27 @@ public class BoardReplyService {
 
     public BoardReplyListResponseDTO getList(final Long boardNo){
 
-        final List<BoardReply> replyList = boardReplyRepository.findAll();
+
+        log.info("boardNo: {}", boardNo);
+        log.info("게시글 탐색");
+
+        final List<BoardReply> replyList = boardReplyRepository.findByBoard(boardNo);
+        log.info("replyList: {}", replyList);
 
         List<BoardReplyDetailResponseDTO> dtoList = replyList.stream()
                 .map(BoardReplyDetailResponseDTO::new)
                 .toList();
-
-        int byReply = boardReplyRepository.countByReply(boardNo);
+        log.info("dtoList: {}", dtoList);
 
         return BoardReplyListResponseDTO.builder()
                 .replies(dtoList)
-                .count(byReply)
                 .build();
 
     }
 
 
 
-    public BoardReplyListResponseDTO deleteReply(Long replyNo) {
+    public BoardReplyListResponseDTO deleteReply(Long replyNo,String userId) {
 
         boardReplyRepository.findById(replyNo).orElseThrow(
                 () -> {
@@ -72,7 +79,7 @@ public class BoardReplyService {
                 }
         );
 
-        boardReplyRepository.deleteById(replyNo);
+        boardReplyRepository.deleteByReplyNoAndUserId(replyNo,userId);
         return getList(replyNo);
     }
 

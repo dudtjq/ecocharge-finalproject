@@ -25,7 +25,7 @@ public class QnaReply {
     @Column(name = "q_reply_text")
     private String replyText;
 
-    @Column(name = "qna_no")
+    @Column(name = "q_no")
     private Long qnaNo;
 
     @CreationTimestamp

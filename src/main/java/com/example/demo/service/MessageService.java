@@ -36,8 +36,7 @@ public class MessageService {
         verificationCodeMap.put(phoneNumber,verificationCode);
 
         log.info("map확인{}",verificationCodeMap.get(phoneNumber));
-       SingleMessageSentResponse response = smsUtil.sendOne(phoneNumber, verificationCode);
-//        String response = verificationCode;
+        SingleMessageSentResponse response = smsUtil.sendOne(phoneNumber, verificationCode);
         // SMS 전송
         return response;
     }

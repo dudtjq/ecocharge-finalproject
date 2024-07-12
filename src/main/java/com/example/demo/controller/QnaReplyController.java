@@ -21,11 +21,12 @@ public class QnaReplyController {
 
     // session 은 나중에 추가 해줄 예정
     // 게시판 댓글 작성
-    @PostMapping("/{qnaNo}")
+    @PostMapping("/{replyNo}")
     public ResponseEntity<?> createReply(
             @Validated @RequestBody QnaReplyRequestDTO requestDTO,
             BindingResult result
     ){
+        log.info("Create a new reply:{}",requestDTO);
 
         if (result.hasErrors()) {
             // ResponseEntity는 응답에 관련된 여러가지 정보 (상태코드, 전달할 데이터 등...) 를
@@ -36,6 +37,7 @@ public class QnaReplyController {
         }
 
         QnaReplyListResponseDTO responseDTO = qnaReplyService.create(requestDTO);
+        log.info("게시글이 작성되었습니다.");
 
         return ResponseEntity.ok().body(responseDTO);
 
@@ -49,7 +51,9 @@ public class QnaReplyController {
     ){
 
         try {
+            log.info("게시글댓글 조회:{}",replyNo);
             QnaReplyDetailResponseDTO responseDTO = qnaReplyService.qnaReplyDetail(replyNo);
+            log.info("댓글rendering");
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -93,7 +97,6 @@ public class QnaReplyController {
             return ResponseEntity.internalServerError().body(e.getMessage());
 
         }
-
 
     }
 

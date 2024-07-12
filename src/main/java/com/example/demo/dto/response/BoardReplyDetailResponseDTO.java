@@ -27,6 +27,8 @@ public class BoardReplyDetailResponseDTO {
     @JsonFormat(pattern = "yyyy년 MM월 dd일 HH:mm (수정됨)")
     private LocalDateTime updateDate;
 
+    private String userId;
+
     public BoardReplyDetailResponseDTO(BoardReply boardReply){
 
         this.replyNo = boardReply.getReplyNo();
@@ -34,6 +36,7 @@ public class BoardReplyDetailResponseDTO {
         this.replyText = boardReply.getReplyText();
         this.replyDate = boardReply.getReplyDate();
         this.updateDate = boardReply.getUpdateReplyDate();
+        this.userId = boardReply.getUserId();
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.demo.dto.request;
 
+import com.example.demo.entity.Board;
 import com.example.demo.entity.BoardReply;
 import lombok.*;
 
@@ -14,11 +15,14 @@ public class BoardReplyRequestDTO {
 
     private String replyText;
 
-    public BoardReply toEntity(){
+    private String userId;
+
+    public BoardReply toEntity(Board board){
         return BoardReply.builder()
-                .boardNo(this.boardNo)
+                .board(board)
                 .replyWriter(this.replyWriter)
                 .replyText(this.replyText)
+                .userId(this.userId)
                 .build();
     }
 

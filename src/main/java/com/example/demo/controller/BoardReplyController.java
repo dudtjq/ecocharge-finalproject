@@ -29,6 +29,7 @@ public class BoardReplyController {
             BindingResult result
     ){
 
+        log.info("requestDTO: {}", requestDTO);
         if (result.hasErrors()) {
             // ResponseEntity는 응답에 관련된 여러가지 정보 (상태코드, 전달할 데이터 등...) 를
             // 한번에 객체로 포장해서 리턴할 수 있게 하는 Spring에서 제공하는 객체.
@@ -44,21 +45,7 @@ public class BoardReplyController {
 
     }
 
-    // 댓글 상세보기
-    @GetMapping("/{replyNo}")
-    public ResponseEntity<?> boardReplyDetail(
-            @PathVariable("replyNo") Long replyNo
-    ){
 
-        try {
-            final BoardReplyDetailResponseDTO responseDTO = replyService.boardReplyDetail(replyNo);
-            return ResponseEntity.ok().body(responseDTO);
-        }catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-
-
-    }
 
     // 페이지도 같이 넘겨줄 예정
     // 게시판 댓글 목록 조회
@@ -67,7 +54,9 @@ public class BoardReplyController {
             @PathVariable("boardNo") Long boardNo
     ){
 
+        log.info("boardNo: {}", boardNo);
         final BoardReplyListResponseDTO responseDTO = replyService.getList(boardNo);
+        log.info("responseDTO:{}",responseDTO.toString());
 
         return ResponseEntity.ok().body(responseDTO);
 
@@ -76,19 +65,21 @@ public class BoardReplyController {
     // 게시판 댓글 삭제
     @DeleteMapping("/{replyNo}")
     public ResponseEntity<?> deleteReply(
-            @PathVariable("replyNo") Long replyNo
+            @PathVariable("replyNo") Long replyNo,
+            @RequestParam("userId") String userId
     ){
 
         if(replyNo == null){
             return ResponseEntity
                     .badRequest()
-                    .body("댓글 번호를 전달해 주세요.");
+                    .body("이미 삭제 된 댓글입니다.");
         }
 
 
         try {
-
-            BoardReplyListResponseDTO responseDTO = replyService.deleteReply(replyNo);
+            log.info("댓글 삭제");
+            BoardReplyListResponseDTO responseDTO = replyService.deleteReply(replyNo,userId);
+            log.info("responseDTO:{}",responseDTO.toString());
             return ResponseEntity.ok().body(responseDTO);
         }catch (Exception e){
 
@@ -104,7 +95,7 @@ public class BoardReplyController {
     public ResponseEntity<?> updateReply(
             @Validated @RequestBody BoardReplyUpdateRequestDTO requestDTO,
             BindingResult result
-            ){
+    ){
 
         if(result.hasErrors()){
             return ResponseEntity.badRequest()
