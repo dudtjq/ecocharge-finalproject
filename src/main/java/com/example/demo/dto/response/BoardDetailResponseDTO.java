@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 @ToString @AllArgsConstructor
 @NoArgsConstructor @Builder
 public class BoardDetailResponseDTO {
-    
+
     private int count;
 
     private Long boardNo;
@@ -23,9 +23,11 @@ public class BoardDetailResponseDTO {
     private String bContent;
 
     private String bProfileImage;
-    
+
     private String createDate;
-    
+
+    private String userId;
+
     private int viewCount;
 
     public BoardDetailResponseDTO(Board board, int count){
@@ -37,6 +39,7 @@ public class BoardDetailResponseDTO {
         this.bProfileImage = board.getBProfileImage();
         this.createDate = board.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.viewCount = board.getViewCount();
+        this.userId = board.getUser().getUserId();
         this.count = count;
     }
 

@@ -6,7 +6,6 @@ import com.example.demo.dto.request.BoardUpdateRequestDTO;
 import com.example.demo.dto.response.BoardDetailResponseDTO;
 import com.example.demo.dto.response.BoardListResponseDTO;
 import com.example.demo.service.BoardService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +32,10 @@ public class BoardController {
                                          @AuthenticationPrincipal TokenUserInfo userInfo
     ) throws IOException {
         log.info("/board/create - POST 요청: {}", requestDTO);
+        log.info("userInfo: {}", userInfo);
         BoardListResponseDTO boardListResponseDTO = boardService.create(requestDTO,userInfo);
 
         return ResponseEntity.ok().body(boardListResponseDTO);
-
 
     }
 
@@ -61,27 +60,26 @@ public class BoardController {
     @GetMapping
     public ResponseEntity<?> boardList(@RequestParam(name = "page", defaultValue = "1") int pageNo){
         log.info("/board GET!, pageNo: {}", pageNo);
-       try {
-           BoardListResponseDTO responseDTO = boardService.retrieve(pageNo);
+        try {
+            BoardListResponseDTO responseDTO = boardService.retrieve(pageNo);
 
-           return ResponseEntity.ok().body(responseDTO);
+            return ResponseEntity.ok().body(responseDTO);
 
-       }catch (Exception e){
+        }catch (Exception e){
             return ResponseEntity
                     .internalServerError()
                     .body(e.getMessage());
-       }
-
+        }
 
     }
-    
+
     @GetMapping("/{boardNo}")
     public void updateViewCount(@PathVariable("boardNo") Long boardNo) {
         log.info("/api/todos/{} GET", boardNo);
-        
+
         boardService.updateViewCount(boardNo);
     }
-    // QnA 삭제 요청 처리 (관리자)
+    // board 삭제 요청 처리 (관리자)
     // 로그인 연동이 확인이 되면 qnaNo 와 함께 userInfo 넘겨줄 예정
     @DeleteMapping("/delete/{boardNo}")
     public ResponseEntity<?> deleteBoard(

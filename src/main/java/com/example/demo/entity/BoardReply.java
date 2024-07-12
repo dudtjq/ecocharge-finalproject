@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter @ToString
+@Getter @Setter @ToString(exclude = "board")
 @EqualsAndHashCode @AllArgsConstructor
 @NoArgsConstructor @Builder
 @Entity
@@ -24,9 +24,6 @@ public class BoardReply {
     @Column(name = "b_reply_text")
     private String replyText;
 
-    @Column(name = "board_no")
-    private Long boardNo;
-
     @CreationTimestamp
     private LocalDateTime replyDate;
 
@@ -34,9 +31,12 @@ public class BoardReply {
     private LocalDateTime updateReplyDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_nos")
+    @JoinColumn(name = "board_no")
     private Board board;
 
+
+    @Column(name = "user_id")
+    private String userId;
 
 
 

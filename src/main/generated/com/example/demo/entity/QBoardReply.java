@@ -24,8 +24,6 @@ public class QBoardReply extends EntityPathBase<BoardReply> {
 
     public final QBoard board;
 
-    public final NumberPath<Long> boardNo = createNumber("boardNo", Long.class);
-
     public final DateTimePath<java.time.LocalDateTime> replyDate = createDateTime("replyDate", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> replyNo = createNumber("replyNo", Long.class);
@@ -35,6 +33,8 @@ public class QBoardReply extends EntityPathBase<BoardReply> {
     public final StringPath replyWriter = createString("replyWriter");
 
     public final DateTimePath<java.time.LocalDateTime> updateReplyDate = createDateTime("updateReplyDate", java.time.LocalDateTime.class);
+
+    public final StringPath userId = createString("userId");
 
     public QBoardReply(String variable) {
         this(BoardReply.class, forVariable(variable), INITS);
