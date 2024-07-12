@@ -15,14 +15,11 @@ public class BoardReplyRequestDTO {
 
     private String replyText;
 
-    private Long replyNo;
-
     private String userId;
 
     public BoardReply toEntity(Board board){
         return BoardReply.builder()
                 .board(board)
-                .replyNo(this.replyNo)
                 .replyWriter(this.replyWriter)
                 .replyText(this.replyText)
                 .userId(this.userId)
